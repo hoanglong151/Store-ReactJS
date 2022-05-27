@@ -1,0 +1,33 @@
+.reviewImages {
+    display: flex;
+    width: 15rem;
+    height: 15rem;
+    border-radius: 1rem;
+    background-color: #ccc;
+
+    .reviewImage {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.inputImage {
+    display: none;
+}
+
+.uploadImages {
+    display: block;
+    background-color: var(--primary-admin);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: #fff;
+    width: fit-content;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.25s linear;
+}
+
+.uploadImages:hover {
+    background-color: red;
+}

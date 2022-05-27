@@ -1,0 +1,62 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin: 0 2rem;
+    .logo {
+        height: 100%;
+        .logoImg {
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .action {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        .infoAccount {
+            margin-left: 4rem;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            .img {
+                height: 4rem;
+                width: 4rem;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
+
+        .notify,
+        .menuUser {
+            background-color: transparent;
+        }
+
+        .userName {
+            padding: 0 1rem;
+        }
+
+        .notify {
+            background-color: #f4f6f8;
+            height: 4rem;
+            width: 4rem;
+            border-radius: 50%;
+            font-size: 2rem;
+            position: relative;
+            padding: 0;
+
+            .numNotifi {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background-color: red;
+                color: var(--primary-content);
+                border-radius: 50%;
+                padding: 0.5rem;
+                font-size: 1.1rem;
+            }
+        }
+    }
+}

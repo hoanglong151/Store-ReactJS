@@ -1,0 +1,29 @@
+.wrapImage {
+    width: 100%;
+    height: 40rem;
+
+    .image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 0.5rem;
+    }
+}
+
+.slick-dots {
+    position: relative;
+    display: flex !important;
+    justify-content: center;
+    bottom: 0;
+
+    li {
+        width: 6rem;
+        height: 6rem;
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.5rem;
+        }
+    }
+}

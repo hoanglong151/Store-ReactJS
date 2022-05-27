@@ -1,0 +1,53 @@
+.newProducts,
+.sellProducts,
+.products {
+    background-color: var(--primary-client-background-color);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: var(--margin-2rem);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title {
+    color: var(--white);
+    margin: 1rem 0;
+}
+
+.showAll {
+    display: flex;
+    align-items: center;
+    color: var(--white);
+
+    & .arrowShowAll {
+        transition: all 0.15s linear;
+        transform: translate(0, 0);
+    }
+
+    &:hover .arrowShowAll {
+        transform: translate(0.5rem, 0);
+    }
+}
+
+.textShowAll {
+    padding-right: 0.5rem;
+}
+
+.yourSelf {
+    color: #000;
+}
+
+.wrapProducts {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    row-gap: 1rem;
+}
+
+.products {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+}

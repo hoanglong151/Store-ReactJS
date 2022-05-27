@@ -1,0 +1,49 @@
+.wrapper {
+    background-color: var(--white);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin: 0 0.5rem;
+    cursor: pointer;
+}
+
+.image {
+    width: 100%;
+    height: 15rem;
+    object-fit: contain;
+    transition: all 0.25s linear;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+}
+
+.name {
+    color: var(--primary-client-background-color);
+}
+
+.priceSale {
+    margin-right: 1rem;
+}
+
+.priceNow {
+    color: red;
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+
+.priceOld {
+    color: #bbb;
+    text-decoration: line-through;
+    font-size: 1.2rem;
+}
+
+.infoSale {
+    background-color: #eee;
+    padding: 1rem;
+    font-size: 1.4rem;
+    border-radius: var(--border-radius);
+}
+
+.boxShadow {
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+}

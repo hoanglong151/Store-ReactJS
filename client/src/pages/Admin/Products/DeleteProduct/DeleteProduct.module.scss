@@ -1,0 +1,51 @@
+.wrapper {
+    display: flex;
+    background-color: var(--white);
+    padding: 1rem;
+    border-radius: 1rem;
+
+    .images {
+        width: 35rem;
+
+        .action {
+            margin-top: 1.5rem;
+            text-align: center;
+            .btn {
+                display: inline-block;
+                background-color: var(--primary-admin);
+                padding: 1rem;
+                color: #fff;
+                border-radius: 0.5rem;
+            }
+        }
+    }
+
+    .content {
+        margin-left: 5rem;
+    }
+
+    .titlePrice {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .sale,
+    .price {
+        color: red;
+        font-weight: bold;
+        font-size: 2rem;
+    }
+
+    .sale {
+        margin-right: 1rem;
+    }
+
+    .salePrice {
+        color: #bbb;
+        text-decoration: line-through;
+    }
+}
+
+.popup {
+    font-size: 1.6rem !important;
+}
