@@ -3,6 +3,7 @@
 }
 
 .menu {
+    position: relative;
     list-style: none;
     background-color: var(--white);
     padding: 0;
@@ -22,6 +23,10 @@
         cursor: pointer;
         transition: all 0.25s linear;
     }
+
+    &:hover .subMenu {
+        display: block;
+    }
 }
 
 .link {
@@ -35,4 +40,23 @@
 
 .name {
     padding: 0 1rem;
+}
+
+.subMenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: var(--white);
+    height: 40rem;
+    min-width: 20rem;
+    list-style: none;
+    box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    display: none;
+    padding: 0;
+}
+
+.subMenuName {
+    display: block;
+    padding: 1.5rem;
 }

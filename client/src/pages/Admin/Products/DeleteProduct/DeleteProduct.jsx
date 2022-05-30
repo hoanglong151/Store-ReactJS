@@ -74,22 +74,21 @@ function DeleteProduct() {
             <div className={clsx(styles.content)}>
                 <h1>Giới Thiệu Sản Phẩm</h1>
                 <h2>{productDelete.Name}</h2>
-                <div>
-                    <span className={clsx(styles.titlePrice)}>Giá: </span>
-                    {productDelete.Sale === 0 ? (
-                        <span className={clsx(styles.price)}>
-                            {new Intl.NumberFormat('de-DE').format(productDelete.Price)} VNĐ
-                        </span>
-                    ) : (
-                        <>
-                            <span className={clsx(styles.sale)}>
-                                {new Intl.NumberFormat('de-DE').format(productDelete.Sale)} VNĐ
-                            </span>
-                            <span className={clsx(styles.salePrice)}>
-                                {new Intl.NumberFormat('de-DE').format(productDelete.Price)} VNĐ
-                            </span>
-                        </>
-                    )}
+                <div className={clsx(styles.wrapperType)}>
+                    <div>
+                        {productDelete.TypesProduct ? (
+                            productDelete.TypesProduct.map((type, index) => (
+                                <div key={index} className={clsx(styles.item)}>
+                                    <p className={clsx(styles.typeDescription)}>{type.description}</p>
+                                    <p className={clsx(styles.typePrice)}>
+                                        {type.sale !== 0 ? new Intl.NumberFormat().format(type.sale) : type.price} VNĐ
+                                    </p>
+                                </div>
+                            ))
+                        ) : (
+                            <></>
+                        )}
+                    </div>
                 </div>
                 <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(productDelete.Description) }} />
             </div>

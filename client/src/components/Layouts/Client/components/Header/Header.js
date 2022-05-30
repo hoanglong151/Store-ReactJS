@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './Header.module.scss';
@@ -7,8 +7,21 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function Header(props) {
-    const { openButtonCategory, openMenuCategory } = props;
+    const { openButtonCategory } = props;
+    const [getFirms, setGetFirms] = useState([]);
     const categories = useSelector((state) => state.category.categories);
+    const firms = useSelector((state) => state.firm.firms);
+    const carts = useSelector((state) => state.cart.cartProducts);
+
+    const handleGetCategory = (category) => {
+        const getFirmsID = category.Products.reduce((pre, next) => {
+            return pre.indexOf(next.Firm_ID) === -1 ? [...pre, next.Firm_ID] : pre;
+        }, []);
+        const getFirms = firms.filter((firm, index) => {
+            return getFirmsID.includes(firm._id);
+        });
+        setGetFirms(getFirms);
+    };
     return (
         <div className={clsx(styles.wrapper)}>
             <div className={clsx(styles.header)}>
@@ -25,7 +38,11 @@ function Header(props) {
                             <ul className={clsx(styles.categories)}>
                                 {categories.map((category, index) => (
                                     <li className={clsx(styles.itemCategory)} key={category._id}>
-                                        <Link to="/" className={clsx(styles.itemLink)}>
+                                        <Link
+                                            to={`/category/${category._id}`}
+                                            className={clsx(styles.itemLink)}
+                                            onMouseEnter={() => handleGetCategory(category)}
+                                        >
                                             <img className={clsx(styles.itemImage)} src={category.Image} />
                                             <p className={clsx(styles.itemName)}>{category.Name}</p>
                                             <FontAwesomeIcon icon={faChevronRight} />
@@ -33,11 +50,16 @@ function Header(props) {
 
                                         {/* Sub Menu */}
                                         <ul className={clsx(styles.subMenu)}>
-                                            <li className={clsx(styles.subMenuItem)}>
-                                                <Link to="/" className={clsx(styles.subMenuName)}>
-                                                    Apple
-                                                </Link>
-                                            </li>
+                                            {getFirms.map((firm, index) => (
+                                                <li key={firm._id} className={clsx(styles.subMenuItem)}>
+                                                    <Link
+                                                        to={`/firm/${category._id}/${firm._id}`}
+                                                        className={clsx(styles.subMenuName)}
+                                                    >
+                                                        {firm.Name}
+                                                    </Link>
+                                                </li>
+                                            ))}
                                         </ul>
                                     </li>
                                 ))}
@@ -51,14 +73,15 @@ function Header(props) {
                     <input className={clsx(styles.inputSearch)} placeholder="Bạn cần tìm gì ?" />
                 </div>
                 <div className={clsx(styles.other)}>
-                    <div className={clsx(styles.truck)}>
+                    <Link to="/" className={clsx(styles.truck)}>
                         <FontAwesomeIcon icon={faTruckFast} />
                         <p className={clsx(styles.titleOther)}>Tra cứu đơn hàng</p>
-                    </div>
-                    <div className={clsx(styles.cart)}>
+                    </Link>
+                    <Link to="/cart" className={clsx(styles.cart)}>
                         <FontAwesomeIcon icon={faCartShopping} />
+                        <span className={clsx(styles.numberCart)}>{carts?.length !== 0 ? carts?.length : ''}</span>
                         <p className={clsx(styles.titleOther)}>Giỏ hàng</p>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </div>

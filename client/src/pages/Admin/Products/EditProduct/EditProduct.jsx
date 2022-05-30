@@ -13,6 +13,7 @@ import ErrorMessage from '~/components/Form/ErrorMessage/ErrorMessage';
 import Selects from '~/components/Form/Selects/Selects';
 import TextArea from '~/components/Form/TextArea/TextArea';
 import SelectImage from '~/components/Form/SelectImage/SelectImage';
+import Accordion from '~/components/Form/Accordion/Accordion';
 
 function EditProduct() {
     let { id } = useParams();
@@ -23,10 +24,9 @@ function EditProduct() {
     const fileImages = [];
     const [images, setImages] = useState([]);
     const [select, setSelect] = useState([]);
+    const [typesProduct, setTypesProduct] = useState([]);
     const { product, category } = useSelector((state) => state);
     const firms = useSelector((state) => state.firm.firms);
-
-    console.log(productEdit);
 
     const navigate = useNavigate();
 
@@ -50,6 +50,7 @@ function EditProduct() {
                 Firm_ID: { value: getProduct.Firm_ID._id, label: getProduct.Firm_ID.Name },
             };
             setProductEdit(editProduct);
+            setTypesProduct(getProduct.TypesProduct);
             setProductImageOld(getProduct.Image);
             setImages(getProduct.Image);
             setSelect(mapCategories);
@@ -78,8 +79,8 @@ function EditProduct() {
 
     const validationSchema = Yup.object().shape({
         name: Yup.string('Nhập Tên Sản Phẩm').required('Vui Lòng Nhập Tên Sản Phẩm'),
-        price: Yup.number().min(0, 'Tối thiếu 0đ').required('Vui Lòng Nhập Giá Sản Phẩm').integer(),
-        amount: Yup.number().min(1, 'Tối thiếu 1 sản phẩm').required('Vui Lòng Nhập số lượng Sản Phẩm').integer(),
+        // price: Yup.number().min(0, 'Tối thiếu 0đ').required('Vui Lòng Nhập Giá Sản Phẩm').integer(),
+        // amount: Yup.number().min(1, 'Tối thiếu 1 sản phẩm').required('Vui Lòng Nhập số lượng Sản Phẩm').integer(),
         description: Yup.string().required(),
     });
 
@@ -92,12 +93,14 @@ function EditProduct() {
             description: productEdit?.Description ? productEdit.Description : '',
             category_Id: select,
             firm_Id: productEdit.Firm_ID?.value,
-            amount: productEdit?.Amount ? productEdit.Amount : 0,
-            sale: productEdit?.Sale ? productEdit.Sale : 0,
-            price: productEdit?.Price ? productEdit.Price : 0,
+            types: {
+                description: '',
+                price: 0,
+                sale: 0,
+                amount: 0,
+            },
             createDate: productEdit?.CreateDate ? productEdit.CreateDate : '',
             updateDate: productEdit?.UpdateDate ? productEdit.UpdateDate : getNowDate,
-            sold: productEdit?.Sold ? productEdit.Sold : 0,
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -113,6 +116,7 @@ function EditProduct() {
                     });
                     fd.append('imagesOld', productImageOld);
                 }
+                fd.append('typesProduct', JSON.stringify(typesProduct));
                 try {
                     await productsApi.editProduct(fd);
                     navigate('/Admin/Products');
@@ -123,6 +127,28 @@ function EditProduct() {
             submit();
         },
     });
+
+    const handleAddType = () => {
+        if (
+            formik.values.types.description !== '' &&
+            formik.values.types.price !== 0 &&
+            formik.values.types.amount !== 0
+        ) {
+            const type = { ...formik.values.types };
+            setTypesProduct([...typesProduct, type]);
+            formik.values.types.description = '';
+            formik.values.types.price = 0;
+            formik.values.types.sale = 0;
+            formik.values.types.amount = 0;
+        }
+    };
+
+    const handleDeleteType = (i) => {
+        const newTypes = typesProduct.filter((type, index) => {
+            return index !== i;
+        });
+        setTypesProduct(newTypes);
+    };
 
     const handleSelectCategory = (options) => {
         setProductEdit({ ...productEdit, Category_ID: options });
@@ -195,41 +221,17 @@ function EditProduct() {
                     data={optionsFirm}
                     multiple={false}
                 />
+                <Label>Loại</Label>
+                <Accordion
+                    onHandleDeleteType={handleDeleteType}
+                    onHandleAddType={handleAddType}
+                    formik={formik}
+                    typesProduct={typesProduct}
+                />
                 <Label>Mô Tả</Label>
                 <TextArea data={formik.values.description} onChange={handleInput} />
-                <Label>Giá Sản Phẩm</Label>
-                <Input
-                    id="price"
-                    name="price"
-                    onChange={formik.handleChange}
-                    value={formik.values.price}
-                    type="number"
-                    placeholder="Giá Sản Phẩm"
-                    errors={formik.touched.price && formik.errors.price}
-                />
-                {formik.errors.price && formik.touched.price ? (
-                    <ErrorMessage>{formik.errors.price}</ErrorMessage>
-                ) : null}
-                <Label>Giá Khuyến Mãi</Label>
-                <Input
-                    id="sale"
-                    name="sale"
-                    onChange={formik.handleChange}
-                    value={formik.values.sale}
-                    type="number"
-                    placeholder="Giá Khuyến Mãi"
-                />
-                <Label>Số Lượng</Label>
-                <Input
-                    id="amount"
-                    name="amount"
-                    onChange={formik.handleChange}
-                    value={formik.values.amount}
-                    type="number"
-                    placeholder="Số Lượng"
-                />
                 <Label>Hình Ảnh</Label>
-                <SelectImage images={images} onChange={uploadMultipleFiles} />
+                <SelectImage id="images" name="images" images={images} onChange={uploadMultipleFiles} />
                 <button type="submit" className={clsx(styles.createBtn)}>
                     Cập Nhật Sản Phẩm
                 </button>

@@ -37,9 +37,7 @@ router.post("/addProduct", upload.array("images", 6), async (req, res) => {
     Description: req.body.description,
     Category_ID: req.body.category_Id.split(","),
     Firm_ID: req.body.firm_Id,
-    Amount: req.body.amount,
-    Sale: req.body.sale,
-    Price: req.body.price,
+    TypesProduct: JSON.parse(req.body.typesProduct),
     CreateDate: new Date(req.body.createDate),
     UpdateDate: "",
   };
@@ -96,12 +94,9 @@ router.patch("/editProduct", upload.array("images", 6), async (req, res) => {
     Description: req.body.description,
     Category_ID: req.body.category_Id.split(","),
     Firm_ID: req.body.firm_Id,
-    Amount: req.body.amount,
-    Sale: req.body.sale,
-    Price: req.body.price,
+    TypesProduct: JSON.parse(req.body.typesProduct),
     CreateDate: new Date(req.body.createDate),
     UpdateDate: new Date(req.body.updateDate),
-    Sold: req.body.sold,
   };
 
   if (req.files.length !== 0) {

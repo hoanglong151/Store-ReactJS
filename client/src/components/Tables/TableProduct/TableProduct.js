@@ -12,6 +12,7 @@ import styles from './TableProduct.module.scss';
 
 export default function TablesProduct(props) {
     const { titles, products } = props;
+
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -34,7 +35,13 @@ export default function TablesProduct(props) {
                             <TableCell align="left">
                                 {data.Category_ID.map((category, index) => category.Name).join(', ')}
                             </TableCell>
-                            <TableCell align="left">{new Intl.NumberFormat('de-DE').format(data.Price)} VNĐ</TableCell>
+                            <TableCell align="left">
+                                {new Date(data.CreateDate).toLocaleDateString('en-GB', {
+                                    year: 'numeric',
+                                    month: 'numeric',
+                                    day: 'numeric',
+                                })}
+                            </TableCell>
                             <TableCell align="left">
                                 <Link
                                     to={`/Admin/DetailProduct/${data._id}`}

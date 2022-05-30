@@ -21,7 +21,7 @@ function Home() {
                         <FontAwesomeIcon icon={faAngleRight} className={clsx(styles.arrowShowAll)} />
                     </Link>
                 </div>
-                <SliderCard slideShow={5} slideScroll={5} />
+                <SliderCard slideShow={5} slideScroll={5} products={product.products} />
             </div>
             <div className={clsx(styles.sellProducts)}>
                 <div className={clsx(styles.header)}>
@@ -31,7 +31,7 @@ function Home() {
                         <FontAwesomeIcon icon={faAngleRight} className={clsx(styles.arrowShowAll)} />
                     </Link>
                 </div>
-                <SliderCard slideShow={5} slideScroll={5} />
+                <SliderCard slideShow={5} slideScroll={5} products={product.products} />
             </div>
             <div className={clsx(styles.products)}>
                 <div className={clsx(styles.header)}>
@@ -42,10 +42,8 @@ function Home() {
                     </Link>
                 </div>
                 <div className={clsx(styles.wrapProducts)}>
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((product, index) => (
-                        <div key={index}>
-                            <CardProduct boxShadow />
-                        </div>
+                    {product.products.map((product, index) => (
+                        <CardProduct key={index} boxShadow product={product} />
                     ))}
                 </div>
             </div>

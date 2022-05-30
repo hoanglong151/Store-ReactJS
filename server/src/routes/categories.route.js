@@ -15,9 +15,11 @@ const uuid = require("uuid");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  categoriesModel.find({}, (err, categories) => {
-    res.send(categories);
-  });
+  categoriesModel
+    .find({}, (err, categories) => {
+      res.send(categories);
+    })
+    .populate("Products");
 });
 
 router.post("/addCategory", upload.single("image"), async (req, res) => {

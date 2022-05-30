@@ -5,6 +5,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { getProducts } from '~/app/reducerProduct';
 import { getCategories } from '~/app/reducerCategory';
 import { getFirms } from '~/app/reducerFirm';
+import { getCarts } from '~/app/reducerCart';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from '~/routes';
 import { DefaultLayout } from '~/components/Layouts/Admin';
@@ -34,6 +35,13 @@ function App() {
         getFirm();
     }, []);
 
+    useEffect(() => {
+        const getCart = async () => {
+            await dispatch(getCarts());
+        };
+        getCart();
+    }, []);
+
     return (
         <div className="App">
             <BrowserRouter>
@@ -42,9 +50,9 @@ function App() {
                         let LayoutClient = DefaultLayoutClient;
                         const Page = route.component;
 
-                        // if (route.layout) {
-                        //     LayoutAdmin = route.layout;
-                        // }
+                        if (route.layout) {
+                            LayoutClient = route.layout;
+                        }
 
                         return (
                             <Route

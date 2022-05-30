@@ -1,0 +1,74 @@
+.wrapperCart {
+    position: relative;
+    display: flex;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    margin-bottom: 2rem;
+}
+
+.btnClose {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 4px;
+    background-color: transparent;
+    padding: 1rem;
+    font-size: 2rem;
+    color: var(--primary-client-background-color);
+}
+
+.image {
+    width: 20rem;
+    border-radius: var(--border-radius);
+    margin-right: 2rem;
+}
+
+.infoProduct {
+}
+
+.nameProduct {
+    margin: 0;
+}
+
+.priceProduct {
+    margin: 1rem 0;
+}
+
+.numberProduct {
+    display: flex;
+    align-items: center;
+}
+
+.selectNumber {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 1rem;
+}
+
+.decrease,
+.increase {
+    background-color: transparent;
+    font-size: 2rem;
+    padding: 0 1rem;
+}
+
+.number {
+    padding: 0 1rem;
+}
+
+.priceActive {
+    color: red;
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+.priceOld {
+    color: #aaa;
+    font-size: 1.4rem;
+    text-decoration: line-through;
+    margin-left: 1rem;
+}

@@ -13,17 +13,18 @@ import Selects from '~/components/Form/Selects/Selects';
 import TextArea from '~/components/Form/TextArea/TextArea';
 import SelectImage from '~/components/Form/SelectImage/SelectImage';
 import ErrorMessage from '~/components/Form/ErrorMessage/ErrorMessage';
+import Accordion from '~/components/Form/Accordion/Accordion';
 
 function AddProduct() {
     const navigate = useNavigate();
     const categories = useSelector((state) => state.category.categories);
     const firms = useSelector((state) => state.firm.firms);
-    const dispatch = useDispatch();
 
     const fileObj = [];
     const fileArray = [];
     const fileImages = [];
     const [images, setImage] = useState([]);
+    const [typesProduct, setTypesProduct] = useState([]);
 
     const today = new Date();
     let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(today);
@@ -47,8 +48,8 @@ function AddProduct() {
 
     const validationSchema = Yup.object().shape({
         name: Yup.string('Nhập Tên Sản Phẩm').required('Vui Lòng Nhập Tên Sản Phẩm'),
-        price: Yup.number().min(0, 'Tối thiếu 0đ').required('Vui Lòng Nhập Giá Sản Phẩm').integer(),
-        amount: Yup.number().min(1, 'Tối thiếu 1 sản phẩm').required('Vui Lòng Nhập số lượng Sản Phẩm').integer(),
+        // price: Yup.number().min(0, 'Tối thiếu 0đ').required('Vui Lòng Nhập Giá Sản Phẩm').integer(),
+        // amount: Yup.number().min(1, 'Tối thiếu 1 sản phẩm').required('Vui Lòng Nhập số lượng Sản Phẩm').integer(),
         description: Yup.string().required('Vui Lòng Nhập Mô Tả Sản Phẩm'),
         images: Yup.array().min(1, 'Không chọn hình đòi tạo sản phẩm ?'),
     });
@@ -59,12 +60,15 @@ function AddProduct() {
             images: [],
             description: '',
             category_Id: [],
-            amount: 0,
-            sale: 0,
-            price: 0,
+            firm_Id: '',
+            types: {
+                description: '',
+                price: 0,
+                sale: 0,
+                amount: 0,
+            },
             createDate: getNowDate,
             updateDate: '',
-            sold: 0,
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -76,6 +80,7 @@ function AddProduct() {
                 values.images.map((image, index) => {
                     fd.append('images', image);
                 });
+                fd.append('typesProduct', JSON.stringify(typesProduct));
                 try {
                     await productsApi.addProduct(fd);
                     navigate('/Admin/Products');
@@ -86,6 +91,28 @@ function AddProduct() {
             submit();
         },
     });
+
+    const handleAddType = () => {
+        if (
+            formik.values.types.description !== '' &&
+            formik.values.types.price !== 0 &&
+            formik.values.types.amount !== 0
+        ) {
+            const type = { ...formik.values.types };
+            setTypesProduct([...typesProduct, type]);
+            formik.values.types.description = '';
+            formik.values.types.price = 0;
+            formik.values.types.sale = 0;
+            formik.values.types.amount = 0;
+        }
+    };
+
+    const handleDeleteType = (i) => {
+        const newTypes = typesProduct.filter((type, index) => {
+            return index !== i;
+        });
+        setTypesProduct(newTypes);
+    };
 
     const handleSelectCategory = (options) => {
         const optionList = options.map((option, index) => {
@@ -138,39 +165,15 @@ function AddProduct() {
                 <Selects onChangeSelect={handleSelectCategory} data={optionsCate} multiple />
                 <Label>Hãng</Label>
                 <Selects onChangeSelect={handleSelectFirm} data={optionsFirm} multiple={false} />
+                <Label>Loại</Label>
+                <Accordion
+                    onHandleDeleteType={handleDeleteType}
+                    onHandleAddType={handleAddType}
+                    formik={formik}
+                    typesProduct={typesProduct}
+                />
                 <Label>Mô Tả</Label>
                 <TextArea onChange={handleInput} />
-                <Label>Giá Sản Phẩm</Label>
-                <Input
-                    id="price"
-                    name="price"
-                    onChange={formik.handleChange}
-                    value={formik.values.price}
-                    type="number"
-                    placeholder="Giá Sản Phẩm"
-                    errors={formik.touched.price && formik.errors.price}
-                />
-                {formik.errors.price && formik.touched.price ? (
-                    <ErrorMessage>{formik.errors.price}</ErrorMessage>
-                ) : null}
-                <Label>Giá Khuyến Mãi</Label>
-                <Input
-                    id="sale"
-                    name="sale"
-                    onChange={formik.handleChange}
-                    value={formik.values.sale}
-                    type="number"
-                    placeholder="Giá Khuyến Mãi"
-                />
-                <Label>Số Lượng</Label>
-                <Input
-                    id="amount"
-                    name="amount"
-                    onChange={formik.handleChange}
-                    value={formik.values.amount}
-                    type="number"
-                    placeholder="Số Lượng"
-                />
                 <Label>Hình Ảnh</Label>
                 <SelectImage id="images" name="images" images={images} onChange={uploadMultipleFiles} />
                 <div>
