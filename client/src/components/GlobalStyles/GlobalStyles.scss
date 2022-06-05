@@ -10,6 +10,7 @@
     --primary-client-background-color: #2f4f4f;
 
     --white: #fff;
+    --main-color: #d70018;
 
     --border-radius: 1rem;
 
@@ -19,10 +20,12 @@ html {
     font-family: 'Roboto', sans-serif;
     font-size: 62.5%;
 }
-body {
+* {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+}
+body {
     font-size: 1.6rem;
 }
 

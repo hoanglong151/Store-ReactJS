@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import styles from './CartProduct.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import CardProductCart from '~/components/Cards/CardProductCart/CardProductCart';
 import { increase, decrease, remove } from '~/app/reducerCart';
+import TotalPriceCart from '~/components/Layouts/Client/components/TotalPriceCart/TotalPriceCart';
 
 function CartProduct() {
+    const navigate = useNavigate();
     const cartProducts = useSelector((state) => state.cart.cartProducts);
     const dispatch = useDispatch();
 
@@ -24,6 +26,10 @@ function CartProduct() {
 
     const handleRemoveProduct = (product) => {
         dispatch(remove(product));
+    };
+
+    const handlePayment = () => {
+        navigate('/bill');
     };
     return (
         <div className={clsx(styles.wrapper)}>
@@ -46,6 +52,8 @@ function CartProduct() {
                         />
                     </div>
                 ))}
+
+            <TotalPriceCart onPayment={handlePayment} title="Tiến hành đặt hàng" />
         </div>
     );
 }

@@ -1,0 +1,19 @@
+.createBtn {
+    padding: 1rem;
+    border: unset;
+    background-color: var(--primary-admin);
+    border-radius: 0.5rem;
+    color: var(--white);
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: background-color 0.25s linear;
+    display: inline-block;
+
+    &:hover {
+        background-color: var(--primary-admin-hover);
+    }
+}
+
+.popup {
+    font-size: 1.6rem !important;
+}

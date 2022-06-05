@@ -1,0 +1,61 @@
+.wrapPaymentInfo {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+}
+
+.wrapTotalPrice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.titleTotalPrice {
+    margin: 0;
+}
+
+.totalPrice {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--main-color);
+}
+
+.wrapPayment {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.payment,
+.otherProduct {
+    padding: 2rem;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.payment {
+    background-color: var(--main-color);
+    color: var(--white);
+}
+
+.otherProduct {
+    border: 1px solid var(--main-color);
+    color: var(--main-color);
+    transition: all 0.1s linear;
+
+    &:hover {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+}

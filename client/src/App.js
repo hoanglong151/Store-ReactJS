@@ -6,10 +6,15 @@ import { getProducts } from '~/app/reducerProduct';
 import { getCategories } from '~/app/reducerCategory';
 import { getFirms } from '~/app/reducerFirm';
 import { getCarts } from '~/app/reducerCart';
+import { getAreas } from '~/app/reducerArea';
+import { getProvinces } from './app/reducerProvince';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from '~/routes';
 import { DefaultLayout } from '~/components/Layouts/Admin';
 import { DefaultLayout as DefaultLayoutClient } from '~/components/Layouts/Client';
+import { getDistricts } from './app/reducerDistrict';
+import { getSaleCodes } from './app/reducerSaleCode';
+import { getAddressStores } from './app/reducerAddressStore';
 
 function App() {
     const dispatch = useDispatch();
@@ -33,6 +38,41 @@ function App() {
             await dispatch(getFirms());
         };
         getFirm();
+    }, []);
+
+    useEffect(() => {
+        const getArea = async () => {
+            await dispatch(getAreas());
+        };
+        getArea();
+    }, []);
+
+    useEffect(() => {
+        const getProvince = async () => {
+            await dispatch(getProvinces());
+        };
+        getProvince();
+    }, []);
+
+    useEffect(() => {
+        const getDistrict = async () => {
+            await dispatch(getDistricts());
+        };
+        getDistrict();
+    }, []);
+
+    useEffect(() => {
+        const getSaleCode = async () => {
+            await dispatch(getSaleCodes());
+        };
+        getSaleCode();
+    }, []);
+
+    useEffect(() => {
+        const getAddressStore = async () => {
+            await dispatch(getAddressStores());
+        };
+        getAddressStore();
     }, []);
 
     useEffect(() => {
