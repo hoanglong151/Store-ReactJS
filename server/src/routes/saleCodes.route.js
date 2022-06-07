@@ -16,6 +16,7 @@ router.post("/addSaleCode", (req, res) => {
   const area = {
     _id: id,
     Name: req.body.name,
+    Sale: req.body.sale,
   };
   saleCodesModel.create(area, (err, data) => {
     if (err) {
@@ -29,6 +30,7 @@ router.post("/addSaleCode", (req, res) => {
 router.patch("/editSaleCode/:id", (req, res) => {
   const editSaleCode = {
     Name: req.body.name,
+    Sale: req.body.sale,
   };
 
   saleCodesModel.findByIdAndUpdate(req.params.id, editSaleCode, (err, data) => {
@@ -46,6 +48,12 @@ router.delete("/deleteSaleCode/:id", async (req, res) => {
   // } else {
   //   res.send({ exist: "Existed" });
   // }
+});
+
+router.post("/applySaleCode", async (req, res) => {
+  saleCodesModel.findOne({ Name: req.body.code }, (err, data) => {
+    res.send(data);
+  });
 });
 
 module.exports = router;

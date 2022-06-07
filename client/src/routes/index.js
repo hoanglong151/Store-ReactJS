@@ -21,17 +21,19 @@ import AdminProvinces from '~/pages/Admin/Provinces/Provinces';
 import AdminDistricts from '~/pages/Admin/Districts/Districts';
 import AdminSaleCodes from '~/pages/Admin/SaleCodes/SaleCodes';
 import AdminAddressStores from '~/pages/Admin/AddressStores/AddressStores';
+import AdminBillStatus from '~/pages/Admin/BillStatus/BillStatus';
 
 // Layout
 import NoSidebar from '~/components/Layouts/Client/NoSidebar';
+import CartLayout from '~/components/Layouts/Client/CartLayout/CartLayout';
 
 const publicRoutes = [
     { path: '/', component: UserHome },
     { path: 'product/detail/:id', component: UserProductDetail, layout: NoSidebar },
     { path: 'category/:cateID', component: UserProductsCategory, layout: NoSidebar },
     { path: 'firm/:cateID/:firmID', component: UserProductsCategoryFirm, layout: NoSidebar },
-    { path: 'cart', component: UserCartProduct, layout: NoSidebar },
-    { path: 'bill', component: UserPayment, layout: NoSidebar },
+    { path: 'cart', component: UserCartProduct, layout: CartLayout },
+    { path: 'bill', component: UserPayment, layout: CartLayout },
 ];
 
 const privateRoutes = [
@@ -49,6 +51,7 @@ const privateRoutes = [
     { path: 'Admin/Districts', component: AdminDistricts },
     { path: 'Admin/SaleCodes', component: AdminSaleCodes },
     { path: 'Admin/AddressStores', component: AdminAddressStores },
+    { path: 'Admin/BillStatus', component: AdminBillStatus },
 ];
 
 export { publicRoutes, privateRoutes };

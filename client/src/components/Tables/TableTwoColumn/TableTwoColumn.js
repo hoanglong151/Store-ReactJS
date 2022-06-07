@@ -16,32 +16,34 @@ function TableTwoColumn(props) {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>{title}</TableCell>
-                        <TableCell align="right">Chức năng</TableCell>
+                        {title.map((name) => (
+                            <TableCell key={name}>{name}</TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map((item) => (
-                        <TableRow key={item._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                            <TableCell component="th" scope="row">
-                                {item.Name}
-                            </TableCell>
-                            <TableCell align="right">
-                                <button
-                                    className={clsx(styles.btn, styles.editBtn)}
-                                    onClick={() => onHandleOpenDialog(item)}
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    className={clsx(styles.btn, styles.deleteBtn)}
-                                    onClick={() => onHandleDelete(item)}
-                                >
-                                    Delete
-                                </button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                    {data.length > 0 &&
+                        data.map((item) => (
+                            <TableRow key={item._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <TableCell component="th" scope="row">
+                                    {item.Name}
+                                </TableCell>
+                                <TableCell align="left">
+                                    <button
+                                        className={clsx(styles.btn, styles.editBtn)}
+                                        onClick={() => onHandleOpenDialog(item)}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        className={clsx(styles.btn, styles.deleteBtn)}
+                                        onClick={() => onHandleDelete(item)}
+                                    >
+                                        Delete
+                                    </button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                 </TableBody>
             </Table>
         </TableContainer>

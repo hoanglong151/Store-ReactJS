@@ -4,22 +4,16 @@ import clsx from 'clsx';
 import styles from './Selects.module.scss';
 
 function Selects(props) {
-    const { onChangeSelect, data, select, multiple } = props;
-    const customStyles = {
-        menu: (provided, state) => ({
-            ...provided,
-            zIndex: 100,
-        }),
-    };
+    const { onChangeSelect, data, select, multiple, className, placeholder } = props;
     return (
         <Select
-            styles={customStyles}
             onChange={onChangeSelect}
-            className={clsx(styles.select)}
+            className={clsx(styles.select, { [className]: className })}
             closeMenuOnSelect={!multiple}
             value={select}
             isMulti={multiple}
             options={data}
+            placeholder={placeholder || 'Select'}
         />
     );
 }

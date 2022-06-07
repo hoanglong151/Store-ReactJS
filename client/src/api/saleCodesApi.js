@@ -13,6 +13,9 @@ const saleCodesApi = {
     editSaleCode: (data, id) => {
         return axiosClient.patch(`/saleCodes/editSaleCode/${id}`, data);
     },
+    applySaleCode: (data) => {
+        return axiosClient.post('/saleCodes/applySaleCode', data);
+    },
 };
 
 export default saleCodesApi;

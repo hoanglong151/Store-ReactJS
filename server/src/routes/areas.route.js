@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
   areasModel.find({}, (err, data) => {
-    console.log(data);
     res.send(data);
   });
   // .populate("Provinces");

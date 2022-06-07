@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import styles from './Areas.module.scss';
-import TableTwoColumn from '~/components/Tables/TableTwoColumn/TableTwoColumn';
 import DialogOneField from '~/components/Form/Dialog/DialogOneField/DialogOneField';
 import { useFormik } from 'formik';
 import { getAreas } from '~/app/reducerArea';
 import { useDispatch, useSelector } from 'react-redux';
+import TableTwoColumn from '~/components/Tables/TableTwoColumn/TableTwoColumn';
 import areasApi from '~/api/areasApi';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -124,7 +124,7 @@ function Areas() {
                 data={areas}
                 onHandleOpenDialog={handleOpenDialog}
                 onHandleDelete={handleDeleteArea}
-                title="Vùng miền"
+                title={['Vùng miền', 'Chức năng']}
             />
         </div>
     );

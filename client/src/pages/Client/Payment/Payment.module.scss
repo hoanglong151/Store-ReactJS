@@ -4,9 +4,10 @@
 }
 
 .paymentInfo {
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: var(--border-radius);
     background-color: var(--white);
+    margin-bottom: 2rem;
 }
 
 .shipMethod {
@@ -14,23 +15,46 @@
     align-items: center;
 }
 
+.wrapMethod {
+    display: flex;
+    align-items: center;
+    margin-right: 2rem;
+    margin-top: 1rem;
+}
+
 .inputWidth {
     width: 2rem !important;
     height: 2rem;
 }
 
-.atShop,
-.ship {
-    display: flex;
-    align-items: center;
-    font-size: 1.8rem;
-}
-
-.ship {
-    margin-left: 1.5rem;
-}
-
 .textShipMethod {
     padding-left: 0.5rem;
     width: 100%;
+}
+
+.wrapAddress {
+    background-color: #f3f4f6;
+    margin: 1rem 0.5rem;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+}
+
+.wrapAreaCity {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 -1rem;
+}
+
+.w100 {
+    width: 100%;
+    padding: 0 1rem;
+}
+
+.mb1 {
+    margin-bottom: 1rem;
+}
+
+.mb0 {
+    margin-bottom: 0 !important;
 }

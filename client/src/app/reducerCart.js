@@ -9,6 +9,9 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState: {
         cartProducts: [],
+        totalPrice: 0,
+        totalPriceSale: 0,
+        saleCode: {},
     },
     reducers: {
         addProductToCart: (state, action) => {
@@ -21,8 +24,15 @@ const cartSlice = createSlice({
                 Description: action.payload.typeSelect.description,
                 NumberProduct: 1,
             };
-            state.cartProducts.push(product);
-            localStorage.setItem('cart', JSON.stringify(state.cartProducts));
+            const currentPrice = product.Sale ? product.Sale : product.Price;
+            const newState = {
+                ...state,
+                cartProducts: [...state.cartProducts, product],
+                totalPrice: state.totalPrice + currentPrice,
+                totalPriceSale: state.totalPriceSale + currentPrice,
+            };
+            localStorage.setItem('cart', JSON.stringify(newState));
+            return newState;
         },
         increase: (state, action) => {
             const result = current(state.cartProducts).map((product) => {
@@ -31,8 +41,15 @@ const cartSlice = createSlice({
                 }
                 return product;
             });
-            state.cartProducts = result;
-            localStorage.setItem('cart', JSON.stringify(state.cartProducts));
+            const currentPrice = action.payload.Sale ? action.payload.Sale : action.payload.Price;
+            const newState = {
+                ...state,
+                cartProducts: result,
+                totalPrice: state.totalPrice + currentPrice,
+                totalPriceSale: state.totalPriceSale + currentPrice,
+            };
+            localStorage.setItem('cart', JSON.stringify(newState));
+            return newState;
         },
         decrease: (state, action) => {
             const result = current(state.cartProducts).map((product) => {
@@ -41,8 +58,15 @@ const cartSlice = createSlice({
                 }
                 return product;
             });
-            state.cartProducts = result;
-            localStorage.setItem('cart', JSON.stringify(state.cartProducts));
+            const currentPrice = action.payload.Sale ? action.payload.Sale : action.payload.Price;
+            const newState = {
+                ...state,
+                cartProducts: result,
+                totalPrice: state.totalPrice - currentPrice,
+                totalPriceSale: state.totalPriceSale - currentPrice,
+            };
+            localStorage.setItem('cart', JSON.stringify(newState));
+            return newState;
         },
         remove: (state, action) => {
             const result = current(state.cartProducts).filter((product) => {
@@ -50,18 +74,39 @@ const cartSlice = createSlice({
                     return product;
                 }
             });
-            state.cartProducts = result;
-            localStorage.setItem('cart', JSON.stringify(state.cartProducts));
+            const currentPrice = action.payload.Sale ? action.payload.Sale : action.payload.Price;
+            const newState = {
+                ...state,
+                cartProducts: result,
+                totalPrice: state.totalPrice - currentPrice * action.payload.NumberProduct,
+                totalPriceSale: state.totalPriceSale - currentPrice * action.payload.NumberProduct,
+            };
+            localStorage.setItem('cart', JSON.stringify(newState));
+            return newState;
+        },
+        applySale: (state, action) => {
+            const newState = {
+                ...state,
+                totalPriceSale: state.totalPrice - action.payload.Sale,
+                saleCode: action.payload,
+            };
+            localStorage.setItem('cart', JSON.stringify(newState));
+            return newState;
         },
     },
     extraReducers: (builder) => {
         builder.addCase(getCarts.fulfilled, (state, action) => {
             if (action.payload !== null) {
-                state.cartProducts = action.payload;
+                state = action.payload;
+                return {
+                    ...state,
+                    cartProducts: action.payload.cartProducts,
+                    totalPrice: action.payload.totalPrice,
+                };
             }
         });
     },
 });
 
-export const { addProductToCart, increase, decrease, remove } = cartSlice.actions;
+export const { addProductToCart, increase, decrease, remove, applySale } = cartSlice.actions;
 export default cartSlice.reducer;

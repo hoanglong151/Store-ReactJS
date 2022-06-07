@@ -6,8 +6,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Input from '../../Input/Input';
 
-function DialogOneField(props) {
-    const { open, onHandleCloseDialog, formik, edit, textTitle, placeholder } = props;
+function DialogSaleCode(props) {
+    const { open, onHandleCloseDialog, formik, edit, textTitle } = props;
     return (
         <Dialog open={open} onClose={onHandleCloseDialog}>
             <form onSubmit={formik.handleSubmit}>
@@ -18,7 +18,15 @@ function DialogOneField(props) {
                         name="name"
                         onChange={formik.handleChange}
                         value={formik.values.name}
-                        placeholder={placeholder}
+                        placeholder="Mã khuyến mãi"
+                    />
+                    <Input
+                        id="sale"
+                        name="sale"
+                        onChange={formik.handleChange}
+                        value={formik.values.sale}
+                        placeholder="Giảm giá"
+                        type="number"
                     />
                 </DialogContent>
                 <DialogActions>
@@ -30,4 +38,4 @@ function DialogOneField(props) {
     );
 }
 
-export default DialogOneField;
+export default DialogSaleCode;

@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import styles from './SaleCodes.module.scss';
+import styles from './BillStatus.module.scss';
+import DialogOneField from '~/components/Form/Dialog/DialogOneField/DialogOneField';
 import { useFormik } from 'formik';
+import { getAreas } from '~/app/reducerArea';
 import { useDispatch, useSelector } from 'react-redux';
+import TableTwoColumn from '~/components/Tables/TableTwoColumn/TableTwoColumn';
+import billStatusApi from '~/api/billStatusApi';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import saleCodesApi from '~/api/saleCodesApi';
-import { getSaleCodes } from '~/app/reducerSaleCode';
-import DialogSaleCode from '~/components/Form/Dialog/DialogSaleCode/DialogSaleCode';
-import TableSaleCode from '~/components/Tables/TableSaleCode/TableSaleCode';
 
-function SaleCodes() {
-    const [editSaleCode, setEditSaleCode] = useState({});
+function BillStatus() {
+    const [billStatus, setBillStatus] = useState([]);
+    const [editBillStatus, setEditBillStatus] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
-    const { saleCodes } = useSelector((state) => state.saleCode);
     const DeleteSwal = withReactContent(Swal);
 
     const dispatch = useDispatch();
 
-    const handleOpenDialog = (saleCode) => {
-        if (saleCode._id) {
-            setEditSaleCode(saleCode);
+    useEffect(() => {
+        const getBillStatus = async () => {
+            const billStatus = await billStatusApi.getAll();
+            setBillStatus(billStatus);
+        };
+        getBillStatus();
+    });
+
+    const handleOpenDialog = (status) => {
+        if (status._id) {
+            setEditBillStatus(status);
             setOpenEdit(true);
         } else {
             setOpenCreate(true);
@@ -33,9 +41,9 @@ function SaleCodes() {
         setOpenEdit(false);
     };
 
-    const handleDeleteSaleCode = (code) => {
+    const handleDeleteBillStatus = (status) => {
         DeleteSwal.fire({
-            title: 'Bạn muốn xóa mã khuyến mãi này?',
+            title: 'Bạn muốn xóa tình trạng này?',
             icon: 'error',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -48,22 +56,21 @@ function SaleCodes() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const result = await saleCodesApi.deleteSaleCode(code._id);
+                    const result = await billStatusApi.deleteBillStatus(status._id);
                     if (result.exist) {
                         DeleteSwal.fire({
-                            title: 'Mã Khuyến Mãi Đang Được Sử Dụng',
+                            title: 'Tình Trạng Đang Được Sử Dụng',
                             customClass: {
                                 popup: `${clsx(styles.popup)}`,
                             },
                         });
                     } else {
                         DeleteSwal.fire({
-                            title: 'Mã Khuyến Mãi Đã Được Xóa',
+                            title: 'Tình Trạng Đã Được Xóa',
                             customClass: {
                                 popup: `${clsx(styles.popup)}`,
                             },
                         });
-                        dispatch(getSaleCodes());
                     }
                 } catch (err) {
                     throw Error(err);
@@ -72,39 +79,34 @@ function SaleCodes() {
         });
     };
 
-    const objectSaleCode = () => {
-        if (editSaleCode._id) {
+    const objectBillStatus = () => {
+        if (Object.keys(editBillStatus).length !== 0) {
             return {
-                id: editSaleCode._id,
-                name: editSaleCode.Name,
-                sale: editSaleCode.Sale,
+                id: editBillStatus._id,
+                name: editBillStatus.Name,
             };
         } else {
             return {
                 name: '',
-                sale: 0,
             };
         }
     };
 
     const formik = useFormik({
         enableReinitialize: true,
-        initialValues: objectSaleCode(),
+        initialValues: objectBillStatus(),
         onSubmit: (values) => {
             const submit = async () => {
-                console.log(values);
                 try {
-                    if (editSaleCode._id) {
-                        await saleCodesApi.editSaleCode(values, editSaleCode._id);
+                    if (Object.keys(editBillStatus).length !== 0) {
+                        await billStatusApi.editBillStatus(values, editBillStatus._id);
                     } else {
-                        await saleCodesApi.addSaleCode(values);
+                        await billStatusApi.addBillStatus(values);
                     }
                     formik.setFieldValue('name', '');
-                    formik.setFieldValue('sale', 0);
                     setOpenCreate(false);
                     setOpenEdit(false);
-                    setEditSaleCode({});
-                    dispatch(getSaleCodes());
+                    setEditBillStatus({});
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -115,22 +117,24 @@ function SaleCodes() {
     return (
         <div>
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
-                Tạo mã khuyến mãi
+                Tạo tình trạng
             </button>
-            <DialogSaleCode
+            <DialogOneField
                 formik={formik}
                 open={openCreate || openEdit}
                 onHandleCloseDialog={handleCloseDialog}
-                edit={editSaleCode}
-                textTitle={['Tạo mã khuyến mãi', 'Cập nhật mã khuyến mãi']}
+                edit={editBillStatus}
+                textTitle={['Tạo tình trạng', 'Cập nhật tình trạng']}
+                placeholder="Tình trạng"
             />
-            <TableSaleCode
-                data={saleCodes}
+            <TableTwoColumn
+                data={billStatus}
                 onHandleOpenDialog={handleOpenDialog}
-                onHandleDelete={handleDeleteSaleCode}
+                title={['Tình trạng', 'Chức năng']}
+                onHandleDelete={handleDeleteBillStatus}
             />
         </div>
     );
 }
 
-export default SaleCodes;
+export default BillStatus;

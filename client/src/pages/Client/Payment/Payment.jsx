@@ -1,30 +1,162 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useFormik } from 'formik';
-import TotalPriceCart from '~/components/Layouts/Client/components/TotalPriceCart/TotalPriceCart';
+import TotalPriceCart from '~/components/TotalPriceCart/TotalPriceCart';
 import styles from './Payment.module.scss';
 import Input from '~/components/Form/Input/Input';
-import Label from '~/components/Form/Label/Label';
+import HeaderCart from '~/components/Layouts/Client/components/HeaderCart/HeaderCart';
+import Selects from '~/components/Form/Selects/Selects';
+import { useSelector } from 'react-redux';
+import billStatusApi from '~/api/billStatusApi';
 
 function Bill() {
+    const { addressStore, area, district, province, cart } = useSelector((state) => state);
+    const { addressStores } = addressStore;
+    const { areas } = area;
+    const { districts } = district;
+    const { provinces } = province;
+    const [selectMethodShip, setSelectMethodShip] = useState('Nhận tại cửa hàng');
+    const [selectArea, setSelectArea] = useState();
+    const [selectProvince, setSelectProvince] = useState();
+    const [selectDistrict, setSelectDistrict] = useState();
+    const [selectBillStatus, setSelectBillStatus] = useState({});
+    const [selectAddressStore, setSelectAddressStore] = useState();
     const navigate = useNavigate();
-    const handlePayment = () => {
-        navigate('/bill');
+
+    useEffect(() => {
+        const getBillStatus = async () => {
+            const billStatus = await billStatusApi.getAll();
+            setSelectBillStatus(billStatus[0]);
+        };
+        getBillStatus();
+    }, []);
+
+    const selectProvinces = useMemo(() => {
+        const getProvinceByArea = provinces.filter((province) => {
+            const getProvince = province.Areas.find((area) => {
+                if (area._id === selectArea?.value) {
+                    return province;
+                }
+            });
+            return getProvince;
+        });
+
+        const convertProvince = getProvinceByArea.map((value) => {
+            return {
+                value: value._id,
+                label: value.Name,
+            };
+        });
+        setSelectProvince(convertProvince[0]);
+        return convertProvince;
+    }, [selectArea]);
+
+    const selectDistricts = useMemo(() => {
+        const getDistrictsByAreaAndProvince = districts.filter((district) => {
+            const getDistrict = district.Areas.find((area) => {
+                if (area._id === selectArea?.value) {
+                    return district.Provinces.find((province) => {
+                        if (province._id === selectProvince?.value) {
+                            return district;
+                        }
+                    });
+                }
+            });
+            return getDistrict;
+        });
+
+        return getDistrictsByAreaAndProvince.map((value) => {
+            return {
+                value: value._id,
+                label: value.Name,
+            };
+        });
+    }, [selectArea, selectProvince]);
+
+    const selectAddressStores = useMemo(() => {
+        const getAddressStoresByAreaAndProvinceAndDistrict = addressStores.filter((store) => {
+            const getStore = store.Areas.find((area) => {
+                if (area._id === selectArea?.value) {
+                    return store.Provinces.find((province) => {
+                        if (province._id === selectProvince?.value) {
+                            if (selectDistrict?.value) {
+                                return store.Districts.find((district) => {
+                                    if (district._id == selectDistrict?.value) {
+                                        return store;
+                                    }
+                                });
+                            }
+                            return store;
+                        }
+                    });
+                }
+            });
+            return getStore;
+        });
+
+        return getAddressStoresByAreaAndProvinceAndDistrict.map((value) => {
+            return {
+                value: value._id,
+                label: value.Name,
+            };
+        });
+    }, [selectArea, selectProvince, selectDistrict]);
+
+    const convertSelects = useMemo(() => {
+        const newAreas = areas.map((area) => {
+            return {
+                value: area._id,
+                label: area.Name,
+            };
+        });
+        setSelectArea(newAreas[0]);
+
+        return {
+            Areas: newAreas,
+        };
+    }, [areas]);
+
+    const handleSelectMethodShip = (method) => {
+        setSelectMethodShip(method);
+    };
+
+    const handleSelectArea = (area) => {
+        setSelectArea(area);
+        setSelectDistrict(null);
+        formik.setFieldValue('area', area.value);
+    };
+
+    const handleSelectProvince = (province) => {
+        setSelectProvince(province);
+        setSelectDistrict(null);
+        formik.setFieldValue('province', province.value);
+    };
+
+    const handleSelectDistrict = (district) => {
+        setSelectDistrict(district);
+        formik.setFieldValue('district', district.value);
+    };
+
+    const handleSelectAddressStore = (address) => {
+        setSelectAddressStore(address);
+        formik.setFieldValue('address', address.value);
     };
 
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: {
             name: '',
             phone: '',
             email: '',
-            shipPayment: 'atShop',
-            area: 'Miền Nam',
-            city: 'Hồ Chí Minh',
-            ward: 'Quận/Huyện',
+            shipPayment: selectMethodShip,
+            area: selectArea?.value || '',
+            province: selectProvince?.value || '',
+            district: '',
             address: '',
             other: '',
-            exportBill: false,
+            cart: cart || {},
+            billStatus: selectBillStatus || {},
         },
         onSubmit: (values) => {
             console.log(values);
@@ -32,10 +164,11 @@ function Bill() {
     });
     return (
         <div className={clsx(styles.wrapper)}>
-            <div className={clsx(styles.paymentInfo)}>
-                <form onSubmit={formik.handleSubmit}>
+            <form onSubmit={formik.handleSubmit}>
+                <HeaderCart title="Thông Tin Đặt Hàng" link="/cart" />
+                <div className={clsx(styles.paymentInfo)}>
                     <div>
-                        <h3>Thông tin khách hàng</h3>
+                        <h3 className={clsx(styles.mb1)}>Thông tin khách hàng</h3>
                         <Input
                             id="name"
                             name="name"
@@ -43,6 +176,7 @@ function Bill() {
                             value={formik.values.name}
                             placeholder="Họ và tên (bắt buộc)"
                             errors={formik.errors.name && formik.touched.name}
+                            className={clsx(styles.mb1)}
                         />
                         <Input
                             id="phone"
@@ -50,8 +184,8 @@ function Bill() {
                             onChange={formik.handleChange}
                             value={formik.values.phone}
                             placeholder="Số điện thoại (bắt buộc)"
-                            type="number"
                             errors={formik.errors.phone && formik.touched.phone}
+                            className={clsx(styles.mb1)}
                         />
                         <Input
                             id="email"
@@ -61,45 +195,82 @@ function Bill() {
                             placeholder="Email (Vui lòng điền email để nhận hóa đơn VAT)"
                             type="email"
                             errors={formik.errors.email && formik.touched.email}
+                            className={clsx(styles.mb1)}
                         />
                     </div>
                     <div>
                         <h3>Chọn cách thức giao hàng</h3>
                         <div className={clsx(styles.shipMethod)}>
-                            <div className={clsx(styles.atShop)}>
-                                <Input
-                                    id="shipPayment"
-                                    name="shipPayment"
-                                    onChange={formik.handleChange}
-                                    value={formik.values.shipPayment}
-                                    type="radio"
-                                    errors={formik.errors.shipPayment && formik.touched.shipPayment}
-                                    className={clsx(styles.inputWidth)}
-                                />
-                                <label htmlFor="shipPayment" className={clsx(styles.textShipMethod)}>
-                                    Nhận tại cửa hàng
-                                </label>
-                            </div>
-                            <div className={clsx(styles.ship)}>
-                                <Input
-                                    id="shipPayment"
-                                    name="shipPayment"
-                                    onChange={formik.handleChange}
-                                    value={formik.values.shipPayment}
-                                    type="radio"
-                                    errors={formik.errors.shipPayment && formik.touched.shipPayment}
-                                    className={clsx(styles.inputWidth)}
-                                />
-                                <label htmlFor="shipPayment" className={clsx(styles.textShipMethod)}>
-                                    Giao hàng tận nơi
-                                </label>
-                            </div>
+                            {['Nhận tại cửa hàng', 'Giao hàng tận nơi'].map((methodShip) => (
+                                <div key={methodShip} className={clsx(styles.wrapMethod)}>
+                                    <Input
+                                        id="shipPayment"
+                                        name="shipPayment"
+                                        onChange={(formik.handleChange, () => handleSelectMethodShip(methodShip))}
+                                        value={formik.values.shipPayment}
+                                        type="radio"
+                                        checked={methodShip === selectMethodShip}
+                                        errors={formik.errors.shipPayment && formik.touched.shipPayment}
+                                        className={clsx(styles.inputWidth)}
+                                    />
+                                    <label className={clsx(styles.textShipMethod)}>{methodShip}</label>
+                                </div>
+                            ))}
                         </div>
-                        <div className={clsx(styles.wrapAddress)}></div>
+                        <div className={clsx(styles.wrapAddress)}>
+                            <div className={clsx(styles.wrapAreaCity)}>
+                                <Selects
+                                    select={selectArea}
+                                    data={convertSelects.Areas}
+                                    onChangeSelect={handleSelectArea}
+                                    className={clsx(styles.w100, styles.mb1)}
+                                />
+                                <Selects
+                                    select={selectProvince}
+                                    data={selectProvinces}
+                                    onChangeSelect={handleSelectProvince}
+                                    className={clsx(styles.w100, styles.mb1)}
+                                />
+                            </div>
+                            <Selects
+                                data={selectDistricts}
+                                select={selectDistrict}
+                                onChangeSelect={handleSelectDistrict}
+                                className={clsx(styles.mb1)}
+                                placeholder="Quận / Huyện"
+                            />
+                            {selectMethodShip === 'Nhận tại cửa hàng' ? (
+                                <Selects
+                                    data={selectAddressStores}
+                                    select={selectAddressStore}
+                                    onChangeSelect={handleSelectAddressStore}
+                                    className={clsx(styles.mb0)}
+                                    placeholder="Chọn địa chỉ cửa hàng"
+                                />
+                            ) : (
+                                <Input
+                                    id="address"
+                                    name="address"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.address}
+                                    placeholder="Số nhà, tên đường"
+                                    errors={formik.errors.address && formik.touched.address}
+                                    className={clsx(styles.mb0)}
+                                />
+                            )}
+                        </div>
+                        <Input
+                            name="other"
+                            id="other"
+                            onChange={formik.handleChange}
+                            value={formik.values.other}
+                            placeholder="Yêu cầu khác"
+                            errors={formik.errors.other && formik.touched.other}
+                        />
                     </div>
-                </form>
-            </div>
-            <TotalPriceCart onPayment={handlePayment} title="Tiếp tục" />
+                </div>
+                <TotalPriceCart title="Thanh Toán" />
+            </form>
         </div>
     );
 }

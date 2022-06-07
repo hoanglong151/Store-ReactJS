@@ -12,6 +12,7 @@ import {
     faList,
     faMobileButton,
     faSackDollar,
+    faTruck,
 } from '@fortawesome/free-solid-svg-icons';
 import { faSalesforce } from '@fortawesome/free-brands-svg-icons';
 
@@ -63,6 +64,13 @@ function Siderbar(props) {
                 >
                     <FontAwesomeIcon icon={faSalesforce} />
                     <span className={clsx(styles.titleMenu)}>Mã Khuyến Mãi</span>
+                </NavLink>
+                <NavLink
+                    to="/Admin/BillStatus"
+                    className={({ isActive }) => clsx(styles.linkMenu, { [styles.active]: isActive })}
+                >
+                    <FontAwesomeIcon icon={faTruck} />
+                    <span className={clsx(styles.titleMenu)}>Tình Trạng ĐH</span>
                 </NavLink>
                 <div className={clsx(styles.linkMenu)} onClick={handleCloseMenuArea}>
                     <div className={clsx(styles.areaText)}>

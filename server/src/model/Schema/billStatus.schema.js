@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const SaleCodes = new Schema(
+const BillStatus = new Schema(
   {
     _id: Schema.Types.ObjectId,
     Name: String,
-    Sale: Number,
   },
   {
     versionKey: false,
@@ -13,6 +12,6 @@ const SaleCodes = new Schema(
   }
 );
 
-const saleCodesModel = mongoose.model("saleCodes", SaleCodes);
+const billStatusModel = mongoose.model("billStatus", BillStatus);
 
-module.exports = saleCodesModel;
+module.exports = billStatusModel;

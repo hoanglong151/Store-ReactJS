@@ -11,7 +11,7 @@ function Header(props) {
     const [getFirms, setGetFirms] = useState([]);
     const categories = useSelector((state) => state.category.categories);
     const firms = useSelector((state) => state.firm.firms);
-    const carts = useSelector((state) => state.cart.cartProducts);
+    const { cartProducts } = useSelector((state) => state.cart);
 
     const handleGetCategory = (category) => {
         const getFirmsID = category.Products.reduce((pre, next) => {
@@ -79,7 +79,9 @@ function Header(props) {
                     </Link>
                     <Link to="/cart" className={clsx(styles.cart)}>
                         <FontAwesomeIcon icon={faCartShopping} />
-                        <span className={clsx(styles.numberCart)}>{carts?.length !== 0 ? carts?.length : ''}</span>
+                        <span className={clsx(styles.numberCart)}>
+                            {cartProducts?.length !== 0 ? cartProducts?.length : ''}
+                        </span>
                         <p className={clsx(styles.titleOther)}>Giỏ hàng</p>
                     </Link>
                 </div>

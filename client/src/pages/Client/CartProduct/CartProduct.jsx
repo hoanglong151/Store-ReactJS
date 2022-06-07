@@ -7,11 +7,12 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import CardProductCart from '~/components/Cards/CardProductCart/CardProductCart';
 import { increase, decrease, remove } from '~/app/reducerCart';
-import TotalPriceCart from '~/components/Layouts/Client/components/TotalPriceCart/TotalPriceCart';
+import TotalPriceCart from '~/components/TotalPriceCart/TotalPriceCart';
+import HeaderCart from '~/components/Layouts/Client/components/HeaderCart/HeaderCart';
 
 function CartProduct() {
     const navigate = useNavigate();
-    const cartProducts = useSelector((state) => state.cart.cartProducts);
+    const { cartProducts } = useSelector((state) => state.cart);
     const dispatch = useDispatch();
 
     const handleIncrease = (product) => {
@@ -33,14 +34,7 @@ function CartProduct() {
     };
     return (
         <div className={clsx(styles.wrapper)}>
-            <div className={clsx(styles.header)}>
-                <Link to="/" className={clsx(styles.btnBack)}>
-                    <FontAwesomeIcon icon={faChevronLeft} className={clsx(styles.iconBack)} />
-                    <span className={clsx(styles.textBack)}>Trở về</span>
-                </Link>
-                <h2 className={clsx(styles.cart)}>Giỏ hàng</h2>
-            </div>
-
+            <HeaderCart title="Giỏ Hàng" link="/" />
             {cartProducts &&
                 cartProducts.map((product) => (
                     <div key={product._id}>
@@ -52,7 +46,6 @@ function CartProduct() {
                         />
                     </div>
                 ))}
-
             <TotalPriceCart onPayment={handlePayment} title="Tiến hành đặt hàng" />
         </div>
     );
