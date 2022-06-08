@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TableBill from '~/components/Tables/TableBill/TableBill';
+import billsApi from '~/api/billsApi';
 
 function Bills() {
+    const [bills, setBills] = useState([]);
+    useEffect(() => {
+        const getAllBills = async () => {
+            const getBill = await billsApi.getAll();
+            setBills(getBill);
+        };
+        getAllBills();
+    }, []);
     return (
         <div>
-            <TableBill />
+            <TableBill rows={bills} />
         </div>
     );
 }

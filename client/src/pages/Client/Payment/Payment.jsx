@@ -7,8 +7,12 @@ import styles from './Payment.module.scss';
 import Input from '~/components/Form/Input/Input';
 import HeaderCart from '~/components/Layouts/Client/components/HeaderCart/HeaderCart';
 import Selects from '~/components/Form/Selects/Selects';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import billStatusApi from '~/api/billStatusApi';
+import billsApi from '~/api/billsApi';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { emptyCart } from '~/app/reducerCart';
 
 function Bill() {
     const { addressStore, area, district, province, cart } = useSelector((state) => state);
@@ -22,7 +26,14 @@ function Bill() {
     const [selectDistrict, setSelectDistrict] = useState();
     const [selectBillStatus, setSelectBillStatus] = useState({});
     const [selectAddressStore, setSelectAddressStore] = useState();
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [address, setAddress] = useState('');
+    const [other, setOther] = useState('');
+    const SuccessSwal = withReactContent(Swal);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const getBillStatus = async () => {
@@ -119,6 +130,8 @@ function Bill() {
 
     const handleSelectMethodShip = (method) => {
         setSelectMethodShip(method);
+        setSelectDistrict(null);
+        setSelectAddressStore(null);
     };
 
     const handleSelectArea = (area) => {
@@ -135,33 +148,74 @@ function Bill() {
 
     const handleSelectDistrict = (district) => {
         setSelectDistrict(district);
+        setSelectAddressStore(null);
         formik.setFieldValue('district', district.value);
     };
 
     const handleSelectAddressStore = (address) => {
         setSelectAddressStore(address);
-        formik.setFieldValue('address', address.value);
+        formik.setFieldValue('addressStore', address.value);
+    };
+
+    const handleSetName = (e) => {
+        setName(e.target.value);
+        formik.setFieldValue('name', e.target.value);
+    };
+    const handleSetPhone = (e) => {
+        setPhone(e.target.value);
+        formik.setFieldValue('phone', e.target.value);
+    };
+    const handleSetEmail = (e) => {
+        setEmail(e.target.value);
+        formik.setFieldValue('email', e.target.value);
+    };
+    const handleSetAddress = (e) => {
+        setAddress(e.target.value);
+        formik.setFieldValue('address', e.target.value);
+    };
+    const handleSetOther = (e) => {
+        setOther(e.target.value);
+        formik.setFieldValue('other', e.target.value);
     };
 
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            name: '',
-            phone: '',
-            email: '',
+            name: name,
+            phone: phone,
+            email: email,
             shipPayment: selectMethodShip,
             area: selectArea?.value || '',
             province: selectProvince?.value || '',
-            district: '',
-            address: '',
-            other: '',
+            district: selectDistrict?.value || '',
+            addressStore: selectAddressStore?.value || '',
+            address: address,
+            other: other,
             cart: cart || {},
             billStatus: selectBillStatus || {},
         },
         onSubmit: (values) => {
-            console.log(values);
+            const submit = async () => {
+                const result = await billsApi.paymentBill(values);
+                if (result) {
+                    SuccessSwal.fire({
+                        icon: 'success',
+                        title: 'Đặt Hàng Thành Công',
+                        text: 'Đơn Hàng Của Bạn Đang Chờ Xử Lý. Chúng Tôi Sẽ Liên Hệ Với Bạn Sớm Nhất',
+                        confirmButtonText: 'OK',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            localStorage.setItem('cart', null);
+                            dispatch(emptyCart());
+                            navigate('/');
+                        }
+                    });
+                }
+            };
+            submit();
         },
     });
+
     return (
         <div className={clsx(styles.wrapper)}>
             <form onSubmit={formik.handleSubmit}>
@@ -172,7 +226,7 @@ function Bill() {
                         <Input
                             id="name"
                             name="name"
-                            onChange={formik.handleChange}
+                            onChange={handleSetName}
                             value={formik.values.name}
                             placeholder="Họ và tên (bắt buộc)"
                             errors={formik.errors.name && formik.touched.name}
@@ -181,7 +235,7 @@ function Bill() {
                         <Input
                             id="phone"
                             name="phone"
-                            onChange={formik.handleChange}
+                            onChange={handleSetPhone}
                             value={formik.values.phone}
                             placeholder="Số điện thoại (bắt buộc)"
                             errors={formik.errors.phone && formik.touched.phone}
@@ -190,7 +244,7 @@ function Bill() {
                         <Input
                             id="email"
                             name="email"
-                            onChange={formik.handleChange}
+                            onChange={handleSetEmail}
                             value={formik.values.email}
                             placeholder="Email (Vui lòng điền email để nhận hóa đơn VAT)"
                             type="email"
@@ -251,7 +305,7 @@ function Bill() {
                                 <Input
                                     id="address"
                                     name="address"
-                                    onChange={formik.handleChange}
+                                    onChange={handleSetAddress}
                                     value={formik.values.address}
                                     placeholder="Số nhà, tên đường"
                                     errors={formik.errors.address && formik.touched.address}
@@ -262,7 +316,7 @@ function Bill() {
                         <Input
                             name="other"
                             id="other"
-                            onChange={formik.handleChange}
+                            onChange={handleSetOther}
                             value={formik.values.other}
                             placeholder="Yêu cầu khác"
                             errors={formik.errors.other && formik.touched.other}

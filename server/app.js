@@ -23,6 +23,7 @@ const provinces = require("./src/routes/provinces.route");
 const districts = require("./src/routes/districts.route");
 const saleCodes = require("./src/routes/saleCodes.route");
 const addressStores = require("./src/routes/addressStores.route");
+const bills = require("./src/routes/bills.route");
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -42,6 +43,7 @@ app.use("/provinces", provinces);
 app.use("/districts", districts);
 app.use("/saleCodes", saleCodes);
 app.use("/addressStores", addressStores);
+app.use("/bills", bills);
 
 app.get("/", (req, res) => {
   res.send("Hello World");

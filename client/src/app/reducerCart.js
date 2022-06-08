@@ -85,10 +85,22 @@ const cartSlice = createSlice({
             return newState;
         },
         applySale: (state, action) => {
+            if (state.totalPrice > action.payload.Sale) {
+                const newState = {
+                    ...state,
+                    totalPriceSale: state.totalPrice - action.payload.Sale,
+                    saleCode: action.payload,
+                };
+                localStorage.setItem('cart', JSON.stringify(newState));
+                return newState;
+            }
+        },
+        emptyCart: () => {
             const newState = {
-                ...state,
-                totalPriceSale: state.totalPrice - action.payload.Sale,
-                saleCode: action.payload,
+                cartProducts: [],
+                totalPrice: 0,
+                totalPriceSale: 0,
+                saleCode: {},
             };
             localStorage.setItem('cart', JSON.stringify(newState));
             return newState;
@@ -108,5 +120,5 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addProductToCart, increase, decrease, remove, applySale } = cartSlice.actions;
+export const { addProductToCart, increase, decrease, remove, applySale, emptyCart } = cartSlice.actions;
 export default cartSlice.reducer;
