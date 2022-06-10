@@ -9,6 +9,7 @@ const Bills = new Schema(
     Email: String,
     Bill: [
       {
+        BillID: Schema.Types.ObjectId,
         ShipPayment: String,
         Areas: {
           type: Schema.Types.ObjectId,

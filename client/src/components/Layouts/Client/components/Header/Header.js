@@ -73,7 +73,7 @@ function Header(props) {
                     <input className={clsx(styles.inputSearch)} placeholder="Bạn cần tìm gì ?" />
                 </div>
                 <div className={clsx(styles.other)}>
-                    <Link to="/" className={clsx(styles.truck)}>
+                    <Link to="/findBill" className={clsx(styles.truck)}>
                         <FontAwesomeIcon icon={faTruckFast} />
                         <p className={clsx(styles.titleOther)}>Tra cứu đơn hàng</p>
                     </Link>

@@ -7,6 +7,12 @@ const billsApi = {
     getAll: () => {
         return axiosClient.get('/bills');
     },
+    updateBill: (data) => {
+        return axiosClient.patch('/bills/updateBill', data);
+    },
+    findBill: (data) => {
+        return axiosClient.post('/bills/findBill', data);
+    },
 };
 
 export default billsApi;

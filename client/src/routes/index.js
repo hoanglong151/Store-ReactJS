@@ -5,6 +5,7 @@ import UserProductsCategory from '~/pages/Client/ProductsCategory/ProductsCatego
 import UserProductsCategoryFirm from '~/pages/Client/ProductsCategoryFirm/ProductsCategoryFirm';
 import UserCartProduct from '~/pages/Client/CartProduct/CartProduct';
 import UserPayment from '~/pages/Client/Payment/Payment';
+import UserFindBill from '~/pages/Client/FindBill/FindBill';
 
 // Private Routers
 import AdminProducts from '~/pages/Admin/Products/Products';
@@ -22,6 +23,7 @@ import AdminDistricts from '~/pages/Admin/Districts/Districts';
 import AdminSaleCodes from '~/pages/Admin/SaleCodes/SaleCodes';
 import AdminAddressStores from '~/pages/Admin/AddressStores/AddressStores';
 import AdminBillStatus from '~/pages/Admin/BillStatus/BillStatus';
+import AdminBillDetail from '~/pages/Admin/Bills/DetailBill/DetailBill';
 
 // Layout
 import NoSidebar from '~/components/Layouts/Client/NoSidebar';
@@ -34,6 +36,7 @@ const publicRoutes = [
     { path: 'firm/:cateID/:firmID', component: UserProductsCategoryFirm, layout: NoSidebar },
     { path: 'cart', component: UserCartProduct, layout: CartLayout },
     { path: 'bill', component: UserPayment, layout: CartLayout },
+    { path: 'findBill', component: UserFindBill, layout: CartLayout },
 ];
 
 const privateRoutes = [
@@ -52,6 +55,7 @@ const privateRoutes = [
     { path: 'Admin/SaleCodes', component: AdminSaleCodes },
     { path: 'Admin/AddressStores', component: AdminAddressStores },
     { path: 'Admin/BillStatus', component: AdminBillStatus },
+    { path: 'Admin/DetailBill/:customerID/:billID', component: AdminBillDetail },
 ];
 
 export { publicRoutes, privateRoutes };

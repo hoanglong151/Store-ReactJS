@@ -1,0 +1,17 @@
+.btn {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-admin);
+    margin: 1rem 0.5rem;
+    color: var(--white);
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--primary-admin-hover);
+    }
+}
+
+.numberBill {
+    color: var(--main-color);
+    font-weight: 600;
+}
