@@ -8,13 +8,14 @@ import { getFirms } from '~/app/reducerFirm';
 import { getCarts } from '~/app/reducerCart';
 import { getAreas } from '~/app/reducerArea';
 import { getProvinces } from './app/reducerProvince';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from '~/routes';
 import { DefaultLayout } from '~/components/Layouts/Admin';
 import { DefaultLayout as DefaultLayoutClient } from '~/components/Layouts/Client';
 import { getDistricts } from './app/reducerDistrict';
 import { getSaleCodes } from './app/reducerSaleCode';
 import { getAddressStores } from './app/reducerAddressStore';
+import Login from './pages/Admin/Authentication/Login/Login';
 
 function App() {
     const dispatch = useDispatch();
@@ -108,20 +109,22 @@ function App() {
                     })}
 
                     {privateRoutes.map((route, index) => {
+                        const checkLogin = sessionStorage.getItem('tokenUser');
                         let LayoutAdmin = DefaultLayout;
                         const Page = route.component;
 
-                        // if (route.layout) {
-                        //     LayoutUser = route.layout;
-                        // }
-
+                        if (route.layout) {
+                            LayoutAdmin = route.layout;
+                        } else if (route.layout === null) {
+                            LayoutAdmin = Fragment;
+                        }
                         return (
                             <Route
                                 key={index}
                                 path={route.path}
                                 element={
                                     <LayoutAdmin>
-                                        <Page />
+                                        <Page auth={checkLogin} />
                                     </LayoutAdmin>
                                 }
                             />

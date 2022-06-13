@@ -24,6 +24,7 @@ import AdminSaleCodes from '~/pages/Admin/SaleCodes/SaleCodes';
 import AdminAddressStores from '~/pages/Admin/AddressStores/AddressStores';
 import AdminBillStatus from '~/pages/Admin/BillStatus/BillStatus';
 import AdminBillDetail from '~/pages/Admin/Bills/DetailBill/DetailBill';
+import AdminLogin from '~/pages/Admin/Authentication/Login/Login';
 
 // Layout
 import NoSidebar from '~/components/Layouts/Client/NoSidebar';
@@ -56,6 +57,7 @@ const privateRoutes = [
     { path: 'Admin/AddressStores', component: AdminAddressStores },
     { path: 'Admin/BillStatus', component: AdminBillStatus },
     { path: 'Admin/DetailBill/:customerID/:billID', component: AdminBillDetail },
+    { path: 'Admin/Login', component: AdminLogin, layout: null },
 ];
 
 export { publicRoutes, privateRoutes };

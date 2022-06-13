@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const firmsModel = require("../model/Schema/firms.schema");
+const jwt = require("jsonwebtoken");
 
 router.get("/", (req, res) => {
   firmsModel.find({}, (err, firms) => {
@@ -10,16 +11,22 @@ router.get("/", (req, res) => {
 });
 
 router.post("/addFirm", (req, res) => {
-  const id = new mongoose.Types.ObjectId().toString();
-  const firm = {
-    _id: id,
-    Name: req.body.name,
-  };
-  firmsModel.create(firm, (err, data) => {
+  const token = req.headers.authorization.split(" ");
+  jwt.verify(token[1], "hoanglong", (err, info) => {
     if (err) {
-      return res.status(404);
+      res.status(401);
     }
-    res.send(data);
+    const id = new mongoose.Types.ObjectId().toString();
+    const firm = {
+      _id: id,
+      Name: req.body.name,
+    };
+    firmsModel.create(firm, (err, data) => {
+      if (err) {
+        return res.status(404);
+      }
+      res.send(data);
+    });
   });
 });
 

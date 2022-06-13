@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { getProducts } from '~/app/reducerProduct';
 import { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -9,6 +10,7 @@ import styles from './Products.module.scss';
 function Products() {
     const { products } = useSelector((state) => state.product);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(getProducts());

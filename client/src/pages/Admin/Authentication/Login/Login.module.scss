@@ -1,0 +1,63 @@
+.wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5)),
+        url('../../../../assets/images/Login.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.formLogin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 1rem;
+}
+
+.title {
+    margin-bottom: 2rem;
+    color: var(--white);
+}
+
+.wrapInput {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.input {
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.errorMessage {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: var(--main-color);
+    font-size: 1.4rem;
+    padding-top: 0.5rem;
+}
+
+.btn {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.15s linear;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 1);
+        cursor: pointer;
+    }
+}

@@ -102,7 +102,7 @@ function Firms() {
                     setOpenPopupEdit(false);
                     dispatch(getFirms());
                 } catch (err) {
-                    alert('Error: ', Error);
+                    throw err;
                 }
             };
             submit();

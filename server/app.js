@@ -24,6 +24,7 @@ const districts = require("./src/routes/districts.route");
 const saleCodes = require("./src/routes/saleCodes.route");
 const addressStores = require("./src/routes/addressStores.route");
 const bills = require("./src/routes/bills.route");
+const authentication = require("./src/routes/authentication.route");
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -44,6 +45,7 @@ app.use("/districts", districts);
 app.use("/saleCodes", saleCodes);
 app.use("/addressStores", addressStores);
 app.use("/bills", bills);
+app.use("/auth", authentication);
 
 app.get("/", (req, res) => {
   res.send("Hello World");
