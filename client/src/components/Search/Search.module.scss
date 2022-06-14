@@ -1,0 +1,54 @@
+.search,
+.searchProducts {
+    width: 35rem;
+}
+
+.search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    padding: 0 1rem;
+    width: 35rem;
+    margin: 0 8px;
+}
+
+.remove,
+.spinner {
+    position: absolute;
+    right: 0;
+    margin: 0 1rem;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.spinner {
+    animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.iconSearch {
+    position: absolute;
+    left: 0;
+    margin: 0 1rem;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.inputSearch {
+    flex: 1;
+    padding: 1rem 1rem 1rem 3rem;
+}

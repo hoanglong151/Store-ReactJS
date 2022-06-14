@@ -57,7 +57,6 @@ const privateRoutes = [
     { path: 'Admin/AddressStores', component: AdminAddressStores },
     { path: 'Admin/BillStatus', component: AdminBillStatus },
     { path: 'Admin/DetailBill/:customerID/:billID', component: AdminBillDetail },
-    { path: 'Admin/Login', component: AdminLogin, layout: null },
 ];
 
 export { publicRoutes, privateRoutes };

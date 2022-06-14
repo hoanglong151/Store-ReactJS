@@ -27,6 +27,7 @@ function Login() {
                     alert(result.Invalid);
                 } else {
                     sessionStorage.setItem('accessToken', result.token);
+                    navigate('/Admin');
                 }
             };
             submit();

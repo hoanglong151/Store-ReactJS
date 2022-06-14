@@ -23,4 +23,13 @@ router.post("/login", (req, res) => {
   });
 });
 
+router.get("/validateToken", function (req, res) {
+  const token = req.headers.authorization.split(" ");
+  jwt.verify(token[1], "hoanglong", (err, info) => {
+    if (err) {
+      res.send({ token: "Changed Token" });
+    }
+  });
+});
+
 module.exports = router;

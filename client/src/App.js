@@ -16,6 +16,7 @@ import { getDistricts } from './app/reducerDistrict';
 import { getSaleCodes } from './app/reducerSaleCode';
 import { getAddressStores } from './app/reducerAddressStore';
 import Login from './pages/Admin/Authentication/Login/Login';
+import PrivateRoutes from './routes/PrivateRoutes';
 
 function App() {
     const dispatch = useDispatch();
@@ -107,9 +108,7 @@ function App() {
                             />
                         );
                     })}
-
                     {privateRoutes.map((route, index) => {
-                        const checkLogin = sessionStorage.getItem('tokenUser');
                         let LayoutAdmin = DefaultLayout;
                         const Page = route.component;
 
@@ -123,13 +122,16 @@ function App() {
                                 key={index}
                                 path={route.path}
                                 element={
-                                    <LayoutAdmin>
-                                        <Page auth={checkLogin} />
-                                    </LayoutAdmin>
+                                    <PrivateRoutes>
+                                        <LayoutAdmin>
+                                            <Page />
+                                        </LayoutAdmin>
+                                    </PrivateRoutes>
                                 }
                             />
                         );
                     })}
+                    <Route path="/Admin/Login" element={<Login />} />
                 </Routes>
             </BrowserRouter>
         </div>

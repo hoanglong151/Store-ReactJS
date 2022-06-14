@@ -258,4 +258,11 @@ router.delete("/deleteProduct/:id", async (req, res) => {
   }
 });
 
+router.get("/searchProduct/", async (req, res) => {
+  const result = await productsModel
+    .find({ Name: { $regex: req.query.q, $options: "i" } })
+    .exec();
+  res.send(result);
+});
+
 module.exports = router;

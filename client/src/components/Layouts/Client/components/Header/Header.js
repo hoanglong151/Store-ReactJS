@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './Header.module.scss';
-import { faCartShopping, faChevronRight, faMagnifyingGlass, faTruckFast } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faChevronRight, faTruckFast } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import SearchProduct from '~/components/Search/Search';
 
 function Header(props) {
     const { openButtonCategory } = props;
@@ -68,10 +69,7 @@ function Header(props) {
                     </div>
                 )}
 
-                <div className={clsx(styles.search)}>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                    <input className={clsx(styles.inputSearch)} placeholder="Bạn cần tìm gì ?" />
-                </div>
+                <SearchProduct />
                 <div className={clsx(styles.other)}>
                     <Link to="/findBill" className={clsx(styles.truck)}>
                         <FontAwesomeIcon icon={faTruckFast} />

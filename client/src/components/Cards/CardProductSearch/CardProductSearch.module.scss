@@ -1,0 +1,37 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem 1rem;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #eee;
+    }
+}
+.img {
+    width: 6rem;
+    height: 6rem;
+    object-fit: cover;
+}
+
+.wrapperInfo {
+    margin-left: 1rem;
+}
+
+.nameProduct {
+    font-size: 1.4rem;
+    padding-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.newPrice {
+    font-weight: 600;
+    color: var(--main-color);
+}
+
+.oldPrice {
+    text-decoration: line-through;
+    font-size: 1.3rem;
+    margin-left: 1rem;
+    color: #bbb;
+}
