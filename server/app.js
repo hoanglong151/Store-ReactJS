@@ -5,8 +5,8 @@ const helmet = require("helmet");
 const app = express();
 const port = 3001;
 const morgan = require("morgan");
+require("dotenv").config({ path: __dirname + "\\.env" });
 require("./src/model/connectFirebase.model");
-require("dotenv").config({ path: __dirname + "/./.env" });
 
 app.use(helmet());
 app.use(cors());

@@ -7,9 +7,9 @@ function PrivateRoutes({ children }) {
     const checkLogin = sessionStorage.getItem('accessToken');
     useEffect(() => {
         const validation = async () => {
-            const result = await authenticationApi.validateToken(checkLogin);
+            const result = await authenticationApi.validateToken();
             if (result.token) {
-                sessionStorage.setItem('accessToken', null);
+                sessionStorage.removeItem('accessToken');
                 navigate('/Admin/Login');
             }
         };

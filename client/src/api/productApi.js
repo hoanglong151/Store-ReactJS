@@ -14,7 +14,9 @@ const productsApi = {
         return axiosClient.delete(`/products/deleteProduct/${data}`);
     },
     searchProduct: (data) => {
-        return axiosClient.get(`/products/searchProduct?q=${encodeURIComponent(data)}`);
+        return axiosClient.get(`/products/searchProduct?q=${encodeURIComponent(data)}`, {
+            headers: { Authorization: null },
+        });
     },
 };
 

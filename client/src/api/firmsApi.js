@@ -5,9 +5,7 @@ const firmsApi = {
         return axiosClient.get('/firms');
     },
     addFirm: (data) => {
-        return axiosClient.post('/firms/addFirm', data, {
-            headers: { Authorization: 'Bearer ' + sessionStorage.getItem('accessToken') },
-        });
+        return axiosClient.post('/firms/addFirm', data);
     },
     editFirm: (data, id) => {
         return axiosClient.patch(`/firms/editFirm/${id}`, data);

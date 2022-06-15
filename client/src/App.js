@@ -26,58 +26,42 @@ function App() {
             await dispatch(getProducts());
         };
         getProduct();
-    }, []);
 
-    useEffect(() => {
         const getCategory = async () => {
             await dispatch(getCategories());
         };
         getCategory();
-    }, []);
 
-    useEffect(() => {
         const getFirm = async () => {
             await dispatch(getFirms());
         };
         getFirm();
-    }, []);
 
-    useEffect(() => {
         const getArea = async () => {
             await dispatch(getAreas());
         };
         getArea();
-    }, []);
 
-    useEffect(() => {
         const getProvince = async () => {
             await dispatch(getProvinces());
         };
         getProvince();
-    }, []);
 
-    useEffect(() => {
         const getDistrict = async () => {
             await dispatch(getDistricts());
         };
         getDistrict();
-    }, []);
 
-    useEffect(() => {
         const getSaleCode = async () => {
             await dispatch(getSaleCodes());
         };
         getSaleCode();
-    }, []);
 
-    useEffect(() => {
         const getAddressStore = async () => {
             await dispatch(getAddressStores());
         };
         getAddressStore();
-    }, []);
 
-    useEffect(() => {
         const getCart = async () => {
             await dispatch(getCarts());
         };
