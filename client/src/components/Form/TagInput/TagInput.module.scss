@@ -1,0 +1,33 @@
+.tags {
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.2rem);
+    border-radius: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    display: block;
+    grid-column: 1/3;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #ccc;
+    padding: 0.4rem;
+    border-radius: 4px;
+    margin: 0.2rem;
+}
+
+.remove {
+    padding: 0 0.5rem;
+    margin: 0 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #fff;
+    }
+}
+
+.error {
+    border: 1px solid #cc0033;
+}

@@ -33,6 +33,7 @@ function EditProduct() {
     useEffect(() => {
         const getProduct = product.products.find((product) => product._id === id);
         if (getProduct !== undefined) {
+            console.log(getProduct);
             const mapCategories = getProduct.Category_ID.map((category) => category._id);
             const mapCategoriesProduct = getProduct.Category_ID.map((category) => ({
                 value: category._id,
@@ -94,15 +95,17 @@ function EditProduct() {
             category_Id: select,
             firm_Id: productEdit.Firm_ID?.value,
             types: {
-                description: '',
+                color: '',
+                name: '',
                 price: 0,
                 sale: 0,
                 amount: 0,
+                sold: 0,
             },
             createDate: productEdit?.CreateDate ? productEdit.CreateDate : '',
             updateDate: productEdit?.UpdateDate ? productEdit.UpdateDate : getNowDate,
         },
-        validationSchema: validationSchema,
+        // validationSchema: validationSchema,
         onSubmit: (values) => {
             const submit = async () => {
                 console.log(values);
@@ -129,16 +132,20 @@ function EditProduct() {
     });
 
     const handleAddType = () => {
-        if (
-            formik.values.types.description !== '' &&
-            formik.values.types.price !== 0 &&
-            formik.values.types.amount !== 0
-        ) {
-            const type = { ...formik.values.types };
+        if (formik.values.types.name !== '' && formik.values.types.price !== '' && formik.values.types.amount !== 0) {
+            const type = {
+                Color: formik.values.types.color,
+                Name: formik.values.types.name,
+                Price: formik.values.types.price,
+                Sale: formik.values.types.sale,
+                Amount: formik.values.types.amount,
+                Sold: 0,
+            };
             setTypesProduct([...typesProduct, type]);
             formik.values.types.description = '';
-            formik.values.types.price = 0;
-            formik.values.types.sale = 0;
+            formik.values.types.color = '';
+            formik.values.types.price = formik.values.types.price;
+            formik.values.types.sale = formik.values.types.sale;
             formik.values.types.amount = 0;
         }
     };

@@ -13,7 +13,9 @@ function CardProductCart(props) {
             </button>
             <img className={clsx(styles.image)} src={product.Image[0]} />
             <div className={clsx(styles.infoProduct)}>
-                <h3 className={clsx(styles.nameProduct)}>{product.Name}</h3>
+                <h3 className={clsx(styles.nameProduct)}>
+                    {product.Name + ` (${product.Description}${product.Color && ' - ' + product.Color})`}
+                </h3>
                 <div className={clsx(styles.priceProduct)}>
                     {product.Sale !== 0 ? (
                         <div>

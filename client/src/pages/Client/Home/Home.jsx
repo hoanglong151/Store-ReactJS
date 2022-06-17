@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import styles from './Home.module.scss';
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ function Home() {
                         <FontAwesomeIcon icon={faAngleRight} className={clsx(styles.arrowShowAll)} />
                     </Link>
                 </div>
-                <SliderCard slideShow={5} slideScroll={5} products={product.products} />
+                <SliderCard slideShow={5} slideScroll={5} product={product.products} />
             </div>
             <div className={clsx(styles.sellProducts)}>
                 <div className={clsx(styles.header)}>
@@ -31,7 +31,7 @@ function Home() {
                         <FontAwesomeIcon icon={faAngleRight} className={clsx(styles.arrowShowAll)} />
                     </Link>
                 </div>
-                <SliderCard slideShow={5} slideScroll={5} products={product.products} />
+                <SliderCard slideShow={5} slideScroll={5} product={product.products} />
             </div>
             <div className={clsx(styles.products)}>
                 <div className={clsx(styles.header)}>

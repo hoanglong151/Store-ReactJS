@@ -36,8 +36,8 @@ function CartProduct() {
         <div className={clsx(styles.wrapper)}>
             <HeaderCart title="Giỏ Hàng" link="/" />
             {cartProducts &&
-                cartProducts.map((product) => (
-                    <div key={product._id}>
+                cartProducts.map((product, index) => (
+                    <div key={index}>
                         <CardProductCart
                             product={product}
                             onIncrease={handleIncrease}

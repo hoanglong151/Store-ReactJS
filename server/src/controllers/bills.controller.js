@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
 const billsModel = require("../model/Schema/bills.schema");
+const productsModel = require("../model/Schema/products.schema");
 
 const findBill = (req, res) => {
   if (req.body.phone !== "" && req.body.billID !== "") {
@@ -47,6 +47,30 @@ const updateBill = (req, res) => {
 };
 
 const paymentBill = (req, res) => {
+  req.body.cart.cartProducts.map((product) => {
+    productsModel.findOne(
+      {
+        _id: product._id,
+      },
+      (err, result) => {
+        const data = result.TypesProduct.find((type) => {
+          if (
+            type.color === product.Color &&
+            type.description === product.Description &&
+            type.price === product.Price &&
+            type.sale === product.Sale
+          ) {
+            return type;
+          }
+        });
+        data.amount -= product.NumberProduct;
+        data.sold += product.NumberProduct;
+        productsModel.findByIdAndUpdate(product._id, result, (err, data) => {
+          if (err) return err;
+        });
+      }
+    );
+  });
   billsModel.findOne(
     { Name: req.body.name, Phone: req.body.phone },
     async (err, data) => {

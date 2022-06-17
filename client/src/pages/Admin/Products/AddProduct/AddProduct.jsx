@@ -56,16 +56,18 @@ function AddProduct() {
 
     const formik = useFormik({
         initialValues: {
-            name: '',
             images: [],
             description: '',
             category_Id: [],
             firm_Id: '',
+            name: '',
             types: {
-                description: '',
+                color: '',
+                name: '',
                 price: 0,
                 sale: 0,
                 amount: 0,
+                sold: 0,
             },
             createDate: getNowDate,
             updateDate: '',
@@ -93,16 +95,13 @@ function AddProduct() {
     });
 
     const handleAddType = () => {
-        if (
-            formik.values.types.description !== '' &&
-            formik.values.types.price !== 0 &&
-            formik.values.types.amount !== 0
-        ) {
+        if (formik.values.types.name !== '' && formik.values.types.price !== 0 && formik.values.types.amount !== 0) {
             const type = { ...formik.values.types };
             setTypesProduct([...typesProduct, type]);
-            formik.values.types.description = '';
-            formik.values.types.price = 0;
-            formik.values.types.sale = 0;
+            formik.values.types.name = '';
+            formik.values.types.color = '';
+            formik.values.types.price = formik.values.types.price;
+            formik.values.types.sale = formik.values.types.sale;
             formik.values.types.amount = 0;
         }
     };
@@ -153,12 +152,11 @@ function AddProduct() {
                 />
                 <Label>Tên Sản Phẩm</Label>
                 <Input
+                    placeholder="Tên Sản Phẩm"
                     id="name"
                     name="name"
                     onChange={formik.handleChange}
                     value={formik.values.name}
-                    placeholder="Tên Sản Phẩm"
-                    errors={formik.touched.name && formik.errors.name}
                 />
                 {formik.errors.name && formik.touched.name ? <ErrorMessage>{formik.errors.name}</ErrorMessage> : null}
                 <Label>Danh Mục</Label>

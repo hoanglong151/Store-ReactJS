@@ -16,6 +16,7 @@
                 padding: 1rem;
                 color: #fff;
                 border-radius: 0.5rem;
+                cursor: pointer;
             }
         }
     }
@@ -79,4 +80,41 @@
 .typePrice {
     font-size: 1.3rem;
     letter-spacing: 1px;
+}
+
+.active {
+    border: 1px solid red;
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2rem;
+        height: 1.4rem;
+        border-bottom-right-radius: var(--border-radius);
+        background: #d70018;
+        background-image: url('../../../../assets/images/check-solid.svg');
+        background-size: 50%;
+        background-repeat: no-repeat;
+        background-position: center;
+        color: #fff;
+    }
+}
+
+.priceInfo {
+    margin: 1rem 0 2rem 0;
+}
+
+.showDescription {
+    margin-left: 1rem;
+    text-transform: capitalize;
+}
+
+.wrapperColor {
+    margin-bottom: 2rem;
+}
+
+.titleSelectColor {
+    margin: 1rem;
 }

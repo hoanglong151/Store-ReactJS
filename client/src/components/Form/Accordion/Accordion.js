@@ -33,33 +33,40 @@ export default function AccordionBasic(props) {
                     </button>
                     <div className={clsx(styles.formInput)}>
                         <Input
-                            placeholder="Loại"
-                            id="types.description"
-                            name="types.description"
+                            placeholder="Màu Sắc"
+                            id="types.color"
+                            name="types.color"
                             onChange={formik.handleChange}
-                            value={formik.values.types.description}
+                            value={formik.values.types.color}
+                        />
+                        <Input
+                            placeholder="Loại"
+                            id="types.name"
+                            name="types.name"
+                            onChange={formik.handleChange}
+                            value={formik.values.types.name}
                         />
                         <Input
                             placeholder="Giá"
-                            type="number"
                             id="types.price"
                             name="types.price"
+                            type="number"
                             onChange={formik.handleChange}
                             value={formik.values.types.price}
                         />
                         <Input
                             placeholder="Giá Khuyễn Mãi"
-                            type="number"
                             id="types.sale"
                             name="types.sale"
+                            type="number"
                             onChange={formik.handleChange}
                             value={formik.values.types.sale}
                         />
                         <Input
                             placeholder="Số Lượng"
-                            type="number"
                             id="types.amount"
                             name="types.amount"
+                            type="number"
                             onChange={formik.handleChange}
                             value={formik.values.types.amount}
                         />
@@ -69,6 +76,7 @@ export default function AccordionBasic(props) {
                         <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
+                                    <TableCell>Màu Sắc</TableCell>
                                     <TableCell>Loại</TableCell>
                                     <TableCell align="right">Giá</TableCell>
                                     <TableCell align="right">Giá Khuyến Mãi</TableCell>
@@ -80,11 +88,14 @@ export default function AccordionBasic(props) {
                                 {typesProduct.map((type, index) => (
                                     <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                         <TableCell component="th" scope="row">
-                                            {type.description}
+                                            {type.Color}
                                         </TableCell>
-                                        <TableCell align="right">{type.price} VNĐ</TableCell>
-                                        <TableCell align="right">{type.sale} VNĐ</TableCell>
-                                        <TableCell align="right">{type.amount}</TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {type.Name}
+                                        </TableCell>
+                                        <TableCell align="right">{type.Price} VNĐ</TableCell>
+                                        <TableCell align="right">{type.Sale} VNĐ</TableCell>
+                                        <TableCell align="right">{type.Amount}</TableCell>
                                         <TableCell align="right">
                                             <button
                                                 className={clsx(styles.btn)}

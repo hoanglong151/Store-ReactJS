@@ -48,8 +48,12 @@
 
 .wrapperType {
     margin: 0 -1rem;
-    cursor: pointer;
     user-select: none;
+    cursor: pointer;
+}
+
+.wrapperItem {
+    display: flex;
 }
 
 .item {
@@ -61,6 +65,7 @@
     margin: 0 1rem;
     border-radius: var(--border-radius);
     overflow: hidden;
+    cursor: pointer;
 }
 
 .typeDescription,
@@ -71,11 +76,16 @@
 .typeDescription {
     font-size: 1.5rem;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .typePrice {
     font-size: 1.3rem;
     letter-spacing: 1px;
+}
+
+.titleSelectColor {
+    margin: 1rem;
 }
 
 .active {
@@ -99,9 +109,14 @@
 }
 
 .priceInfo {
-    margin-bottom: 2rem;
+    margin: 1rem 0 2rem 0;
 }
 
 .showDescription {
     margin-left: 1rem;
+    text-transform: capitalize;
+}
+
+.wrapperColor {
+    margin-bottom: 2rem;
 }

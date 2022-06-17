@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const productsModel = require("../model/Schema/products.schema");
 const categoriesModel = require("../model/Schema/categories.schema");
 const firmsModel = require("../model/Schema/firms.schema");
+const typeProducts = require("../model/Schema/typeProducts.schema");
 const { storage } = require("../model/connectFirebase.model");
 const {
   ref,
@@ -16,7 +17,8 @@ const getProducts = async (req, res) => {
     const listProducts = await productsModel
       .find()
       .populate("Category_ID")
-      .populate("Firm_ID");
+      .populate("Firm_ID")
+      .populate("TypesProduct");
     res.send(listProducts);
   } catch (Error) {
     res.send("Toang", Error);
@@ -33,10 +35,12 @@ const addProduct = async (req, res) => {
     Description: req.body.description,
     Category_ID: req.body.category_Id.split(","),
     Firm_ID: req.body.firm_Id,
-    TypesProduct: JSON.parse(req.body.typesProduct),
+    TypesProduct: [],
     CreateDate: new Date(req.body.createDate),
     UpdateDate: "",
   };
+
+  const types = JSON.parse(req.body.typesProduct);
 
   await Promise.all(
     req.files.map(async (image, index) => {
@@ -56,7 +60,6 @@ const addProduct = async (req, res) => {
   );
 
   try {
-    const newProduct = await productsModel.create(product);
     await Promise.all(
       product.Category_ID.map(async (category, index) => {
         categoriesModel.findByIdAndUpdate(
@@ -68,13 +71,34 @@ const addProduct = async (req, res) => {
         );
       })
     );
-    await firmsModel.findByIdAndUpdate(
+
+    firmsModel.findByIdAndUpdate(
       product.Firm_ID,
       { $push: { Products: product._id } },
       (err, firm) => {
         if (err) return err;
       }
     );
+
+    await Promise.all(
+      types.map(async (type) => {
+        const idType = new mongoose.Types.ObjectId().toString();
+        const typePro = {
+          _id: idType,
+          Name: type.name,
+          Color: type.color,
+          Price: type.price,
+          Sale: type.sale,
+          Amount: type.amount,
+          Sold: type.sold,
+          Product: id,
+        };
+        product.TypesProduct.push(idType);
+        typeProducts.create(typePro);
+      })
+    );
+
+    const newProduct = await productsModel.create(product);
 
     res.send(newProduct);
   } catch (err) {
@@ -142,6 +166,51 @@ const editProduct = async (req, res) => {
       return category._id.toString();
     });
 
+    const getProduct = await typeProducts.find({
+      Product: mongoose.Types.ObjectId(req.body.id),
+    });
+
+    const convertIDType = getProduct.map((product) => {
+      return product._id.toString();
+    });
+
+    const convertTypeProduct = editProduct.TypesProduct.map((type) => {
+      if (type._id && type.Product) {
+        return type._id;
+      } else {
+        return "";
+      }
+    });
+    await Promise.all(
+      convertIDType.map((type) => {
+        if (!convertTypeProduct.includes(type)) {
+          typeProducts.findByIdAndRemove(type, (err, data) => {
+            if (err) return err;
+          });
+        }
+      })
+    );
+
+    await Promise.all(
+      editProduct.TypesProduct.map(async (type, index) => {
+        if (!type._id && !type.Product) {
+          const idType = new mongoose.Types.ObjectId().toString();
+          const typePro = {
+            _id: idType,
+            Name: type.Name,
+            Color: type.Color,
+            Price: type.Price,
+            Sale: type.Sale,
+            Amount: type.Amount,
+            Sold: type.Sold,
+            Product: req.body.id,
+          };
+          editProduct.TypesProduct.splice(index, 1, typePro);
+          typeProducts.create(typePro);
+        }
+      })
+    );
+
     const newProduct = await productsModel.findByIdAndUpdate(
       editProduct._id,
       editProduct,
@@ -207,6 +276,13 @@ const editProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const getProduct = await productsModel.findById(req.params.id);
+
+    const typeByProduct = await typeProducts.find({ Product: req.params.id });
+    typeByProduct.map((type) => {
+      typeProducts.findByIdAndDelete(type._id, (err, data) => {
+        if (err) return err;
+      });
+    });
 
     getProduct.Image.map((image, index) => {
       const fileRef = ref(storage, image);

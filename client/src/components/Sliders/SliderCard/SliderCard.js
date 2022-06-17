@@ -25,7 +25,7 @@ function SamplePrevArrow(props) {
 }
 
 function SliderCard(props) {
-    const { slideShow, slideScroll, products } = props;
+    const { slideShow, slideScroll, product } = props;
     const settings = {
         infinite: true,
         speed: 500,
@@ -36,13 +36,12 @@ function SliderCard(props) {
         nextArrow: <SampleNextArrow />,
         prevArrow: <SamplePrevArrow />,
     };
+
     return (
         <div className={clsx(styles.wrapper)}>
             <Slider {...settings}>
-                {products.map((product, index) => (
-                    <div key={product._id} className={clsx(styles.slide)}>
-                        <CardProduct product={product} />
-                    </div>
+                {product.map((product, index) => (
+                    <CardProduct key={product._id} product={product} />
                 ))}
             </Slider>
         </div>

@@ -41,6 +41,10 @@
     user-select: none;
 }
 
+.wrapperItem {
+    display: flex;
+}
+
 .item {
     display: inline-block;
     position: relative;
@@ -60,11 +64,16 @@
 .typeDescription {
     font-size: 1.5rem;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .typePrice {
     font-size: 1.3rem;
     letter-spacing: 1px;
+}
+
+.titleSelectColor {
+    margin: 1rem;
 }
 
 .active {
@@ -93,6 +102,7 @@
 
 .showDescription {
     margin-left: 1rem;
+    text-transform: capitalize;
 }
 
 .btn {

@@ -22,8 +22,10 @@ const cartSlice = createSlice({
                 Price: action.payload.typeSelect.price,
                 Sale: action.payload.typeSelect.sale,
                 Description: action.payload.typeSelect.description,
+                Color: action.payload.typeByColor.color,
                 NumberProduct: 1,
             };
+            console.log(product);
             const currentPrice = product.Sale ? product.Sale : product.Price;
             const newState = {
                 ...state,
@@ -70,7 +72,15 @@ const cartSlice = createSlice({
         },
         remove: (state, action) => {
             const result = current(state.cartProducts).filter((product) => {
+                console.log(product, action.payload);
                 if (product._id !== action.payload._id) {
+                    return product;
+                } else if (
+                    (product.Description !== action.payload.Description &&
+                        product.Price !== action.payload.Price &&
+                        product.Sale !== action.payload.Sale) ||
+                    product.Color !== action.payload.Color
+                ) {
                     return product;
                 }
             });
