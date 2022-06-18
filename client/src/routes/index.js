@@ -6,6 +6,7 @@ import UserProductsCategoryFirm from '~/pages/Client/ProductsCategoryFirm/Produc
 import UserCartProduct from '~/pages/Client/CartProduct/CartProduct';
 import UserPayment from '~/pages/Client/Payment/Payment';
 import UserFindBill from '~/pages/Client/FindBill/FindBill';
+import UserProducts from '~/pages/Client/Products';
 
 // Private Routers
 import AdminProducts from '~/pages/Admin/Products/Products';
@@ -24,7 +25,6 @@ import AdminSaleCodes from '~/pages/Admin/SaleCodes/SaleCodes';
 import AdminAddressStores from '~/pages/Admin/AddressStores/AddressStores';
 import AdminBillStatus from '~/pages/Admin/BillStatus/BillStatus';
 import AdminBillDetail from '~/pages/Admin/Bills/DetailBill/DetailBill';
-import AdminLogin from '~/pages/Admin/Authentication/Login/Login';
 
 // Layout
 import NoSidebar from '~/components/Layouts/Client/NoSidebar';
@@ -32,7 +32,8 @@ import CartLayout from '~/components/Layouts/Client/CartLayout/CartLayout';
 
 const publicRoutes = [
     { path: '/', component: UserHome },
-    { path: 'product/detail/:id', component: UserProductDetail, layout: NoSidebar },
+    { path: 'product/detail', component: UserProductDetail, layout: NoSidebar },
+    { path: 'products', component: UserProducts, layout: NoSidebar },
     { path: 'category/:cateID', component: UserProductsCategory, layout: NoSidebar },
     { path: 'firm/:cateID/:firmID', component: UserProductsCategoryFirm, layout: NoSidebar },
     { path: 'cart', component: UserCartProduct, layout: CartLayout },

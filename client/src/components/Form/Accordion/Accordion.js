@@ -85,6 +85,7 @@ export default function AccordionBasic(props) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
+                                {console.log(typesProduct)}
                                 {typesProduct.map((type, index) => (
                                     <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                         <TableCell component="th" scope="row">

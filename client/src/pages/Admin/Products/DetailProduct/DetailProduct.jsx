@@ -65,8 +65,9 @@ function DetailProduct() {
                                     type: [
                                         ...pre[getTypeByColorIndex].type,
                                         {
+                                            _id: next._id,
                                             Name: next.Name,
-                                            Price: next.price,
+                                            Price: next.Price,
                                             Sale: next.Sale,
                                             Amount: next.Amount,
                                             Sold: next.Sold,
@@ -81,6 +82,7 @@ function DetailProduct() {
                             Color: next.Color,
                             type: [
                                 {
+                                    _id: next._id,
                                     Name: next.Name,
                                     Price: next.Price,
                                     Sale: next.Sale,
@@ -95,6 +97,7 @@ function DetailProduct() {
                         Color: next.Color,
                         type: [
                             {
+                                _id: next._id,
                                 Name: next.Name,
                                 Price: next.Price,
                                 Sale: next.Sale,
@@ -150,14 +153,15 @@ function DetailProduct() {
                 <div className={clsx(styles.wrapperType)}>
                     <div className={clsx(styles.wrapperItem)}>
                         {typeByColor.type &&
-                            typeByColor.type.map((item, index) => {
+                            typeByColor?.type.map((item, index) => {
                                 return (
                                     <div key={index}>
                                         <div
                                             className={clsx(styles.item, {
                                                 [styles.active]: item.Name === typeSelect.Name,
+                                                [styles.soldOut]: item.Amount <= 0,
                                             })}
-                                            onClick={() => handleSelectType(item)}
+                                            onClick={item.Amount <= 0 ? undefined : () => handleSelectType(item)}
                                         >
                                             <p className={clsx(styles.typeDescription)}>{item.Name}</p>
                                             <p className={clsx(styles.typePrice)}>

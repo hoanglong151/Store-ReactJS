@@ -1,5 +1,6 @@
 const billsModel = require("../model/Schema/bills.schema");
-const productsModel = require("../model/Schema/products.schema");
+const typeProductsModel = require("../model/Schema/typeProducts.schema");
+const mongoose = require("mongoose");
 
 const findBill = (req, res) => {
   if (req.body.phone !== "" && req.body.billID !== "") {
@@ -48,101 +49,97 @@ const updateBill = (req, res) => {
 
 const paymentBill = (req, res) => {
   req.body.cart.cartProducts.map((product) => {
-    productsModel.findOne(
-      {
-        _id: product._id,
-      },
-      (err, result) => {
-        const data = result.TypesProduct.find((type) => {
-          if (
-            type.color === product.Color &&
-            type.description === product.Description &&
-            type.price === product.Price &&
-            type.sale === product.Sale
-          ) {
-            return type;
-          }
-        });
-        data.amount -= product.NumberProduct;
-        data.sold += product.NumberProduct;
-        productsModel.findByIdAndUpdate(product._id, result, (err, data) => {
-          if (err) return err;
-        });
-      }
-    );
-  });
-  billsModel.findOne(
-    { Name: req.body.name, Phone: req.body.phone },
-    async (err, data) => {
-      const BillID = new mongoose.Types.ObjectId().toString();
-      if (data === null) {
-        const id = new mongoose.Types.ObjectId().toString();
-        const bill = {
-          _id: id,
-          Name: req.body.name,
-          Phone: req.body.phone,
-          Email: req.body.email,
-          Bill: [
-            {
-              BillID: BillID,
-              ShipPayment: req.body.shipPayment,
-              Areas: req.body.area,
-              Provinces: req.body.province,
-              Districts: req.body.district,
-              Other: req.body.other,
-              Cart: req.body.cart,
-              BillStatus: req.body.billStatus,
-              CreateDate: new Date(),
-            },
-          ],
-        };
-
-        if (req.body.address !== "") {
-          bill.Bill[0].Address = req.body.address;
-        } else {
-          bill.Bill[0].AddressStores = req.body.addressStore;
-        }
-
-        await billsModel.create(bill, (err, data) => {
-          if (err) {
-            console.log("LỖI: ", err);
-            return err;
-          }
-          res.send(data);
+    typeProductsModel.findById(product.TypeProductID, (err, type) => {
+      const amount = type.Amount;
+      type.Amount -= product.NumberProduct;
+      if (type.Amount < 0) {
+        res.status(200).send({
+          Product: `${product.Name}`,
+          Amount: `Hiện tại chỉ còn ${amount} sản phẩm. Bạn có thể đặt ${amount} sản phẩm. Mong bạn thông cảm vì sự bất tiện này!`,
         });
       } else {
-        const bill = {
-          BillID: BillID,
-          ShipPayment: req.body.shipPayment,
-          Areas: req.body.area,
-          Provinces: req.body.province,
-          Districts: req.body.district,
-          Other: req.body.other,
-          Cart: req.body.cart,
-          BillStatus: req.body.billStatus,
-          CreateDate: new Date(),
-        };
+        type.Sold += product.NumberProduct;
+        typeProductsModel.findByIdAndUpdate(type._id, type, (err, result) => {
+          if (err) {
+            console.log("Update Type Product: ", err);
+          }
+        });
 
-        if (req.body.address !== "") {
-          bill.Address = req.body.address;
-        } else {
-          bill.AddressStores = req.body.addressStore;
-        }
+        billsModel.findOne(
+          { Name: req.body.name, Phone: req.body.phone },
+          async (err, data) => {
+            const BillID = new mongoose.Types.ObjectId().toString();
+            if (data === null) {
+              const id = new mongoose.Types.ObjectId().toString();
+              const bill = {
+                _id: id,
+                Name: req.body.name,
+                Phone: req.body.phone,
+                Email: req.body.email,
+                Bill: [
+                  {
+                    BillID: BillID,
+                    ShipPayment: req.body.shipPayment,
+                    Areas: req.body.area,
+                    Provinces: req.body.province,
+                    Districts: req.body.district,
+                    Other: req.body.other,
+                    Cart: req.body.cart,
+                    BillStatus: req.body.billStatus,
+                    CreateDate: new Date(),
+                  },
+                ],
+              };
 
-        billsModel.findByIdAndUpdate(
-          data._id,
-          { $push: { Bill: bill } },
-          (err, data) => {
-            if (err) {
-              console.log("LỖI: ", err);
-              return err;
+              if (req.body.address !== "") {
+                bill.Bill[0].Address = req.body.address;
+              } else {
+                bill.Bill[0].AddressStores = req.body.addressStore;
+              }
+
+              await billsModel.create(bill, (err, data) => {
+                if (err) {
+                  console.log("LỖI: ", err);
+                  return err;
+                }
+                res.send(data);
+              });
+            } else {
+              const bill = {
+                BillID: BillID,
+                ShipPayment: req.body.shipPayment,
+                Areas: req.body.area,
+                Provinces: req.body.province,
+                Districts: req.body.district,
+                Other: req.body.other,
+                Cart: req.body.cart,
+                BillStatus: req.body.billStatus,
+                CreateDate: new Date(),
+              };
+
+              if (req.body.address !== "") {
+                bill.Address = req.body.address;
+              } else {
+                bill.AddressStores = req.body.addressStore;
+              }
+
+              billsModel.findByIdAndUpdate(
+                data._id,
+                { $push: { Bill: bill } },
+                (err, data) => {
+                  if (err) {
+                    console.log("LỖI: ", err);
+                    return err;
+                  }
+                  res.send(data);
+                }
+              );
             }
-            res.send(data);
           }
         );
       }
-    }
-  );
+    });
+  });
 };
 
 const getBills = (req, res) => {

@@ -19,13 +19,13 @@ const cartSlice = createSlice({
                 _id: action.payload.product._id,
                 Name: action.payload.product.Name,
                 Image: action.payload.product.Image,
-                Price: action.payload.typeSelect.price,
-                Sale: action.payload.typeSelect.sale,
-                Description: action.payload.typeSelect.description,
-                Color: action.payload.typeByColor.color,
+                Price: action.payload.typeSelect.Price,
+                Sale: action.payload.typeSelect.Sale,
+                Description: action.payload.typeSelect.Name,
+                Color: action.payload.typeByColor.Color,
+                TypeProductID: action.payload.typeSelect._id,
                 NumberProduct: 1,
             };
-            console.log(product);
             const currentPrice = product.Sale ? product.Sale : product.Price;
             const newState = {
                 ...state,
@@ -72,7 +72,6 @@ const cartSlice = createSlice({
         },
         remove: (state, action) => {
             const result = current(state.cartProducts).filter((product) => {
-                console.log(product, action.payload);
                 if (product._id !== action.payload._id) {
                     return product;
                 } else if (

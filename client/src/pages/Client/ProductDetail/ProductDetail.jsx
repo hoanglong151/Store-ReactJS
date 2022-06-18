@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import styles from './ProductDetail.module.scss';
@@ -8,7 +8,8 @@ import DOMPurify from 'dompurify';
 import { addProductToCart } from '~/app/reducerCart';
 
 function ProductDetail() {
-    let { id } = useParams();
+    const { state } = useLocation();
+    const { product } = state;
     let navigate = useNavigate();
     const [productDetail, setProductDetail] = useState({});
     const [typeByColor, setTypeByColor] = useState({});
@@ -18,7 +19,7 @@ function ProductDetail() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const getProduct = products.find((product) => product._id === id);
+        const getProduct = products.find((item) => item._id === product.Product);
         if (getProduct !== undefined) {
             const mapCategories = getProduct.Category_ID.map((category) => ({
                 value: category._id,
@@ -57,6 +58,7 @@ function ProductDetail() {
                                 type: [
                                     ...pre[getTypeByColorIndex].type,
                                     {
+                                        _id: next._id,
                                         Name: next.Name,
                                         Price: next.Price,
                                         Sale: next.Sale,
@@ -71,6 +73,7 @@ function ProductDetail() {
                             Color: next.Color,
                             type: [
                                 {
+                                    _id: next._id,
                                     Name: next.Name,
                                     Price: next.Price,
                                     Sale: next.Sale,
@@ -85,6 +88,7 @@ function ProductDetail() {
                         Color: next.Color,
                         type: [
                             {
+                                _id: next._id,
                                 Name: next.Name,
                                 Price: next.Price,
                                 Sale: next.Sale,
@@ -108,6 +112,7 @@ function ProductDetail() {
     };
 
     const handleSelectType = (type) => {
+        console.log(type);
         setTypeSelect(type);
     };
 
@@ -118,7 +123,7 @@ function ProductDetail() {
     return (
         <div className={clsx(styles.wrapper)}>
             <div className={clsx(styles.images)}>
-                <Sliders data={productDetail.Image || []} />
+                <Sliders data={product.Image || []} />
             </div>
             <div className={clsx(styles.content)}>
                 <h1>Giới Thiệu Sản Phẩm</h1>
@@ -154,8 +159,9 @@ function ProductDetail() {
                                         <div
                                             className={clsx(styles.item, {
                                                 [styles.active]: item.Name === typeSelect.Name,
+                                                [styles.soldOut]: item.Amount <= 0,
                                             })}
-                                            onClick={() => handleSelectType(item)}
+                                            onClick={item.Amount <= 0 ? undefined : () => handleSelectType(item)}
                                         >
                                             <p className={clsx(styles.typeDescription)}>{item.Name}</p>
                                             <p className={clsx(styles.typePrice)}>

@@ -14,8 +14,11 @@
     }
 
     .titlePrice {
+        display: inline-block;
         font-size: 2rem;
         font-weight: bold;
+        margin-top: 1rem;
+        margin-right: 0.5rem;
     }
 
     .sale,
@@ -37,7 +40,6 @@
 
 .wrapperType {
     margin: 0 -1rem;
-    cursor: pointer;
     user-select: none;
 }
 
@@ -94,6 +96,11 @@
         background-position: center;
         color: #fff;
     }
+}
+
+.soldOut {
+    opacity: 0.5;
+    cursor: default;
 }
 
 .priceInfo {

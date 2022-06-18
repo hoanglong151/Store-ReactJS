@@ -56,6 +56,10 @@
     user-select: none;
 }
 
+.wrapperItem {
+    display: flex;
+}
+
 .item {
     display: inline-block;
     position: relative;
@@ -100,6 +104,11 @@
         background-position: center;
         color: #fff;
     }
+}
+
+.soldOut {
+    opacity: 0.5;
+    cursor: default;
 }
 
 .priceInfo {

@@ -197,7 +197,13 @@ function Bill() {
         onSubmit: (values) => {
             const submit = async () => {
                 const result = await billsApi.paymentBill(values);
-                if (result) {
+                if (result.Amount) {
+                    SuccessSwal.fire({
+                        icon: 'error',
+                        title: `Đặt Hàng Thất Bại <br /> (${result.Product})`,
+                        text: result.Amount,
+                    });
+                } else {
                     SuccessSwal.fire({
                         icon: 'success',
                         title: 'Đặt Hàng Thành Công',

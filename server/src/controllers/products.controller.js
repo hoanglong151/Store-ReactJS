@@ -85,12 +85,12 @@ const addProduct = async (req, res) => {
         const idType = new mongoose.Types.ObjectId().toString();
         const typePro = {
           _id: idType,
-          Name: type.name,
-          Color: type.color,
-          Price: type.price,
-          Sale: type.sale,
-          Amount: type.amount,
-          Sold: type.sold,
+          Name: type.Name,
+          Color: type.Color,
+          Price: type.Price,
+          Sale: type.Sale,
+          Amount: type.Amount,
+          Sold: type.Sold,
           Product: id,
         };
         product.TypesProduct.push(idType);
@@ -102,6 +102,7 @@ const addProduct = async (req, res) => {
 
     res.send(newProduct);
   } catch (err) {
+    console.log("Err: ", err);
     res.send(err);
   }
 };

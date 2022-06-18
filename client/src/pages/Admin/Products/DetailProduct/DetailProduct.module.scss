@@ -49,7 +49,6 @@
 .wrapperType {
     margin: 0 -1rem;
     user-select: none;
-    cursor: pointer;
 }
 
 .wrapperItem {
@@ -106,6 +105,11 @@
         background-position: center;
         color: #fff;
     }
+}
+
+.soldOut {
+    opacity: 0.5;
+    cursor: default;
 }
 
 .priceInfo {

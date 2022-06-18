@@ -74,6 +74,7 @@ function AddProduct() {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
+            console.log('Values: ', values);
             const submit = async () => {
                 const fd = new FormData();
                 for (let key in values) {
@@ -96,7 +97,14 @@ function AddProduct() {
 
     const handleAddType = () => {
         if (formik.values.types.name !== '' && formik.values.types.price !== 0 && formik.values.types.amount !== 0) {
-            const type = { ...formik.values.types };
+            const type = {
+                Color: formik.values.types.color,
+                Name: formik.values.types.name,
+                Price: formik.values.types.price,
+                Sale: formik.values.types.sale,
+                Amount: formik.values.types.amount,
+                Sold: 0,
+            };
             setTypesProduct([...typesProduct, type]);
             formik.values.types.name = '';
             formik.values.types.color = '';

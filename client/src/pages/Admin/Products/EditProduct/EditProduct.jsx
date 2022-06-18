@@ -33,7 +33,6 @@ function EditProduct() {
     useEffect(() => {
         const getProduct = product.products.find((product) => product._id === id);
         if (getProduct !== undefined) {
-            console.log(getProduct);
             const mapCategories = getProduct.Category_ID.map((category) => category._id);
             const mapCategoriesProduct = getProduct.Category_ID.map((category) => ({
                 value: category._id,
@@ -108,7 +107,6 @@ function EditProduct() {
         // validationSchema: validationSchema,
         onSubmit: (values) => {
             const submit = async () => {
-                console.log(values);
                 const fd = new FormData();
                 for (let key in values) {
                     fd.append(key, values[key]);
