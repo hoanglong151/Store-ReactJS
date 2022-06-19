@@ -10,3 +10,8 @@
     grid-template-columns: repeat(5, 1fr);
     row-gap: 1rem;
 }
+
+.title {
+    margin: 0 0.5rem 0.5rem;
+    color: var(--white);
+}

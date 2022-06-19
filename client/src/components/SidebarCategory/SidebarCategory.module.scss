@@ -1,0 +1,21 @@
+.category {
+    display: inline-block;
+    border: 1px solid var(--white);
+    color: var(--white);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background-color: transparent;
+    transition: all 0.15s linear;
+    margin: 0 0.5rem 1rem;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+    }
+}
+
+.itemCate {
+    color: var(--primary-client-background-color);
+    border: 1px solid var(--primary-client-background-color);
+    cursor: pointer;
+}

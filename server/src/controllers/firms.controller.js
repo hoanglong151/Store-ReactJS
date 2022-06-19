@@ -3,9 +3,18 @@ const firmsModel = require("../model/Schema/firms.schema");
 const jwt = require("jsonwebtoken");
 
 const getFirms = (req, res) => {
-  firmsModel.find({}, (err, firms) => {
-    res.send(firms);
-  });
+  firmsModel
+    .find({}, (err, firms) => {
+      res.send(firms);
+    })
+    .populate("Products")
+    .populate({
+      path: "Products",
+      populate: {
+        path: "TypesProduct",
+        model: "typeProducts",
+      },
+    });
 };
 
 const addFirm = (req, res) => {

@@ -17,6 +17,10 @@
     margin: 0 auto;
 }
 
+.imgHome {
+    z-index: 10;
+}
+
 .image {
     height: 5rem;
 }
@@ -93,10 +97,10 @@
         content: '';
         display: block;
         position: absolute;
-        top: -2rem;
+        top: -8rem;
         left: 0;
-        width: 31rem;
-        height: 3rem;
+        width: 45rem;
+        height: 10rem;
     }
 }
 

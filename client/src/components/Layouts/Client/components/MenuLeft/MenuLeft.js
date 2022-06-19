@@ -24,7 +24,8 @@ function MenuLeft() {
                 {categories.map((category, index) => (
                     <li className={clsx(styles.item)} key={category._id}>
                         <Link
-                            to={`/category/${category._id}`}
+                            to={`/category`}
+                            state={{ cateID: category._id }}
                             className={clsx(styles.link)}
                             onMouseEnter={() => handleGetCategory(category)}
                         >
@@ -35,7 +36,11 @@ function MenuLeft() {
                         <ul className={clsx(styles.subMenu)}>
                             {getFirms.map((firm, index) => (
                                 <li key={firm._id} className={clsx(styles.subMenuItem)}>
-                                    <Link to={`/firm/${category._id}/${firm._id}`} className={clsx(styles.subMenuName)}>
+                                    <Link
+                                        to={`/firm`}
+                                        state={{ cateID: category._id, firmID: firm._id }}
+                                        className={clsx(styles.subMenuName)}
+                                    >
                                         {firm.Name}
                                     </Link>
                                 </li>

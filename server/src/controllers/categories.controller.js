@@ -14,7 +14,14 @@ const getCategories = (req, res) => {
     .find({}, (err, categories) => {
       res.send(categories);
     })
-    .populate("Products");
+    .populate("Products")
+    .populate({
+      path: "Products",
+      populate: {
+        path: "TypesProduct",
+        model: "typeProducts",
+      },
+    });
 };
 
 const addCategory = async (req, res) => {

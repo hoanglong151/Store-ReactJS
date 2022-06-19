@@ -48,7 +48,7 @@ function SliderBasic(props) {
                 <div className={clsx(styles.poster)}>
                     <img
                         className={clsx(styles.image)}
-                        src="https://eshop.hk.chinamobile.com/export/sites/default/imgdir/Handset/apple/20210423/7804-iPhone12proproductpage-en_01.jpg"
+                        src="https://cdn.tgdd.vn/Files/2019/12/04/1224683/6-dau-hieu-ban-nen-thay-chiec-macbook-moi-4.jpg"
                     />
                 </div>
                 <div className={clsx(styles.poster)}>

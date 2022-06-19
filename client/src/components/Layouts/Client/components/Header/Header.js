@@ -26,7 +26,7 @@ function Header(props) {
     return (
         <div className={clsx(styles.wrapper)}>
             <div className={clsx(styles.header)}>
-                <Link to="/">
+                <Link to="/" className={clsx(styles.imgHome)}>
                     <img
                         className={clsx(styles.image)}
                         src="https://freepngimg.com/thumb/mustang/23061-5-mustang-logo-transparent-image.png"
@@ -40,7 +40,8 @@ function Header(props) {
                                 {categories.map((category, index) => (
                                     <li className={clsx(styles.itemCategory)} key={category._id}>
                                         <Link
-                                            to={`/category/${category._id}`}
+                                            to={`/category`}
+                                            state={{ cateID: category._id }}
                                             className={clsx(styles.itemLink)}
                                             onMouseEnter={() => handleGetCategory(category)}
                                         >
@@ -54,7 +55,8 @@ function Header(props) {
                                             {getFirms.map((firm, index) => (
                                                 <li key={firm._id} className={clsx(styles.subMenuItem)}>
                                                     <Link
-                                                        to={`/firm/${category._id}/${firm._id}`}
+                                                        to={`/firm`}
+                                                        state={{ cateID: category._id, firmID: firm._id }}
                                                         className={clsx(styles.subMenuName)}
                                                     >
                                                         {firm.Name}

@@ -8,104 +8,18 @@ import SliderCard from '~/components/Sliders/SliderCard/SliderCard.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import CardProduct from '~/components/Cards/CardProduct/CardProduct';
+import { useSortProductByTitle } from '~/hooks';
+import SidebarCategory from '~/components/SidebarCategory';
 
 function Home() {
     const { product, category } = useSelector((state) => state);
-    const [productCheap, setProductCheap] = useState([]);
-    const [productHot, setProductHot] = useState([]);
-    const [productNew, setProductNew] = useState([]);
+    const [products, setProducts] = useState([]);
+    const productCheap = useSortProductByTitle(products, 'CHEAP');
+    const productHot = useSortProductByTitle(products, 'HOT');
+    const productNew = useSortProductByTitle(products, 'NEW');
 
     useEffect(() => {
-        const data = product.products
-            .map((product) => {
-                const getProductsCheap = product.TypesProduct.reduce((pre, next) => {
-                    if (next.Amount > 0) {
-                        if (pre.Sale !== 0 && next.Sale !== 0) {
-                            return pre.Sale < next.Sale ? pre : next;
-                        } else if (pre.Sale !== 0 && next.Sale === 0) {
-                            return pre.Sale < next.Price ? pre : next;
-                        } else if (pre.Sale === 0 && next.Sale !== 0) {
-                            return pre.Price < next.Sale ? pre : next;
-                        } else {
-                            return pre.Price < next.Price ? pre : next;
-                        }
-                    }
-                    return pre;
-                }, {});
-                if (Object.keys(getProductsCheap).length !== 0) {
-                    return {
-                        ...getProductsCheap,
-                        Image: product.Image,
-                        NameProduct: product.Name,
-                    };
-                }
-            })
-            .filter((item) => item !== undefined);
-        setProductCheap(data);
-    }, [product.products]);
-
-    useEffect(() => {
-        let newPro = [];
-        let initReduce = { ...product.products[0] };
-        product.products.reduce((pre, next) => {
-            const formatPreDay = new Intl.DateTimeFormat('en').format(new Date(pre.CreateDate));
-            const formatNextDay = new Intl.DateTimeFormat('en').format(new Date(next.CreateDate));
-            if (formatPreDay > formatNextDay) {
-                newPro = [pre, ...newPro];
-                return pre;
-            } else {
-                newPro = [next, ...newPro];
-                return next;
-            }
-        }, initReduce);
-
-        const data = newPro
-            .map((product) => {
-                const getProductsCheap = product.TypesProduct.reduce((pre, next) => {
-                    if (next.Amount > 0) {
-                        if (pre.Sale !== 0 && next.Sale !== 0) {
-                            return pre.Sale < next.Sale ? pre : next;
-                        } else if (pre.Sale !== 0 && next.Sale === 0) {
-                            return pre.Sale < next.Price ? pre : next;
-                        } else if (pre.Sale === 0 && next.Sale !== 0) {
-                            return pre.Price < next.Sale ? pre : next;
-                        } else {
-                            return pre.Price < next.Price ? pre : next;
-                        }
-                    }
-                    return pre;
-                }, {});
-                if (Object.keys(getProductsCheap).length !== 0) {
-                    return {
-                        ...getProductsCheap,
-                        Image: product.Image,
-                        NameProduct: product.Name,
-                    };
-                }
-            })
-            .filter((item) => item !== undefined);
-        setProductNew(data);
-    }, [product.products]);
-
-    useEffect(() => {
-        const productsHot = product.products.map((product) => {
-            const getProductsHot = product.TypesProduct.reduce((pre, next) => {
-                if (next.Amount > 0) {
-                    return pre.Sold > next.Sold ? pre : next;
-                }
-                return pre;
-            }, {});
-            if (Object.keys(getProductsHot).length !== 0) {
-                return {
-                    ...getProductsHot,
-                    Image: product.Image,
-                    NameProduct: product.Name,
-                };
-            }
-        });
-
-        const data = productsHot.sort((a, b) => b.Sold - a.Sold).filter((item) => item !== undefined);
-        setProductHot(data);
+        setProducts(product.products);
     }, [product.products]);
 
     return (
@@ -113,20 +27,38 @@ function Home() {
             <div className={clsx(styles.newProducts)}>
                 <div className={clsx(styles.header)}>
                     <h1 className={clsx(styles.title)}>Sản Phẩm Bán Chạy</h1>
-                    <Link to="/products" state={{ products: productHot }} className={clsx(styles.showAll)}>
+                    <Link
+                        to="/products"
+                        state={{ products: productHot, select: 'HOT' }}
+                        className={clsx(styles.showAll)}
+                    >
                         <span className={clsx(styles.textShowAll)}>Xem tất cả</span>
                         <FontAwesomeIcon icon={faAngleRight} className={clsx(styles.arrowShowAll)} />
                     </Link>
+                </div>
+                <div className={clsx(styles.sidebarCategories)}>
+                    {category.categories.map((cate) => (
+                        <SidebarCategory key={cate._id} name={cate.Name} link={cate._id} select="HOT" />
+                    ))}
                 </div>
                 <SliderCard slideShow={5} slideScroll={5} product={productHot} />
             </div>
             <div className={clsx(styles.sellProducts)}>
                 <div className={clsx(styles.header)}>
                     <h1 className={clsx(styles.title)}>Sản Phẩm Mới</h1>
-                    <Link to="/products" state={{ products: productNew }} className={clsx(styles.showAll)}>
+                    <Link
+                        to="/products"
+                        state={{ products: productNew, select: 'NEW' }}
+                        className={clsx(styles.showAll)}
+                    >
                         <span className={clsx(styles.textShowAll)}>Xem tất cả</span>
                         <FontAwesomeIcon icon={faAngleRight} className={clsx(styles.arrowShowAll)} />
                     </Link>
+                </div>
+                <div className={clsx(styles.sidebarCategories)}>
+                    {category.categories.map((cate) => (
+                        <SidebarCategory key={cate._id} name={cate.Name} link={cate._id} select="NEW" />
+                    ))}
                 </div>
                 <SliderCard slideShow={5} slideScroll={5} product={productNew} />
             </div>
@@ -135,17 +67,27 @@ function Home() {
                     <h1 className={clsx(styles.title, styles.yourSelf)}>Sản Phẩm Dành Cho Bạn</h1>
                     <Link
                         to="/products"
-                        state={{ products: productCheap }}
+                        state={{ products: productCheap, select: 'CHEAP' }}
                         className={clsx(styles.showAll, styles.yourSelf)}
                     >
                         <span className={clsx(styles.textShowAll)}>Xem tất cả</span>
                         <FontAwesomeIcon icon={faAngleRight} className={clsx(styles.arrowShowAll)} />
                     </Link>
                 </div>
-                <div className={clsx(styles.wrapProducts)}>
-                    {productCheap.map((product, index) => (
-                        <CardProduct key={index} boxShadow product={product} />
+                <div className={clsx(styles.sidebarCategories)}>
+                    {category.categories.map((cate) => (
+                        <SidebarCategory
+                            key={cate._id}
+                            name={cate.Name}
+                            link={cate._id}
+                            className="itemCate"
+                            select="CHEAP"
+                        />
                     ))}
+                </div>
+                <div className={clsx(styles.wrapProducts)}>
+                    {productCheap.length > 0 &&
+                        productCheap.map((product, index) => <CardProduct key={index} boxShadow product={product} />)}
                 </div>
             </div>
         </div>
