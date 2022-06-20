@@ -29,7 +29,7 @@ function Home() {
                     <h1 className={clsx(styles.title)}>Sản Phẩm Bán Chạy</h1>
                     <Link
                         to="/products"
-                        state={{ products: productHot, select: 'HOT' }}
+                        state={{ products: productHot, select: 'HOT', productsDefault: products }}
                         className={clsx(styles.showAll)}
                     >
                         <span className={clsx(styles.textShowAll)}>Xem tất cả</span>
@@ -48,7 +48,7 @@ function Home() {
                     <h1 className={clsx(styles.title)}>Sản Phẩm Mới</h1>
                     <Link
                         to="/products"
-                        state={{ products: productNew, select: 'NEW' }}
+                        state={{ products: productNew, select: 'NEW', productsDefault: products }}
                         className={clsx(styles.showAll)}
                     >
                         <span className={clsx(styles.textShowAll)}>Xem tất cả</span>
@@ -67,7 +67,7 @@ function Home() {
                     <h1 className={clsx(styles.title, styles.yourSelf)}>Sản Phẩm Dành Cho Bạn</h1>
                     <Link
                         to="/products"
-                        state={{ products: productCheap, select: 'CHEAP' }}
+                        state={{ products: productCheap, select: 'CHEAP', productsDefault: products }}
                         className={clsx(styles.showAll, styles.yourSelf)}
                     >
                         <span className={clsx(styles.textShowAll)}>Xem tất cả</span>
@@ -87,7 +87,9 @@ function Home() {
                 </div>
                 <div className={clsx(styles.wrapProducts)}>
                     {productCheap.length > 0 &&
-                        productCheap.map((product, index) => <CardProduct key={index} boxShadow product={product} />)}
+                        productCheap
+                            .map((product, index) => <CardProduct key={index} boxShadow product={product} />)
+                            .slice(0, 20)}
                 </div>
             </div>
         </div>
