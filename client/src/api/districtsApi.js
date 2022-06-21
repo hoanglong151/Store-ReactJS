@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const districtsApi = {
-    getAll: () => {
-        return axiosClient.get('/districts');
+    getAll: (page) => {
+        return axiosClient.get(`/districts?page=${page}`);
     },
     addDistrict: (data) => {
         return axiosClient.post('/districts/addDistrict', data);

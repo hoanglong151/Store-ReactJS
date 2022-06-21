@@ -11,15 +11,39 @@ const {
   deleteObject,
 } = require("firebase/storage");
 const uuid = require("uuid");
+const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getProducts = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page);
+  let products;
+  const skipProduct = page * PAGE_SIZE - PAGE_SIZE;
   try {
-    const listProducts = await productsModel
-      .find()
-      .populate("Category_ID")
-      .populate("Firm_ID")
-      .populate("TypesProduct");
-    res.send(listProducts);
+    if (page) {
+      products = await productsModel
+        .find()
+        .populate("Category_ID")
+        .populate("Firm_ID")
+        .populate("TypesProduct")
+        .skip(skipProduct)
+        .limit(PAGE_SIZE);
+    } else {
+      products = await productsModel
+        .find()
+        .populate("Category_ID")
+        .populate("Firm_ID")
+        .populate("TypesProduct");
+    }
+    productsModel.countDocuments((err, total) => {
+      if (err) {
+        console.log("Err: ", err);
+        return err;
+      }
+      if (total) {
+        const totalPage = Math.ceil(total / PAGE_SIZE);
+        res.send({ products: products, totalPage: totalPage });
+      }
+    });
   } catch (Error) {
     res.send("Toang", Error);
   }
@@ -333,9 +357,24 @@ const deleteProduct = async (req, res) => {
 
 const searchProduct = async (req, res) => {
   const result = await productsModel
-    .find({ Name: { $regex: req.query.q, $options: "i" } })
+    .find()
+    .populate("Category_ID")
+    .populate("Firm_ID")
+    .populate("TypesProduct")
     .exec();
-  res.send(result);
+  const data = result.filter((value) => {
+    const removeUnicodeNameProduct = replaceUnicode(value.Name.toLowerCase());
+    const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
+    const nameProduct = removeUnicodeNameProduct.split(" ");
+    const searchProduct = removeUnicodeSearch.split(" ");
+    const containsProduct = searchProduct.every((input) => {
+      return nameProduct.includes(input);
+    });
+    if (containsProduct) {
+      return value;
+    }
+  });
+  res.send(data);
 };
 
 module.exports = {

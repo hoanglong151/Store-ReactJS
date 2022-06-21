@@ -1,25 +1,77 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import styles from './AddressStores.module.scss';
 import DialogAddressStore from '~/components/Form/Dialog/DialogAddressStore/DialogAddressStore';
-import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import addressStoresApi from '~/api/addressStoresApi';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import TableAddressStore from '~/components/Tables/TableAddressStore/TableAddressStore';
-import { getAddressStores } from '~/app/reducerAddressStore';
+import areasApi from '~/api/areasApi';
+import provincesApi from '~/api/provincesApi';
+import districtsApi from '~/api/districtsApi';
+import PaginationOutlined from '~/components/Pagination';
 
 function AddressStores() {
     const [editAddressStore, setEditAddressStore] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
-    const { areas } = useSelector((state) => state.area);
-    const { provinces } = useSelector((state) => state.province);
-    const { districts } = useSelector((state) => state.district);
-    const { addressStores } = useSelector((state) => state.addressStore);
     const DeleteSwal = withReactContent(Swal);
-    const dispatch = useDispatch();
+
+    const [areas, setAreas] = useState([]);
+    const [provinces, setProvinces] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const [addressStores, setAddressStores] = useState([]);
+    const [totalPage, setTotalPage] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const getAreas = async () => {
+        try {
+            const result = await areasApi.getAll();
+            setAreas(result.areas);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const getProvinces = async () => {
+        try {
+            const result = await provincesApi.getAll();
+            setProvinces(result.provinces);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const getDistricts = async () => {
+        try {
+            const result = await districtsApi.getAll(currentPage);
+            setDistricts(result.districts);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const getAddressStores = async () => {
+        try {
+            const result = await addressStoresApi.getAll(currentPage);
+            setTotalPage(result.totalPage);
+            setAddressStores(result.addressStores);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const handlePagination = (page) => {
+        setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        getAreas();
+        getProvinces();
+        getDistricts();
+        getAddressStores();
+    }, [currentPage]);
 
     const newAreas = useMemo(() => {
         return areas.map((area, i) => {
@@ -128,7 +180,7 @@ function AddressStores() {
                                 popup: `${clsx(styles.popup)}`,
                             },
                         });
-                        dispatch(getAddressStores());
+                        getAddressStores();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -192,7 +244,7 @@ function AddressStores() {
                     setOpenCreate(false);
                     setOpenEdit(false);
                     setEditAddressStore({});
-                    dispatch(getAddressStores());
+                    getAddressStores();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -205,6 +257,7 @@ function AddressStores() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo cửa hàng
             </button>
+            <PaginationOutlined count={totalPage} onClick={handlePagination} />
             <DialogAddressStore
                 formik={formik}
                 open={openCreate || openEdit}

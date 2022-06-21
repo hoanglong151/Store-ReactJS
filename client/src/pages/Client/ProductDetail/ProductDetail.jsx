@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import styles from './ProductDetail.module.scss';
 import Sliders from '~/components/Sliders/Slider/Slider';
 import DOMPurify from 'dompurify';
 import { addProductToCart } from '~/app/reducerCart';
+import { productsApi } from '~/api';
 
 function ProductDetail() {
     const { state } = useLocation();
@@ -15,8 +16,17 @@ function ProductDetail() {
     const [typeByColor, setTypeByColor] = useState({});
     const [typeSelect, setTypeSelect] = useState({});
     const [filterType, setFilterType] = useState([]);
-    const { products } = useSelector((state) => state.product);
+    const [products, setProducts] = useState([]);
     const dispatch = useDispatch();
+
+    const getProducts = async () => {
+        const result = await productsApi.getAll();
+        setProducts(result.products);
+    };
+
+    useEffect(() => {
+        getProducts();
+    }, []);
 
     useEffect(() => {
         const getProduct = products.find((item) => item._id === product.Product);
@@ -112,7 +122,6 @@ function ProductDetail() {
     };
 
     const handleSelectType = (type) => {
-        console.log(type);
         setTypeSelect(type);
     };
 

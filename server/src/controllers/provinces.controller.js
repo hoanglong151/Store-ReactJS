@@ -2,12 +2,31 @@ const mongoose = require("mongoose");
 const provincesModel = require("../model/Schema/provinces.schema");
 const areasModel = require("../model/Schema/areas.schema");
 
-const getProvinces = (req, res) => {
-  provincesModel
-    .find({}, (err, data) => {
-      res.send(data);
-    })
-    .populate("Areas");
+const getProvinces = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page);
+  let provinces;
+  const skipProvinces = page * PAGE_SIZE - PAGE_SIZE;
+  if (page) {
+    provinces = await provincesModel
+      .find()
+      .populate("Areas")
+      .skip(skipProvinces)
+      .limit(PAGE_SIZE);
+  } else {
+    provinces = await provincesModel.find().populate("Areas");
+  }
+
+  provincesModel.countDocuments((err, total) => {
+    if (err) {
+      console.log("Err: ", err);
+      return err;
+    }
+    if (total) {
+      const totalPage = Math.ceil(total / PAGE_SIZE);
+      res.send({ provinces: provinces, totalPage: totalPage });
+    }
+  });
 };
 
 const addProvince = (req, res) => {

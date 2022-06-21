@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const categoriesApi = {
-    getAll: () => {
-        return axiosClient.get('/categories');
+    getAll: (page) => {
+        return axiosClient.get(`/categories?page=${page}`);
     },
     addCategory: (data) => {
         return axiosClient.post('/categories/addCategory', data);

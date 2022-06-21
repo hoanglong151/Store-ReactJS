@@ -1,20 +1,12 @@
 import React, { Fragment, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { getProducts } from '~/app/reducerProduct';
-import { getCategories } from '~/app/reducerCategory';
-import { getFirms } from '~/app/reducerFirm';
 import { getCarts } from '~/app/reducerCart';
-import { getAreas } from '~/app/reducerArea';
-import { getProvinces } from './app/reducerProvince';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from '~/routes';
 import { DefaultLayout } from '~/components/Layouts/Admin';
 import { DefaultLayout as DefaultLayoutClient } from '~/components/Layouts/Client';
-import { getDistricts } from './app/reducerDistrict';
-import { getSaleCodes } from './app/reducerSaleCode';
-import { getAddressStores } from './app/reducerAddressStore';
 import Login from './pages/Admin/Authentication/Login/Login';
 import PrivateRoutes from './routes/PrivateRoutes';
 
@@ -22,46 +14,6 @@ function App() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const getProduct = async () => {
-            await dispatch(getProducts());
-        };
-        getProduct();
-
-        const getCategory = async () => {
-            await dispatch(getCategories());
-        };
-        getCategory();
-
-        const getFirm = async () => {
-            await dispatch(getFirms());
-        };
-        getFirm();
-
-        const getArea = async () => {
-            await dispatch(getAreas());
-        };
-        getArea();
-
-        const getProvince = async () => {
-            await dispatch(getProvinces());
-        };
-        getProvince();
-
-        const getDistrict = async () => {
-            await dispatch(getDistricts());
-        };
-        getDistrict();
-
-        const getSaleCode = async () => {
-            await dispatch(getSaleCodes());
-        };
-        getSaleCode();
-
-        const getAddressStore = async () => {
-            await dispatch(getAddressStores());
-        };
-        getAddressStore();
-
         const getCart = async () => {
             await dispatch(getCarts());
         };

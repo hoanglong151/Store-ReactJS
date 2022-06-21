@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import styles from './Products.module.scss';
@@ -9,6 +9,7 @@ import SidebarFirm from '~/components/SidebarFirm';
 import ButtonShowMore from '~/components/ShowMore';
 import { useState } from 'react';
 import { useSortProductByTitle } from '~/hooks';
+import { categoriesApi, firmsApi } from '~/api';
 
 function Products() {
     const { state } = useLocation();
@@ -23,7 +24,23 @@ function Products() {
     });
     const productHot = useSortProductByTitle(productsDefault, 'HOT');
     const productNew = useSortProductByTitle(productsDefault, 'NEW');
-    const { category, firm } = useSelector((state) => state);
+    const [firms, setFirms] = useState([]);
+    const [categories, setCategories] = useState([]);
+
+    const getCategories = async () => {
+        const result = await categoriesApi.getAll();
+        setCategories(result.categories);
+    };
+
+    const getFirms = async () => {
+        const result = await firmsApi.getAll();
+        setFirms(result.firms);
+    };
+
+    useEffect(() => {
+        getCategories();
+        getFirms();
+    }, []);
 
     const handleShowMoreProducts = (numberProduct) => {
         setShowProducts(showProducts + numberProduct);
@@ -76,13 +93,13 @@ function Products() {
             <h1 className={clsx(styles.heading)}>Danh Sách Sản Phẩm</h1>
             <div>
                 <h3 className={clsx(styles.title)}>Danh Mục</h3>
-                {category.categories.map((cate) => (
+                {categories.map((cate) => (
                     <SidebarCategory key={cate._id} name={cate.Name} link={cate._id} select={select} />
                 ))}
             </div>
             <div>
                 <h3 className={clsx(styles.title)}>Hãng</h3>
-                {firm.firms.map((firm) => (
+                {firms.map((firm) => (
                     <SidebarFirm key={firm._id} name={firm.Name} select={select} firmID={firm._id} />
                 ))}
             </div>

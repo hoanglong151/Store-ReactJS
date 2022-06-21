@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const saleCodesApi = {
-    getAll: () => {
-        return axiosClient.get('/saleCodes');
+    getAll: (page) => {
+        return axiosClient.get(`/saleCodes?page=${page}`);
     },
     addSaleCode: (data) => {
         return axiosClient.post('/saleCodes/addSaleCode', data);

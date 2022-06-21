@@ -9,19 +9,47 @@ const {
 } = require("firebase/storage");
 const uuid = require("uuid");
 
-const getCategories = (req, res) => {
-  categoriesModel
-    .find({}, (err, categories) => {
-      res.send(categories);
-    })
-    .populate("Products")
-    .populate({
-      path: "Products",
-      populate: {
-        path: "TypesProduct",
-        model: "typeProducts",
-      },
-    });
+const getCategories = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page);
+  let categories;
+  const skipCategories = page * PAGE_SIZE - PAGE_SIZE;
+  if (page) {
+    categories = await categoriesModel
+      .find()
+      .populate("Products")
+      .populate({
+        path: "Products",
+        populate: {
+          path: "TypesProduct",
+          model: "typeProducts",
+        },
+      })
+      .skip(skipCategories)
+      .limit(PAGE_SIZE);
+  } else {
+    categories = await categoriesModel
+      .find()
+      .populate("Products")
+      .populate({
+        path: "Products",
+        populate: {
+          path: "TypesProduct",
+          model: "typeProducts",
+        },
+      });
+  }
+
+  categoriesModel.countDocuments((err, total) => {
+    if (err) {
+      console.log("Err: ", err);
+      return err;
+    }
+    if (total) {
+      const totalPage = Math.ceil(total / PAGE_SIZE);
+      res.send({ categories: categories, totalPage: totalPage });
+    }
+  });
 };
 
 const addCategory = async (req, res) => {

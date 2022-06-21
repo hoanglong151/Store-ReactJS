@@ -1,9 +1,26 @@
 const mongoose = require("mongoose");
 const areasModel = require("../model/Schema/areas.schema");
 
-const getAreas = (req, res) => {
-  areasModel.find({}, (err, data) => {
-    res.send(data);
+const getAreas = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page);
+  let areas;
+  const skipAreas = page * PAGE_SIZE - PAGE_SIZE;
+  if (page) {
+    areas = await areasModel.find().skip(skipAreas).limit(PAGE_SIZE);
+  } else {
+    areas = await areasModel.find();
+  }
+
+  areasModel.countDocuments((err, total) => {
+    if (err) {
+      console.log("Err: ", err);
+      return err;
+    }
+    if (total) {
+      const totalPage = Math.ceil(total / PAGE_SIZE);
+      res.send({ areas: areas, totalPage: totalPage });
+    }
   });
 };
 

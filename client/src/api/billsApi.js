@@ -4,8 +4,8 @@ const billsApi = {
     paymentBill: (data) => {
         return axiosClient.post('/bills/paymentBill', data);
     },
-    getAll: () => {
-        return axiosClient.get('/bills');
+    getAll: (page) => {
+        return axiosClient.get(`/bills?page=${page}`);
     },
     updateBill: (data) => {
         return axiosClient.patch('/bills/updateBill', data);

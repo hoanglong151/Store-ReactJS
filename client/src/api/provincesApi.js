@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const provincesApi = {
-    getAll: () => {
-        return axiosClient.get('/provinces');
+    getAll: (page) => {
+        return axiosClient.get(`/provinces?page=${page}`);
     },
     addProvince: (data) => {
         return axiosClient.post('/provinces/addProvince', data);

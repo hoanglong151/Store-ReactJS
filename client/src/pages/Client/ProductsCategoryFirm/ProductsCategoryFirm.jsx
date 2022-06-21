@@ -6,6 +6,7 @@ import styles from './ProductsCategoryFirm.module.scss';
 import CardProduct from '~/components/Cards/CardProduct/CardProduct';
 import { useSortProductByTitle } from '~/hooks';
 import ButtonShowMore from '~/components/ShowMore';
+import { categoriesApi, firmsApi } from '~/api';
 
 function ProductsCategoryFirm() {
     const { state } = useLocation();
@@ -18,9 +19,26 @@ function ProductsCategoryFirm() {
         Low: false,
         Select: select,
     });
-    const { product, category, firm } = useSelector((state) => state);
+    // const { category, firm } = useSelector((state) => state);
+    const [categories, setCategories] = useState([]);
+    const [firms, setFirms] = useState([]);
     const productSortByTitle = useSortProductByTitle(products, select);
     const [sortProducts, setSortProducts] = useState([]);
+
+    const getFirms = async () => {
+        const result = await firmsApi.getAll();
+        setFirms(result.firms);
+    };
+
+    const getCategories = async () => {
+        const result = await categoriesApi.getAll();
+        setCategories(result.categories);
+    };
+
+    useEffect(() => {
+        getCategories();
+        getFirms();
+    }, []);
 
     useEffect(() => {
         setSortProducts(productSortByTitle);
@@ -42,20 +60,23 @@ function ProductsCategoryFirm() {
 
     useEffect(() => {
         if (cateID) {
-            const getCategory = category.categories.find((selector) => selector._id === cateID);
-            const getProducts = getCategory.Products.filter((product, index) => {
-                return product.Firm_ID === firmID;
-            });
-            setProducts(getProducts);
+            const getCategory = categories.find((selector) => selector._id === cateID);
+            if (getCategory) {
+                const getProducts = getCategory.Products.filter((product, index) => {
+                    return product.Firm_ID === firmID;
+                });
+                setProducts(getProducts);
+            }
         } else {
-            const getFirm = firm.firms.find((selector) => selector._id === firmID);
-            console.log(getFirm);
-            const getProducts = getFirm.Products.filter((product, index) => {
-                return product.Firm_ID === firmID;
-            });
-            setProducts(getProducts);
+            const getFirm = firms.find((selector) => selector._id === firmID);
+            if (getFirm) {
+                const getProducts = getFirm.Products.filter((product, index) => {
+                    return product.Firm_ID === firmID;
+                });
+                setProducts(getProducts);
+            }
         }
-    }, [firmID]);
+    }, [firmID, categories, firms]);
 
     const handleShowMoreProducts = (numberProduct) => {
         setShowProducts(showProducts + numberProduct);

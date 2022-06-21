@@ -3,12 +3,11 @@ import clsx from 'clsx';
 import styles from './BillStatus.module.scss';
 import DialogOneField from '~/components/Form/Dialog/DialogOneField/DialogOneField';
 import { useFormik } from 'formik';
-import { getAreas } from '~/app/reducerArea';
-import { useDispatch, useSelector } from 'react-redux';
 import TableTwoColumn from '~/components/Tables/TableTwoColumn/TableTwoColumn';
 import billStatusApi from '~/api/billStatusApi';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import PaginationOutlined from '~/components/Pagination';
 
 function BillStatus() {
     const [billStatus, setBillStatus] = useState([]);
@@ -17,15 +16,26 @@ function BillStatus() {
     const [openEdit, setOpenEdit] = useState(false);
     const DeleteSwal = withReactContent(Swal);
 
-    const dispatch = useDispatch();
+    const [totalPage, setTotalPage] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const getBillStatus = async () => {
+        try {
+            const result = await billStatusApi.getAll(currentPage);
+            setTotalPage(result.totalPage);
+            setBillStatus(result.billStatus);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const handlePagination = (page) => {
+        setCurrentPage(page);
+    };
 
     useEffect(() => {
-        const getBillStatus = async () => {
-            const billStatus = await billStatusApi.getAll();
-            setBillStatus(billStatus);
-        };
         getBillStatus();
-    });
+    }, [currentPage]);
 
     const handleOpenDialog = (status) => {
         if (status._id) {
@@ -71,6 +81,7 @@ function BillStatus() {
                                 popup: `${clsx(styles.popup)}`,
                             },
                         });
+                        getBillStatus();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -107,6 +118,7 @@ function BillStatus() {
                     setOpenCreate(false);
                     setOpenEdit(false);
                     setEditBillStatus({});
+                    getBillStatus();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -119,6 +131,7 @@ function BillStatus() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo tình trạng
             </button>
+            <PaginationOutlined count={totalPage} onClick={handlePagination} />
             <DialogOneField
                 formik={formik}
                 open={openCreate || openEdit}

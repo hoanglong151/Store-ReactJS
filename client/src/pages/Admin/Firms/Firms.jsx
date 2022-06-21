@@ -1,23 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
 import firmsApi from '~/api/firmsApi';
-import { getFirms } from '~/app/reducerFirm';
 import styles from './Firms.module.scss';
 import TableFirm from '~/components/Tables/TableFirm/TableFirm';
 import DialogFirm from '~/components/Form/Dialog/DialogFirm/DialogFirm';
+import PaginationOutlined from '~/components/Pagination';
 
 function Firms() {
     const [openPopupCreate, setOpenPopupCreate] = useState(false);
     const [openPopupEdit, setOpenPopupEdit] = useState(false);
     const [editFirmPopup, setEditFirmPopup] = useState({});
     const DeleteSwal = withReactContent(Swal);
-    const firms = useSelector((state) => state.firm.firms);
-    const dispatch = useDispatch();
+
+    const [totalPage, setTotalPage] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [firms, setFirms] = useState([]);
+
+    const getFirms = async () => {
+        try {
+            const result = await firmsApi.getAll(currentPage);
+            setTotalPage(result.totalPage);
+            setFirms(result.firms);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const handlePagination = (page) => {
+        setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        getFirms();
+    }, [currentPage]);
 
     const handleOpenPopup = (firm) => {
         if (firm._id) {
@@ -64,7 +83,7 @@ function Firms() {
                                 popup: `${clsx(styles.popup)}`,
                             },
                         });
-                        dispatch(getFirms());
+                        getFirms();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -100,7 +119,7 @@ function Firms() {
                     formik.setFieldValue('name', '');
                     setOpenPopupCreate(false);
                     setOpenPopupEdit(false);
-                    dispatch(getFirms());
+                    getFirms();
                 } catch (err) {
                     throw err;
                 }
@@ -114,6 +133,7 @@ function Firms() {
             <button onClick={handleOpenPopup} className={clsx(styles.createBtn)}>
                 Tạo Hãng
             </button>
+            <PaginationOutlined count={totalPage} onClick={handlePagination} />
             <DialogFirm
                 formik={formik}
                 handleClose={handleClosePopup}

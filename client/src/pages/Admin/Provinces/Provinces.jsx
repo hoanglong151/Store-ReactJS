@@ -1,23 +1,53 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import styles from './Provinces.module.scss';
 import DialogProvince from '~/components/Form/Dialog/DialogProvince/DialogProvince';
-import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import provincesApi from '~/api/provincesApi';
-import { getProvinces } from '~/app/reducerProvince';
+import areasApi from '~/api/areasApi';
 import TableProvince from '~/components/Tables/TableProvince/TableProvince';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import PaginationOutlined from '~/components/Pagination';
 
 function Provinces() {
     const [editProvince, setEditProvince] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
-    const { areas } = useSelector((state) => state.area);
-    const { provinces } = useSelector((state) => state.province);
     const DeleteSwal = withReactContent(Swal);
-    const dispatch = useDispatch();
+
+    const [areas, setAreas] = useState([]);
+    const [provinces, setProvinces] = useState([]);
+    const [totalPage, setTotalPage] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const getAreas = async () => {
+        try {
+            const result = await areasApi.getAll();
+            setAreas(result.areas);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const getProvinces = async () => {
+        try {
+            const result = await provincesApi.getAll(currentPage);
+            setTotalPage(result.totalPage);
+            setProvinces(result.provinces);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const handlePagination = (page) => {
+        setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        getAreas();
+        getProvinces();
+    }, [currentPage]);
 
     const newAreas = useMemo(() => {
         return areas.map((area, i) => {
@@ -82,7 +112,7 @@ function Provinces() {
                                 popup: `${clsx(styles.popup)}`,
                             },
                         });
-                        dispatch(getProvinces());
+                        getProvinces();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -128,7 +158,7 @@ function Provinces() {
                     setOpenCreate(false);
                     setOpenEdit(false);
                     setEditProvince({});
-                    dispatch(getProvinces());
+                    getProvinces();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -141,6 +171,7 @@ function Provinces() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo tỉnh/thành
             </button>
+            <PaginationOutlined count={totalPage} onClick={handlePagination} />
             <DialogProvince
                 formik={formik}
                 open={openCreate || openEdit}

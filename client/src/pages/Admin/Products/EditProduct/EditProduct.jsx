@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styles from './EditProduct.module.scss';
-import productsApi from '~/api/productApi';
+import productsApi from '~/api/productsApi';
 import Label from '~/components/Form/Label/Label';
 import Input from '~/components/Form/Input/Input';
 import ErrorMessage from '~/components/Form/ErrorMessage/ErrorMessage';

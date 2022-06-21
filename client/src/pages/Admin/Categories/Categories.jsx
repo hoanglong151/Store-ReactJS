@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import categoriesApi from '~/api/categoriesApi';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCategories } from '~/app/reducerCategory';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import clsx from 'clsx';
@@ -10,6 +8,7 @@ import TableCategory from '~/components/Tables/TableCategory/TableCategory';
 import DialogCategory from '~/components/Form/Dialog/DialogCategory/DialogCategory';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import PaginationOutlined from '~/components/Pagination';
 
 function Categories() {
     const [image, setImage] = useState('');
@@ -17,8 +16,28 @@ function Categories() {
     const [createCate, setCreateCate] = React.useState(false);
     const [editCate, setEditCate] = React.useState(false);
     const DeleteSwal = withReactContent(Swal);
-    const { categories } = useSelector((state) => state.category);
-    const dispatch = useDispatch();
+
+    const [totalPage, setTotalPage] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [categories, setCategories] = useState([]);
+
+    const getCategories = async () => {
+        try {
+            const result = await categoriesApi.getAll(currentPage);
+            setTotalPage(result.totalPage);
+            setCategories(result.categories);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const handlePagination = (page) => {
+        setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        getCategories();
+    }, [currentPage]);
 
     const handleDeleteCategory = (id) => {
         const delCategory = async () => {
@@ -43,7 +62,7 @@ function Categories() {
                             },
                         });
                         await categoriesApi.deleteCategory(id);
-                        dispatch(getCategories());
+                        getCategories();
                     } catch (err) {
                         throw Error(err);
                     }
@@ -116,7 +135,7 @@ function Categories() {
                     setCateClick({});
                     setCreateCate(false);
                     setEditCate(false);
-                    dispatch(getCategories());
+                    getCategories();
                 } catch (Error) {
                     alert('Error: ', Error);
                 }
@@ -130,6 +149,7 @@ function Categories() {
             <button onClick={handleClickOpen} className={clsx(styles.createBtn)}>
                 Tạo Danh Mục
             </button>
+            <PaginationOutlined count={totalPage} onClick={handlePagination} />
             <DialogCategory
                 open={createCate || editCate}
                 onHandleClose={handleClose}

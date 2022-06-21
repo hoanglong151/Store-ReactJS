@@ -2,13 +2,35 @@ const mongoose = require("mongoose");
 const provincesModel = require("../model/Schema/provinces.schema");
 const districtsModel = require("../model/Schema/districts.schema");
 
-const getDistricts = (req, res) => {
-  districtsModel
-    .find({}, (err, data) => {
-      res.send(data);
-    })
-    .populate("Areas")
-    .populate("Provinces");
+const getDistricts = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page);
+  let districts;
+  const skipDistricts = page * PAGE_SIZE - PAGE_SIZE;
+  if (page) {
+    districts = await districtsModel
+      .find()
+      .populate("Areas")
+      .populate("Provinces")
+      .skip(skipDistricts)
+      .limit(PAGE_SIZE);
+  } else {
+    districts = await districtsModel
+      .find()
+      .populate("Areas")
+      .populate("Provinces");
+  }
+
+  districtsModel.countDocuments((err, total) => {
+    if (err) {
+      console.log("Err: ", err);
+      return err;
+    }
+    if (total) {
+      const totalPage = Math.ceil(total / PAGE_SIZE);
+      res.send({ districts: districts, totalPage: totalPage });
+    }
+  });
 };
 
 const addDistrict = (req, res) => {

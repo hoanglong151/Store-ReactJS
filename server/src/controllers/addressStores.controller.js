@@ -2,14 +2,37 @@ const mongoose = require("mongoose");
 const districtsModel = require("../model/Schema/districts.schema");
 const addressStoresModel = require("../model/Schema/addressStores.schema");
 
-const getAddressStores = (req, res) => {
-  addressStoresModel
-    .find({}, (err, data) => {
-      res.send(data);
-    })
-    .populate("Areas")
-    .populate("Provinces")
-    .populate("Districts");
+const getAddressStores = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page);
+  let addressStores;
+  const skipAddressStores = page * PAGE_SIZE - PAGE_SIZE;
+  if (page) {
+    addressStores = await addressStoresModel
+      .find()
+      .populate("Areas")
+      .populate("Provinces")
+      .populate("Districts")
+      .skip(skipAddressStores)
+      .limit(PAGE_SIZE);
+  } else {
+    addressStores = await addressStoresModel
+      .find()
+      .populate("Areas")
+      .populate("Provinces")
+      .populate("Districts");
+  }
+
+  addressStoresModel.countDocuments((err, total) => {
+    if (err) {
+      console.log("Err: ", err);
+      return err;
+    }
+    if (total) {
+      const totalPage = Math.ceil(total / PAGE_SIZE);
+      res.send({ addressStores: addressStores, totalPage: totalPage });
+    }
+  });
 };
 
 const addAddressStore = (req, res) => {

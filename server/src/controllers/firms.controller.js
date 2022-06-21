@@ -2,19 +2,46 @@ const mongoose = require("mongoose");
 const firmsModel = require("../model/Schema/firms.schema");
 const jwt = require("jsonwebtoken");
 
-const getFirms = (req, res) => {
-  firmsModel
-    .find({}, (err, firms) => {
-      res.send(firms);
-    })
-    .populate("Products")
-    .populate({
-      path: "Products",
-      populate: {
-        path: "TypesProduct",
-        model: "typeProducts",
-      },
-    });
+const getFirms = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page);
+  let firms;
+  const skipFirms = page * PAGE_SIZE - PAGE_SIZE;
+  if (page) {
+    firms = await firmsModel
+      .find()
+      .populate("Products")
+      .populate({
+        path: "Products",
+        populate: {
+          path: "TypesProduct",
+          model: "typeProducts",
+        },
+      })
+      .skip(skipFirms)
+      .limit(PAGE_SIZE);
+  } else {
+    firms = await firmsModel
+      .find()
+      .populate("Products")
+      .populate({
+        path: "Products",
+        populate: {
+          path: "TypesProduct",
+          model: "typeProducts",
+        },
+      });
+  }
+  firmsModel.countDocuments((err, total) => {
+    if (err) {
+      console.log("Err: ", err);
+      return err;
+    }
+    if (total) {
+      const totalPage = Math.ceil(total / PAGE_SIZE);
+      res.send({ firms: firms, totalPage: totalPage });
+    }
+  });
 };
 
 const addFirm = (req, res) => {

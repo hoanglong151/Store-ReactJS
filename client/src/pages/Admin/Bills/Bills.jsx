@@ -6,6 +6,7 @@ import styles from './Bills.module.scss';
 import TableBill from '~/components/Tables/TableBill/TableBill';
 import billsApi from '~/api/billsApi';
 import billStatusApi from '~/api/billStatusApi';
+import PaginationOutlined from '~/components/Pagination';
 
 function Bills() {
     const [bills, setBills] = useState([]);
@@ -15,12 +16,26 @@ function Bills() {
     const [convertBillStatusGet, setConvertBillStatusGet] = useState();
     const [editBill, setEditBill] = useState({});
     const UpdateSwal = withReactContent(Swal);
+
+    const [totalPage, setTotalPage] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const getBills = async () => {
+        try {
+            const result = await billsApi.getAll(currentPage);
+            setTotalPage(result.totalPage);
+            setBills(result.bills);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const handlePagination = (page) => {
+        setCurrentPage(page);
+    };
+
     useEffect(() => {
-        const getAllBills = async () => {
-            const getBill = await billsApi.getAll();
-            setBills(getBill);
-        };
-        getAllBills();
+        getBills();
 
         const getAllBillStatus = async () => {
             const getBillStatus = await billStatusApi.getAll();
@@ -33,7 +48,7 @@ function Bills() {
             setBillStatus(convertStatus);
         };
         getAllBillStatus();
-    }, [openDialog]);
+    }, [openDialog, currentPage]);
 
     const numberBill = useMemo(() => {
         const getBills = bills.reduce((pre, next) => {
@@ -101,6 +116,7 @@ function Bills() {
                 <button className={clsx(styles.btn)} onClick={handleAllBills}>
                     Tất cả
                 </button>
+                <PaginationOutlined count={totalPage} onClick={handlePagination} />
                 {billStatus.map((status, index) => (
                     <button
                         key={status.value}

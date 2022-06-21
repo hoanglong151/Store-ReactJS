@@ -1,23 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import styles from './Areas.module.scss';
 import DialogOneField from '~/components/Form/Dialog/DialogOneField/DialogOneField';
 import { useFormik } from 'formik';
-import { getAreas } from '~/app/reducerArea';
-import { useDispatch, useSelector } from 'react-redux';
 import TableTwoColumn from '~/components/Tables/TableTwoColumn/TableTwoColumn';
 import areasApi from '~/api/areasApi';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import PaginationOutlined from '~/components/Pagination';
 
 function Areas() {
     const [editArea, setEditArea] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
-    const { areas } = useSelector((state) => state.area);
     const DeleteSwal = withReactContent(Swal);
 
-    const dispatch = useDispatch();
+    const [totalPage, setTotalPage] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [areas, setAreas] = useState([]);
+
+    const getAreas = async () => {
+        try {
+            const result = await areasApi.getAll(currentPage);
+            setTotalPage(result.totalPage);
+            setAreas(result.areas);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const handlePagination = (page) => {
+        setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        getAreas();
+    }, [currentPage]);
 
     const handleOpenDialog = (area) => {
         if (area._id) {
@@ -63,7 +81,7 @@ function Areas() {
                                 popup: `${clsx(styles.popup)}`,
                             },
                         });
-                        dispatch(getAreas());
+                        getAreas();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -99,7 +117,7 @@ function Areas() {
                     formik.setFieldValue('name', '');
                     setOpenCreate(false);
                     setOpenEdit(false);
-                    dispatch(getAreas());
+                    getAreas();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -112,6 +130,7 @@ function Areas() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo vùng miền
             </button>
+            <PaginationOutlined count={totalPage} onClick={handlePagination} />
             <DialogOneField
                 formik={formik}
                 open={openCreate || openEdit}

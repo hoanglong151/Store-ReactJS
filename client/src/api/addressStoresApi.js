@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const addressStoresApi = {
-    getAll: () => {
-        return axiosClient.get('/addressStores');
+    getAll: (page) => {
+        return axiosClient.get(`/addressStores?page=${page}`);
     },
     addAddressStore: (data) => {
         return axiosClient.post('/addressStores/addAddressStore', data);

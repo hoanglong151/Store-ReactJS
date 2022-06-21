@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const productsApi = {
-    getAll: () => {
-        return axiosClient.get('/products');
+    getAll: (page) => {
+        return axiosClient.get(`/products?page=${page}`);
     },
     addProduct: (data) => {
         return axiosClient.post('/products/addProduct', data, { headers: { 'Content-Type': 'multipart/form-data' } });

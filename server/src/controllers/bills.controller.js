@@ -142,35 +142,79 @@ const paymentBill = (req, res) => {
   });
 };
 
-const getBills = (req, res) => {
-  billsModel
-    .find({}, (err, data) => {
-      res.send(data);
-    })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "Areas",
-      },
-    })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "Districts",
-      },
-    })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "Provinces",
-      },
-    })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "AddressStores",
-      },
-    });
+const getBills = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page);
+  let bills;
+  const skipBills = page * PAGE_SIZE - PAGE_SIZE;
+  if (page) {
+    bills = await billsModel
+      .find()
+      .populate({
+        path: "Bill",
+        populate: {
+          path: "Areas",
+        },
+      })
+      .populate({
+        path: "Bill",
+        populate: {
+          path: "Districts",
+        },
+      })
+      .populate({
+        path: "Bill",
+        populate: {
+          path: "Provinces",
+        },
+      })
+      .populate({
+        path: "Bill",
+        populate: {
+          path: "AddressStores",
+        },
+      })
+      .skip(skipBills)
+      .limit(PAGE_SIZE);
+  } else {
+    bills = await billsModel
+      .find()
+      .populate({
+        path: "Bill",
+        populate: {
+          path: "Areas",
+        },
+      })
+      .populate({
+        path: "Bill",
+        populate: {
+          path: "Districts",
+        },
+      })
+      .populate({
+        path: "Bill",
+        populate: {
+          path: "Provinces",
+        },
+      })
+      .populate({
+        path: "Bill",
+        populate: {
+          path: "AddressStores",
+        },
+      });
+  }
+
+  billsModel.countDocuments((err, total) => {
+    if (err) {
+      console.log("Err: ", err);
+      return err;
+    }
+    if (total) {
+      const totalPage = Math.ceil(total / PAGE_SIZE);
+      res.send({ bills: bills, totalPage: totalPage });
+    }
+  });
 };
 
 module.exports = { findBill, updateBill, paymentBill, getBills };

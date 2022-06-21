@@ -1,23 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import styles from './SaleCodes.module.scss';
 import { useFormik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import saleCodesApi from '~/api/saleCodesApi';
-import { getSaleCodes } from '~/app/reducerSaleCode';
 import DialogSaleCode from '~/components/Form/Dialog/DialogSaleCode/DialogSaleCode';
 import TableSaleCode from '~/components/Tables/TableSaleCode/TableSaleCode';
+import PaginationOutlined from '~/components/Pagination';
 
 function SaleCodes() {
     const [editSaleCode, setEditSaleCode] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
-    const { saleCodes } = useSelector((state) => state.saleCode);
     const DeleteSwal = withReactContent(Swal);
 
-    const dispatch = useDispatch();
+    const [totalPage, setTotalPage] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [saleCodes, setSaleCodes] = useState([]);
+
+    const getSaleCodes = async () => {
+        try {
+            const result = await saleCodesApi.getAll(currentPage);
+            setTotalPage(result.totalPage);
+            setSaleCodes(result.saleCodes);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const handlePagination = (page) => {
+        setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        getSaleCodes();
+    }, [currentPage]);
 
     const handleOpenDialog = (saleCode) => {
         if (saleCode._id) {
@@ -63,7 +81,7 @@ function SaleCodes() {
                                 popup: `${clsx(styles.popup)}`,
                             },
                         });
-                        dispatch(getSaleCodes());
+                        getSaleCodes();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -104,7 +122,7 @@ function SaleCodes() {
                     setOpenCreate(false);
                     setOpenEdit(false);
                     setEditSaleCode({});
-                    dispatch(getSaleCodes());
+                    getSaleCodes();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -117,6 +135,7 @@ function SaleCodes() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo mã khuyến mãi
             </button>
+            <PaginationOutlined count={totalPage} onClick={handlePagination} />
             <DialogSaleCode
                 formik={formik}
                 open={openCreate || openEdit}

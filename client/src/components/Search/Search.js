@@ -6,8 +6,8 @@ import Tippy from '@tippyjs/react/headless';
 import WrapperPopper from '~/components/Popper/Wrapper';
 import CardProductItem from '~/components/Cards/CardProductSearch/CardProductSearch';
 import { faCircleXmark, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import productApi from '~/api/productApi';
-import { useDebounce } from '~/hooks';
+import productApi from '~/api/productsApi';
+import { useDebounce, useSortProductByTitle } from '~/hooks';
 
 function Search() {
     const [searchResult, setSearchResult] = useState([]);
@@ -15,7 +15,8 @@ function Search() {
     const [visible, setVisible] = useState(true);
     const [loading, setLoading] = useState(false);
     const inputSearchRef = useRef();
-    const debounce = useDebounce(valueSearch, 1000);
+    const debounce = useDebounce(valueSearch, 800);
+    const productsCheap = useSortProductByTitle(searchResult, 'CHEAP');
 
     const hideResultProduct = () => {
         setVisible(false);
@@ -47,12 +48,12 @@ function Search() {
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
             </div>
             <Tippy
-                visible={visible && searchResult.length > 0}
+                visible={visible && productsCheap.length > 0}
                 interactive={true}
                 render={(attrs) => (
                     <div className={clsx(styles.searchProducts)} tabIndex="-1" {...attrs}>
                         <WrapperPopper>
-                            {searchResult?.map((product) => (
+                            {productsCheap?.map((product) => (
                                 <CardProductItem key={product._id} product={product} />
                             ))}
                         </WrapperPopper>

@@ -13,13 +13,15 @@ import billsApi from '~/api/billsApi';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { emptyCart } from '~/app/reducerCart';
+import { addressStoresApi, areasApi, districtsApi, provincesApi } from '~/api';
 
 function Bill() {
-    const { addressStore, area, district, province, cart } = useSelector((state) => state);
-    const { addressStores } = addressStore;
-    const { areas } = area;
-    const { districts } = district;
-    const { provinces } = province;
+    const { cart } = useSelector((state) => state);
+    const [addressStores, setAddressStores] = useState([]);
+    const [areas, setAreas] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const [provinces, setProvinces] = useState([]);
+
     const [selectMethodShip, setSelectMethodShip] = useState('Nhận tại cửa hàng');
     const [selectArea, setSelectArea] = useState();
     const [selectProvince, setSelectProvince] = useState();
@@ -34,6 +36,33 @@ function Bill() {
     const SuccessSwal = withReactContent(Swal);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const getAddressStores = async () => {
+        const result = await addressStoresApi.getAll();
+        setAddressStores(result.addressStores);
+    };
+
+    const getAreas = async () => {
+        const result = await areasApi.getAll();
+        setAreas(result.areas);
+    };
+
+    const getProvinces = async () => {
+        const result = await provincesApi.getAll();
+        setProvinces(result.provinces);
+    };
+
+    const getDistricts = async () => {
+        const result = await districtsApi.getAll();
+        setDistricts(result.districts);
+    };
+
+    useEffect(() => {
+        getAreas();
+        getAddressStores();
+        getProvinces();
+        getDistricts();
+    }, []);
 
     useEffect(() => {
         const getBillStatus = async () => {
@@ -122,7 +151,6 @@ function Bill() {
             };
         });
         setSelectArea(newAreas[0]);
-
         return {
             Areas: newAreas,
         };
@@ -281,7 +309,7 @@ function Bill() {
                             <div className={clsx(styles.wrapAreaCity)}>
                                 <Selects
                                     select={selectArea}
-                                    data={convertSelects.Areas}
+                                    data={convertSelects?.Areas || []}
                                     onChangeSelect={handleSelectArea}
                                     className={clsx(styles.w100, styles.mb1)}
                                 />

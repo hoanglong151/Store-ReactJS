@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import styles from './MenuLeft.module.scss';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { categoriesApi, firmsApi } from '~/api';
 
 function MenuLeft() {
-    const [getFirms, setGetFirms] = useState([]);
-    const categories = useSelector((state) => state.category.categories);
-    const firms = useSelector((state) => state.firm.firms);
+    const [firmByProduct, setFirmByProduct] = useState([]);
+    const [firms, setFirms] = useState([]);
+    const [categories, setCategories] = useState([]);
+
+    const getCategories = async () => {
+        const result = await categoriesApi.getAll();
+        setCategories(result.categories);
+    };
+
+    const getFirms = async () => {
+        const result = await firmsApi.getAll();
+        setFirms(result.firms);
+    };
+
+    useEffect(() => {
+        getCategories();
+        getFirms();
+    }, []);
 
     const handleGetCategory = (category) => {
         const getFirmsID = category.Products.reduce((pre, next) => {
@@ -16,7 +31,7 @@ function MenuLeft() {
         const getFirms = firms.filter((firm, index) => {
             return getFirmsID.includes(firm._id);
         });
-        setGetFirms(getFirms);
+        setFirmByProduct(getFirms);
     };
     return (
         <div className={clsx(styles.wrapper)}>
@@ -34,7 +49,7 @@ function MenuLeft() {
                         </Link>
 
                         <ul className={clsx(styles.subMenu)}>
-                            {getFirms.map((firm, index) => (
+                            {firmByProduct.map((firm, index) => (
                                 <li key={firm._id} className={clsx(styles.subMenuItem)}>
                                     <Link
                                         to={`/firm`}

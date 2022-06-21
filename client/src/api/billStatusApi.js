@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const billStatusApi = {
-    getAll: () => {
-        return axiosClient.get('/billStatus');
+    getAll: (page) => {
+        return axiosClient.get(`/billStatus?page=${page}`);
     },
     addBillStatus: (data) => {
         return axiosClient.post('/billStatus/addBillStatus', data);

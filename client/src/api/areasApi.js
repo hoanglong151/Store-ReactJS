@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const areasApi = {
-    getAll: () => {
-        return axiosClient.get('/areas');
+    getAll: (page) => {
+        return axiosClient.get(`/areas?page=${page}`);
     },
     addArea: (data) => {
         return axiosClient.post('/areas/addArea', data);

@@ -1,31 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import styles from './SearchByCate.module.scss';
+import { productsApi } from '~/api';
+import { useDebounce } from '~/hooks';
 
 function SearchByCate(props) {
     const { type, onSearch } = props;
     const [searchInput, setSearchInput] = useState('');
+    const debounce = useDebounce(searchInput, 800);
 
     useEffect(() => {
-        const id = setTimeout(() => {
-            const result = type.filter((item) => {
-                const itemArr = item.Name.toLowerCase().split(' ');
-                const searchArr = searchInput.split(' ');
-                const containsAll = searchArr.every((element) => {
-                    return itemArr.includes(element);
-                });
-                if (containsAll) {
-                    return item;
-                } else {
-                    return item.Name.toLowerCase().includes(searchInput);
+        if (debounce.trim()) {
+            const submitSearch = async () => {
+                let result;
+                switch (type) {
+                    case 'product':
+                        result = await productsApi.searchProduct(searchInput.trim());
+                        onSearch(result);
+                        break;
                 }
-            });
-            onSearch(result);
-        }, 800);
-        return () => {
-            clearTimeout(id);
-        };
-    }, [searchInput]);
+            };
+            submitSearch();
+        } else {
+            onSearch([]);
+        }
+    }, [debounce]);
 
     const handleSearch = (input) => {
         setSearchInput(input);

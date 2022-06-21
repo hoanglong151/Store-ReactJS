@@ -1,24 +1,65 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import styles from './Districts.module.scss';
 import DialogDistrict from '~/components/Form/Dialog/DialogDistrict/DialogDistrict';
-import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import districtsApi from '~/api/districtsApi';
+import provincesApi from '~/api/provincesApi';
+import areasApi from '~/api/areasApi';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import TableDistrict from '~/components/Tables/TableDistrict/TableDistrict';
-import { getDistricts } from '~/app/reducerDistrict';
+import PaginationOutlined from '~/components/Pagination';
 
 function District() {
     const [editDistrict, setEditDistrict] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
-    const { areas } = useSelector((state) => state.area);
-    const { provinces } = useSelector((state) => state.province);
-    const { districts } = useSelector((state) => state.district);
     const DeleteSwal = withReactContent(Swal);
-    const dispatch = useDispatch();
+
+    const [areas, setAreas] = useState([]);
+    const [provinces, setProvinces] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const [totalPage, setTotalPage] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const getAreas = async () => {
+        try {
+            const result = await areasApi.getAll();
+            setAreas(result.areas);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const getProvinces = async () => {
+        try {
+            const result = await provincesApi.getAll();
+            setProvinces(result.provinces);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const getDistricts = async () => {
+        try {
+            const result = await districtsApi.getAll(currentPage);
+            setTotalPage(result.totalPage);
+            setDistricts(result.districts);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const handlePagination = (page) => {
+        setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        getAreas();
+        getProvinces();
+        getDistricts();
+    }, [currentPage]);
 
     const newAreas = useMemo(() => {
         return areas.map((area, i) => {
@@ -102,7 +143,7 @@ function District() {
                                 popup: `${clsx(styles.popup)}`,
                             },
                         });
-                        dispatch(getDistricts());
+                        getDistricts();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -158,7 +199,7 @@ function District() {
                     setOpenCreate(false);
                     setOpenEdit(false);
                     setEditDistrict({});
-                    dispatch(getDistricts());
+                    getDistricts();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -171,6 +212,7 @@ function District() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo quận/huyện
             </button>
+            <PaginationOutlined count={totalPage} onClick={handlePagination} />
             <DialogDistrict
                 formik={formik}
                 open={openCreate || openEdit}

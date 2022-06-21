@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './AddProductStyle.module.scss';
 import clsx from 'clsx';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import productsApi from '~/api/productApi';
+import productsApi from '~/api/productsApi';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '~/app/reducerProduct';
 import Label from '~/components/Form/Label/Label';
 import Input from '~/components/Form/Input/Input';
 import Selects from '~/components/Form/Selects/Selects';
@@ -14,11 +12,35 @@ import TextArea from '~/components/Form/TextArea/TextArea';
 import SelectImage from '~/components/Form/SelectImage/SelectImage';
 import ErrorMessage from '~/components/Form/ErrorMessage/ErrorMessage';
 import Accordion from '~/components/Form/Accordion/Accordion';
+import { categoriesApi, firmsApi } from '~/api';
 
 function AddProduct() {
+    const [firms, setFirms] = useState([]);
+    const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
-    const categories = useSelector((state) => state.category.categories);
-    const firms = useSelector((state) => state.firm.firms);
+
+    const getCategories = async () => {
+        try {
+            const result = await categoriesApi.getAll();
+            setCategories(result.categories);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    const getFirms = async () => {
+        try {
+            const result = await firmsApi.getAll();
+            setFirms(result.firms);
+        } catch (err) {
+            console.log('Err: ', err);
+        }
+    };
+
+    useEffect(() => {
+        getCategories();
+        getFirms();
+    }, []);
 
     const fileObj = [];
     const fileArray = [];

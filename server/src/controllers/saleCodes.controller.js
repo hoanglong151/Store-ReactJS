@@ -1,9 +1,28 @@
 const mongoose = require("mongoose");
 const saleCodesModel = require("../model/Schema/saleCodes.schema");
 
-const getSaleCodes = (req, res) => {
-  saleCodesModel.find({}, (err, data) => {
-    res.send(data);
+const getSaleCodes = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page);
+  let saleCodes;
+  const skipSaleCodes = page * PAGE_SIZE - PAGE_SIZE;
+  if (page) {
+    saleCodes = await saleCodesModel
+      .find()
+      .skip(skipSaleCodes)
+      .limit(PAGE_SIZE);
+  } else {
+    saleCodes = await saleCodesModel.find();
+  }
+  saleCodesModel.countDocuments((err, total) => {
+    if (err) {
+      console.log("Err: ", err);
+      return err;
+    }
+    if (total) {
+      const totalPage = Math.ceil(total / PAGE_SIZE);
+      res.send({ saleCodes: saleCodes, totalPage: totalPage });
+    }
   });
 };
 

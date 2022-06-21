@@ -1,9 +1,28 @@
 const mongoose = require("mongoose");
 const billStatusModel = require("../model/Schema/billStatus.schema");
 
-const getBillStatus = (req, res) => {
-  billStatusModel.find({}, (err, data) => {
-    res.send(data);
+const getBillStatus = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page);
+  let billStatus;
+  const skipBillStatus = page * PAGE_SIZE - PAGE_SIZE;
+  if (page) {
+    billStatus = await billStatusModel
+      .find()
+      .skip(skipBillStatus)
+      .limit(PAGE_SIZE);
+  } else {
+    billStatus = await billStatusModel.find();
+  }
+  billStatusModel.countDocuments((err, total) => {
+    if (err) {
+      console.log("Err: ", err);
+      return err;
+    }
+    if (total) {
+      const totalPage = Math.ceil(total / PAGE_SIZE);
+      res.send({ billStatus: billStatus, totalPage: totalPage });
+    }
   });
 };
 

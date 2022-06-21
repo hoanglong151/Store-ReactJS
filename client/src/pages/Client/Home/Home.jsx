@@ -10,17 +10,29 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import CardProduct from '~/components/Cards/CardProduct/CardProduct';
 import { useSortProductByTitle } from '~/hooks';
 import SidebarCategory from '~/components/SidebarCategory';
+import { productsApi, categoriesApi } from '~/api';
 
 function Home() {
-    const { product, category } = useSelector((state) => state);
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
     const productCheap = useSortProductByTitle(products, 'CHEAP');
     const productHot = useSortProductByTitle(products, 'HOT');
     const productNew = useSortProductByTitle(products, 'NEW');
 
+    const getProducts = async () => {
+        const result = await productsApi.getAll();
+        setProducts(result.products);
+    };
+
+    const getCategories = async () => {
+        const result = await categoriesApi.getAll();
+        setCategories(result.categories);
+    };
+
     useEffect(() => {
-        setProducts(product.products);
-    }, [product.products]);
+        getProducts();
+        getCategories();
+    }, []);
 
     return (
         <div className={clsx(styles.wrapper)}>
@@ -37,9 +49,10 @@ function Home() {
                     </Link>
                 </div>
                 <div className={clsx(styles.sidebarCategories)}>
-                    {category.categories.map((cate) => (
-                        <SidebarCategory key={cate._id} name={cate.Name} link={cate._id} select="HOT" />
-                    ))}
+                    {categories.length !== 0 &&
+                        categories.map((cate) => (
+                            <SidebarCategory key={cate._id} name={cate.Name} link={cate._id} select="HOT" />
+                        ))}
                 </div>
                 <SliderCard slideShow={5} slideScroll={5} product={productHot} />
             </div>
@@ -56,9 +69,10 @@ function Home() {
                     </Link>
                 </div>
                 <div className={clsx(styles.sidebarCategories)}>
-                    {category.categories.map((cate) => (
-                        <SidebarCategory key={cate._id} name={cate.Name} link={cate._id} select="NEW" />
-                    ))}
+                    {categories.length !== 0 &&
+                        categories.map((cate) => (
+                            <SidebarCategory key={cate._id} name={cate.Name} link={cate._id} select="NEW" />
+                        ))}
                 </div>
                 <SliderCard slideShow={5} slideScroll={5} product={productNew} />
             </div>
@@ -75,15 +89,16 @@ function Home() {
                     </Link>
                 </div>
                 <div className={clsx(styles.sidebarCategories)}>
-                    {category.categories.map((cate) => (
-                        <SidebarCategory
-                            key={cate._id}
-                            name={cate.Name}
-                            link={cate._id}
-                            className="itemCate"
-                            select="CHEAP"
-                        />
-                    ))}
+                    {categories.length !== 0 &&
+                        categories.map((cate) => (
+                            <SidebarCategory
+                                key={cate._id}
+                                name={cate.Name}
+                                link={cate._id}
+                                className="itemCate"
+                                select="CHEAP"
+                            />
+                        ))}
                 </div>
                 <div className={clsx(styles.wrapProducts)}>
                     {productCheap.length > 0 &&

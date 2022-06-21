@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const firmsApi = {
-    getAll: () => {
-        return axiosClient.get('/firms');
+    getAll: (page) => {
+        return axiosClient.get(`/firms?page=${page}`);
     },
     addFirm: (data) => {
         return axiosClient.post('/firms/addFirm', data);
