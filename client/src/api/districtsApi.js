@@ -13,6 +13,11 @@ const districtsApi = {
     editDistrict: (data, id) => {
         return axiosClient.patch(`/districts/editDistrict/${id}`, data);
     },
+    searchDistrict: (data, pageSize) => {
+        return axiosClient.get(`/districts/searchDistrict?q=${encodeURIComponent(data)}&size=${pageSize}`, {
+            headers: { Authorization: null },
+        });
+    },
 };
 
 export default districtsApi;

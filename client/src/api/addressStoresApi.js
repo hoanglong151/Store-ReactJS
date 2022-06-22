@@ -13,6 +13,11 @@ const addressStoresApi = {
     editAddressStore: (data, id) => {
         return axiosClient.patch(`/addressStores/editAddressStore/${id}`, data);
     },
+    searchAddressStore: (data, pageSize) => {
+        return axiosClient.get(`/addressStores/searchAddressStore?q=${encodeURIComponent(data)}&size=${pageSize}`, {
+            headers: { Authorization: null },
+        });
+    },
 };
 
 export default addressStoresApi;

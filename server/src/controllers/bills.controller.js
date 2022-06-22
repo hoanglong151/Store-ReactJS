@@ -1,6 +1,7 @@
 const billsModel = require("../model/Schema/bills.schema");
 const typeProductsModel = require("../model/Schema/typeProducts.schema");
 const mongoose = require("mongoose");
+const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const findBill = (req, res) => {
   if (req.body.phone !== "" && req.body.billID !== "") {
@@ -217,4 +218,50 @@ const getBills = async (req, res) => {
   });
 };
 
-module.exports = { findBill, updateBill, paymentBill, getBills };
+const searchBill = async (req, res) => {
+  const result = await billsModel
+    .find()
+    .populate({
+      path: "Bill",
+      populate: {
+        path: "Areas",
+      },
+    })
+    .populate({
+      path: "Bill",
+      populate: {
+        path: "Districts",
+      },
+    })
+    .populate({
+      path: "Bill",
+      populate: {
+        path: "Provinces",
+      },
+    })
+    .populate({
+      path: "Bill",
+      populate: {
+        path: "AddressStores",
+      },
+    })
+    .exec();
+  const data = result.filter((value) => {
+    const removeUnicodeName = replaceUnicode(value.Name.toLowerCase());
+    const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
+    const name = removeUnicodeName.split(" ");
+    const search = removeUnicodeSearch.split(" ");
+    const contains = search.every((input) => {
+      return name.includes(input);
+    });
+    if (contains) {
+      return value;
+    } else {
+      return removeUnicodeName.toLowerCase().includes(removeUnicodeSearch);
+    }
+  });
+  const totalPage = Math.ceil(data.length / parseInt(req.query.size));
+  res.send({ data: data, totalPage: totalPage });
+};
+
+module.exports = { findBill, updateBill, paymentBill, getBills, searchBill };

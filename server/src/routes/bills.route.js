@@ -7,6 +7,7 @@ const {
   updateBill,
   paymentBill,
   getBills,
+  searchBill,
 } = require("../controllers/bills.controller");
 
 const router = express.Router();
@@ -18,5 +19,7 @@ router.patch("/updateBill", validateToken, updateBill);
 router.post("/paymentBill", paymentBill);
 
 router.get("/", validateToken, getBills);
+
+router.get("/searchBill", searchBill);
 
 module.exports = router;

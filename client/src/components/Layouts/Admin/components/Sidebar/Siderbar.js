@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import styles from './Sidebar.module.scss';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faBars,
@@ -9,8 +9,12 @@ import {
     faChartPie,
     faChevronDown,
     faChevronUp,
+    faCity,
+    faEarthAfrica,
     faList,
+    faLocationPin,
     faMobileButton,
+    faNetworkWired,
     faSackDollar,
     faTruck,
 } from '@fortawesome/free-solid-svg-icons';
@@ -19,8 +23,13 @@ import { faSalesforce } from '@fortawesome/free-brands-svg-icons';
 function Siderbar(props) {
     const { onClick, toggleMenu } = props;
     const [toggleMenuArea, setToggleMenuArea] = useState(false);
+    const { state } = useLocation();
 
-    const handleCloseMenuArea = () => {
+    useEffect(() => {
+        state?.openSubMenu ? setToggleMenuArea(true) : setToggleMenuArea(false);
+    }, [state]);
+
+    const handleToggleMenuArea = () => {
         setToggleMenuArea(!toggleMenuArea);
     };
 
@@ -29,7 +38,7 @@ function Siderbar(props) {
             <div className={styles.toggleMenu} onClick={onClick}>
                 <FontAwesomeIcon icon={faBars} />
             </div>
-            <div className={clsx(styles.menu, { [styles.menuClose]: toggleMenu })}>
+            <div className={clsx(styles.menu, { [styles.mobile]: toggleMenu })}>
                 <NavLink
                     to="/Admin/Products"
                     className={({ isActive }) => clsx(styles.linkMenu, { [styles.active]: isActive })}
@@ -72,8 +81,8 @@ function Siderbar(props) {
                     <FontAwesomeIcon icon={faTruck} />
                     <span className={clsx(styles.titleMenu)}>Tình Trạng ĐH</span>
                 </NavLink>
-                <div className={clsx(styles.linkMenu)} onClick={handleCloseMenuArea}>
-                    <div className={clsx(styles.areaText)}>
+                <div className={clsx(styles.subMenu)} onClick={handleToggleMenuArea}>
+                    <div className={clsx(styles.areaText, { [styles.openMenu]: toggleMenuArea })}>
                         <FontAwesomeIcon icon={faChartArea} />
                         <span className={clsx(styles.titleMenu, styles.areaTitle)}>Khu vực</span>
                         {toggleMenuArea ? (
@@ -83,25 +92,49 @@ function Siderbar(props) {
                         )}
                     </div>
 
-                    <ul className={clsx(styles.areaMenu, { [styles.areaMenuActive]: toggleMenuArea })}>
+                    <ul
+                        className={clsx(styles.areaMenu, {
+                            [styles.areaMenuActive]: toggleMenuArea,
+                        })}
+                    >
                         <li>
-                            <NavLink to="/Admin/Areas" className={clsx(styles.linkArea)}>
-                                Vùng miền
+                            <NavLink
+                                to="/Admin/Areas"
+                                state={{ openSubMenu: true }}
+                                className={({ isActive }) => clsx(styles.linkArea, { [styles.active]: isActive })}
+                            >
+                                <FontAwesomeIcon icon={faEarthAfrica} />
+                                <span className={clsx(styles.titleMenu, styles.areaTitle)}>Vùng miền</span>
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/Admin/Provinces" className={clsx(styles.linkArea)}>
-                                Tỉnh/Thành
+                            <NavLink
+                                to="/Admin/Provinces"
+                                state={{ openSubMenu: true }}
+                                className={({ isActive }) => clsx(styles.linkArea, { [styles.active]: isActive })}
+                            >
+                                <FontAwesomeIcon icon={faCity} />
+                                <span className={clsx(styles.titleMenu, styles.areaTitle)}>Tỉnh/Thành</span>
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/Admin/Districts" className={clsx(styles.linkArea)}>
-                                Quận/Huyện
+                            <NavLink
+                                to="/Admin/Districts"
+                                state={{ openSubMenu: true }}
+                                className={({ isActive }) => clsx(styles.linkArea, { [styles.active]: isActive })}
+                            >
+                                <FontAwesomeIcon icon={faNetworkWired} />
+                                <span className={clsx(styles.titleMenu, styles.areaTitle)}>Quận/Huyện</span>
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/Admin/AddressStores" className={clsx(styles.linkArea)}>
-                                Danh Sách Cửa Hàng
+                            <NavLink
+                                to="/Admin/AddressStores"
+                                state={{ openSubMenu: true }}
+                                className={({ isActive }) => clsx(styles.linkArea, { [styles.active]: isActive })}
+                            >
+                                <FontAwesomeIcon icon={faLocationPin} />
+                                <span className={clsx(styles.titleMenu, styles.areaTitle)}> Danh Sách Cửa Hàng</span>
                             </NavLink>
                         </li>
                     </ul>

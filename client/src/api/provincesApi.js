@@ -13,6 +13,11 @@ const provincesApi = {
     editProvince: (data, id) => {
         return axiosClient.patch(`/provinces/editProvince/${id}`, data);
     },
+    searchProvince: (data, pageSize) => {
+        return axiosClient.get(`/provinces/searchProvince?q=${encodeURIComponent(data)}&size=${pageSize}`, {
+            headers: { Authorization: null },
+        });
+    },
 };
 
 export default provincesApi;

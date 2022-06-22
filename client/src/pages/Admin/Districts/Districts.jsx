@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import TableDistrict from '~/components/Tables/TableDistrict/TableDistrict';
 import PaginationOutlined from '~/components/Pagination';
+import SearchByCate from '~/components/SearchByCate';
 
 function District() {
     const [editDistrict, setEditDistrict] = useState({});
@@ -19,8 +20,15 @@ function District() {
 
     const [areas, setAreas] = useState([]);
     const [provinces, setProvinces] = useState([]);
-    const [districts, setDistricts] = useState([]);
-    const [totalPage, setTotalPage] = useState();
+
+    const [totalPage, setTotalPage] = useState({
+        pageAll: 1,
+        pageSearch: 1,
+    });
+    const [districts, setDistricts] = useState({
+        districtsAll: [],
+        districtsSearch: [],
+    });
     const [currentPage, setCurrentPage] = useState(1);
 
     const getAreas = async () => {
@@ -44,8 +52,8 @@ function District() {
     const getDistricts = async () => {
         try {
             const result = await districtsApi.getAll(currentPage);
-            setTotalPage(result.totalPage);
-            setDistricts(result.districts);
+            setTotalPage({ ...totalPage, pageAll: result.totalPage, pageSearch: result.totalPage });
+            setDistricts({ ...districts, districtsAll: result.districts, districtsSearch: result.districts });
         } catch (err) {
             console.log('Err: ', err);
         }
@@ -168,6 +176,16 @@ function District() {
         formik.setFieldValue('province_Id', optionList);
     };
 
+    const handleSearchDistricts = (data) => {
+        if (Object.keys(data).length !== 0) {
+            setDistricts({ ...districts, districtsSearch: data.data });
+            setTotalPage({ ...totalPage, pageSearch: data.totalPage });
+        } else {
+            setDistricts({ ...districts, districtsSearch: districts.districtsAll });
+            setTotalPage({ ...totalPage, pageSearch: totalPage.pageAll });
+        }
+    };
+
     const objectDistrict = () => {
         if (editDistrict._id) {
             return {
@@ -187,7 +205,6 @@ function District() {
         enableReinitialize: true,
         initialValues: objectDistrict(),
         onSubmit: (values) => {
-            console.log(values);
             const submit = async () => {
                 try {
                     if (editDistrict._id) {
@@ -212,7 +229,8 @@ function District() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo quận/huyện
             </button>
-            <PaginationOutlined count={totalPage} onClick={handlePagination} />
+            <SearchByCate type="district" onSearch={handleSearchDistricts} />
+            <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
             <DialogDistrict
                 formik={formik}
                 open={openCreate || openEdit}
@@ -224,7 +242,7 @@ function District() {
                 editDistrict={editDistrict}
             />
             <TableDistrict
-                districts={districts}
+                districts={districts.districtsSearch}
                 onHandleOpenDialog={handleOpenDialog}
                 onHandleDeleteDistrict={handleDeleteDistrict}
             />

@@ -1,58 +1,50 @@
 .wrapper {
     display: flex;
     flex-direction: column;
+}
+
+.toggleMenu {
+    padding: 1.5rem;
     color: var(--primary-admin);
+    font-size: 2rem;
+    height: 6rem;
+    cursor: pointer;
+    align-self: center;
+    justify-self: center;
+}
+.menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
 
-    .toggleMenu {
-        padding: 1.5rem;
-        color: var(--primary-admin);
-        font-size: 2rem;
-        height: 6rem;
-        cursor: pointer;
-        align-self: center;
-        justify-self: center;
+.linkMenu {
+    color: #999;
+    padding: 2rem;
+    margin-bottom: 1rem;
+}
+
+.titleMenu {
+    padding-left: 1rem;
+}
+
+.menuClose {
+    .linkMenu {
+        text-align: center;
     }
-
-    .menu {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-
-        .linkMenu {
-            color: #999;
-            padding: 2rem;
-            margin-bottom: 1rem;
-
-            &.active {
-                color: var(--primary-admin);
-                border-width: 0 3px 0 0;
-                border-style: solid;
-                border-image: linear-gradient(0deg, var(--white) 5%, var(--primary-admin) 70%);
-                border-image-slice: 1;
-                margin-right: -3px;
-                z-index: 1;
-            }
-        }
-
-        .titleMenu {
-            padding-left: 1rem;
-        }
-    }
-
-    .menuClose {
-        .linkMenu {
-            text-align: center;
-        }
-        .titleMenu {
-            display: none;
-        }
+    .titleMenu {
+        display: none;
     }
 }
+
 .areaText {
     display: flex;
     align-items: center;
     cursor: pointer;
     user-select: none;
+    padding: 2rem 2rem 0;
+    color: #999;
 }
 
 .areaTitle {
@@ -63,6 +55,7 @@
     display: none;
     list-style: none;
     margin-top: 1rem;
+    position: relative;
 }
 
 .areaMenuActive {
@@ -71,6 +64,42 @@
 
 .linkArea {
     display: block;
-    padding: 1.5rem 0 1.5rem 2rem;
+    padding: 1.5rem 1rem 1.5rem 4rem;
     color: #999;
+}
+
+.active {
+    color: var(--primary-admin);
+    border-width: 0 3px 0 0;
+    border-style: solid;
+    border-image: linear-gradient(0deg, var(--white) 5%, var(--primary-admin) 70%);
+    border-image-slice: 1;
+    margin-right: -3px;
+    z-index: 1;
+}
+
+.openMenu {
+    color: var(--primary-admin);
+}
+
+.mobile {
+    a {
+        text-align: center;
+        padding: 2rem 0;
+
+        span {
+            display: none;
+        }
+    }
+
+    .areaText {
+        justify-content: center;
+        span {
+            display: none;
+        }
+
+        span ~ svg {
+            display: none;
+        }
+    }
 }

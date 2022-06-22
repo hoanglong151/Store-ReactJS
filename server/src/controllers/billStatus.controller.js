@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const billStatusModel = require("../model/Schema/billStatus.schema");
+const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getBillStatus = async (req, res) => {
   const PAGE_SIZE = 10;
@@ -62,9 +63,30 @@ const deleteBillStatus = (req, res) => {
   });
 };
 
+const searchBillStatus = async (req, res) => {
+  const result = await billStatusModel.find().exec();
+  const data = result.filter((value) => {
+    const removeUnicodeName = replaceUnicode(value.Name.toLowerCase());
+    const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
+    const name = removeUnicodeName.split(" ");
+    const search = removeUnicodeSearch.split(" ");
+    const contains = search.every((input) => {
+      return name.includes(input);
+    });
+    if (contains) {
+      return value;
+    } else {
+      return removeUnicodeName.toLowerCase().includes(removeUnicodeSearch);
+    }
+  });
+  const totalPage = Math.ceil(data.length / parseInt(req.query.size));
+  res.send({ data: data, totalPage: totalPage });
+};
+
 module.exports = {
   getBillStatus,
   addBillStatus,
   editBillStatus,
   deleteBillStatus,
+  searchBillStatus,
 };

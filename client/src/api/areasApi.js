@@ -13,6 +13,11 @@ const areasApi = {
     editArea: (data, id) => {
         return axiosClient.patch(`/areas/editArea/${id}`, data);
     },
+    searchArea: (data, pageSize) => {
+        return axiosClient.get(`/areas/searchArea?q=${encodeURIComponent(data)}&size=${pageSize}`, {
+            headers: { Authorization: null },
+        });
+    },
 };
 
 export default areasApi;

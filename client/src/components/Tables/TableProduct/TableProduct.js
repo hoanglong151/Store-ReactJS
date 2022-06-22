@@ -12,7 +12,6 @@ import styles from './TableProduct.module.scss';
 
 export default function TablesProduct(props) {
     const { titles, products } = props;
-
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">

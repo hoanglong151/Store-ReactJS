@@ -9,6 +9,7 @@ const {
   addCategory,
   deleteCategory,
   editCategory,
+  searchCategory,
 } = require("../controllers/categories.controller");
 
 const router = express.Router();
@@ -25,5 +26,7 @@ router.patch(
   upload.single("image"),
   editCategory
 );
+
+router.get("/searchCategory/", searchCategory);
 
 module.exports = router;

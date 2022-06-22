@@ -8,6 +8,7 @@ const {
   deleteObject,
 } = require("firebase/storage");
 const uuid = require("uuid");
+const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getCategories = async (req, res) => {
   const PAGE_SIZE = 10;
@@ -136,4 +137,31 @@ const editCategory = async (req, res) => {
     res.send(cate);
   });
 };
-module.exports = { getCategories, addCategory, deleteCategory, editCategory };
+
+const searchCategory = async (req, res) => {
+  const result = await categoriesModel.find().populate("Products").exec();
+  const data = result.filter((value) => {
+    const removeUnicodeName = replaceUnicode(value.Name.toLowerCase());
+    const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
+    const name = removeUnicodeName.split(" ");
+    const search = removeUnicodeSearch.split(" ");
+    const contains = search.every((input) => {
+      return name.includes(input);
+    });
+    if (contains) {
+      return value;
+    } else {
+      return removeUnicodeName.toLowerCase().includes(removeUnicodeSearch);
+    }
+  });
+  const totalPage = Math.ceil(data.length / parseInt(req.query.size));
+  res.send({ data: data, totalPage: totalPage });
+};
+
+module.exports = {
+  getCategories,
+  addCategory,
+  deleteCategory,
+  editCategory,
+  searchCategory,
+};

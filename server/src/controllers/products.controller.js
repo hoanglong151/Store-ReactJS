@@ -363,18 +363,21 @@ const searchProduct = async (req, res) => {
     .populate("TypesProduct")
     .exec();
   const data = result.filter((value) => {
-    const removeUnicodeNameProduct = replaceUnicode(value.Name.toLowerCase());
+    const removeUnicodeName = replaceUnicode(value.Name.toLowerCase());
     const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
-    const nameProduct = removeUnicodeNameProduct.split(" ");
-    const searchProduct = removeUnicodeSearch.split(" ");
-    const containsProduct = searchProduct.every((input) => {
-      return nameProduct.includes(input);
+    const name = removeUnicodeName.split(" ");
+    const search = removeUnicodeSearch.split(" ");
+    const contains = search.every((input) => {
+      return name.includes(input);
     });
-    if (containsProduct) {
+    if (contains) {
       return value;
+    } else {
+      return removeUnicodeName.toLowerCase().includes(removeUnicodeSearch);
     }
   });
-  res.send(data);
+  const totalPage = Math.ceil(data.length / parseInt(req.query.size));
+  res.send({ data: data, totalPage: totalPage });
 };
 
 module.exports = {

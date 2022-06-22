@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import styles from './SearchByCate.module.scss';
-import { productsApi } from '~/api';
+import {
+    addressStoresApi,
+    areasApi,
+    billsApi,
+    billStatusApi,
+    categoriesApi,
+    districtsApi,
+    firmsApi,
+    productsApi,
+    provincesApi,
+    saleCodesApi,
+} from '~/api';
 import { useDebounce } from '~/hooks';
 
 function SearchByCate(props) {
@@ -13,16 +24,53 @@ function SearchByCate(props) {
         if (debounce.trim()) {
             const submitSearch = async () => {
                 let result;
+                const PAGE_SIZE = 10;
                 switch (type) {
                     case 'product':
-                        result = await productsApi.searchProduct(searchInput.trim());
+                        result = await productsApi.searchProduct(searchInput.trim(), PAGE_SIZE);
+                        onSearch(result);
+                        break;
+                    case 'category':
+                        result = await categoriesApi.searchCategory(searchInput.trim(), PAGE_SIZE);
+                        onSearch(result);
+                        break;
+                    case 'firm':
+                        result = await firmsApi.searchFirm(searchInput.trim(), PAGE_SIZE);
+                        onSearch(result);
+                        break;
+                    case 'bill':
+                        result = await billsApi.searchBill(searchInput.trim(), PAGE_SIZE);
+                        onSearch(result);
+                        break;
+                    case 'saleCode':
+                        result = await saleCodesApi.searchSaleCode(searchInput.trim(), PAGE_SIZE);
+                        onSearch(result);
+                        break;
+                    case 'billStatus':
+                        result = await billStatusApi.searchBillStatus(searchInput.trim(), PAGE_SIZE);
+                        onSearch(result);
+                        break;
+                    case 'area':
+                        result = await areasApi.searchArea(searchInput.trim(), PAGE_SIZE);
+                        onSearch(result);
+                        break;
+                    case 'province':
+                        result = await provincesApi.searchProvince(searchInput.trim(), PAGE_SIZE);
+                        onSearch(result);
+                        break;
+                    case 'district':
+                        result = await districtsApi.searchDistrict(searchInput.trim(), PAGE_SIZE);
+                        onSearch(result);
+                        break;
+                    case 'addressStore':
+                        result = await addressStoresApi.searchAddressStore(searchInput.trim(), PAGE_SIZE);
                         onSearch(result);
                         break;
                 }
             };
             submitSearch();
         } else {
-            onSearch([]);
+            onSearch({});
         }
     }, [debounce]);
 

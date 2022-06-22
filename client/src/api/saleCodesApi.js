@@ -16,6 +16,11 @@ const saleCodesApi = {
     applySaleCode: (data) => {
         return axiosClient.post('/saleCodes/applySaleCode', data);
     },
+    searchSaleCode: (data, pageSize) => {
+        return axiosClient.get(`/saleCodes/searchSaleCode?q=${encodeURIComponent(data)}&size=${pageSize}`, {
+            headers: { Authorization: null },
+        });
+    },
 };
 
 export default saleCodesApi;

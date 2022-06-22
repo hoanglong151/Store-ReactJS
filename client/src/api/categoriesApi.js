@@ -15,6 +15,11 @@ const categoriesApi = {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
     },
+    searchCategory: (data, pageSize) => {
+        return axiosClient.get(`/categories/searchCategory?q=${encodeURIComponent(data)}&size=${pageSize}`, {
+            headers: { Authorization: null },
+        });
+    },
 };
 
 export default categoriesApi;

@@ -13,8 +13,8 @@ const productsApi = {
     deleteProduct: (data) => {
         return axiosClient.delete(`/products/deleteProduct/${data}`);
     },
-    searchProduct: (data) => {
-        return axiosClient.get(`/products/searchProduct?q=${encodeURIComponent(data)}`, {
+    searchProduct: (data, pageSize) => {
+        return axiosClient.get(`/products/searchProduct?q=${encodeURIComponent(data)}&size=${pageSize}`, {
             headers: { Authorization: null },
         });
     },

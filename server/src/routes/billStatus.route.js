@@ -7,6 +7,7 @@ const {
   addBillStatus,
   editBillStatus,
   deleteBillStatus,
+  searchBillStatus,
 } = require("../controllers/billStatus.controller");
 
 const router = express.Router();
@@ -18,5 +19,7 @@ router.post("/addBillStatus", validateToken, addBillStatus);
 router.patch("/editBillStatus/:id", validateToken, editBillStatus);
 
 router.delete("/deleteBillStatus/:id", validateToken, deleteBillStatus);
+
+router.get("/searchBillStatus", searchBillStatus);
 
 module.exports = router;

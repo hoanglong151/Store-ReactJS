@@ -8,6 +8,7 @@ import areasApi from '~/api/areasApi';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import PaginationOutlined from '~/components/Pagination';
+import SearchByCate from '~/components/SearchByCate';
 
 function Areas() {
     const [editArea, setEditArea] = useState({});
@@ -15,15 +16,21 @@ function Areas() {
     const [openEdit, setOpenEdit] = useState(false);
     const DeleteSwal = withReactContent(Swal);
 
-    const [totalPage, setTotalPage] = useState();
+    const [totalPage, setTotalPage] = useState({
+        pageAll: 1,
+        pageSearch: 1,
+    });
+    const [areas, setAreas] = useState({
+        areasAll: [],
+        areasSearch: [],
+    });
     const [currentPage, setCurrentPage] = useState(1);
-    const [areas, setAreas] = useState([]);
 
     const getAreas = async () => {
         try {
             const result = await areasApi.getAll(currentPage);
-            setTotalPage(result.totalPage);
-            setAreas(result.areas);
+            setTotalPage({ ...totalPage, pageAll: result.totalPage, pageSearch: result.totalPage });
+            setAreas({ ...areas, areasAll: result.areas, areasSearch: result.areas });
         } catch (err) {
             console.log('Err: ', err);
         }
@@ -90,6 +97,16 @@ function Areas() {
         });
     };
 
+    const handleSearchAreas = (data) => {
+        if (Object.keys(data).length !== 0) {
+            setAreas({ ...areas, areasSearch: data.data });
+            setTotalPage({ ...totalPage, pageSearch: data.totalPage });
+        } else {
+            setAreas({ ...areas, areasSearch: areas.areasAll });
+            setTotalPage({ ...totalPage, pageSearch: totalPage.pageAll });
+        }
+    };
+
     const objectArea = () => {
         if (Object.keys(editArea).length !== 0) {
             return {
@@ -130,7 +147,8 @@ function Areas() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo vùng miền
             </button>
-            <PaginationOutlined count={totalPage} onClick={handlePagination} />
+            <SearchByCate type="area" onSearch={handleSearchAreas} />
+            <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
             <DialogOneField
                 formik={formik}
                 open={openCreate || openEdit}
@@ -140,7 +158,7 @@ function Areas() {
                 placeholder="Tên vùng miền"
             />
             <TableTwoColumn
-                data={areas}
+                data={areas.areasSearch}
                 onHandleOpenDialog={handleOpenDialog}
                 onHandleDelete={handleDeleteArea}
                 title={['Vùng miền', 'Chức năng']}

@@ -11,7 +11,7 @@ function DefaultLayout({ children }) {
     };
     return (
         <div className={clsx(styles.wrapper)}>
-            <div className={clsx(styles.sidebar, { [styles.menuClose]: toggleMenu })}>
+            <div className={clsx(styles.sidebar, { [styles.menuMobile]: toggleMenu })}>
                 <Sidebar onClick={handleToggleMenu} toggleMenu={toggleMenu} />
             </div>
             <div className={clsx(styles.container)}>

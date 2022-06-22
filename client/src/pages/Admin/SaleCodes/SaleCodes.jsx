@@ -8,6 +8,7 @@ import saleCodesApi from '~/api/saleCodesApi';
 import DialogSaleCode from '~/components/Form/Dialog/DialogSaleCode/DialogSaleCode';
 import TableSaleCode from '~/components/Tables/TableSaleCode/TableSaleCode';
 import PaginationOutlined from '~/components/Pagination';
+import SearchByCate from '~/components/SearchByCate';
 
 function SaleCodes() {
     const [editSaleCode, setEditSaleCode] = useState({});
@@ -15,15 +16,21 @@ function SaleCodes() {
     const [openEdit, setOpenEdit] = useState(false);
     const DeleteSwal = withReactContent(Swal);
 
-    const [totalPage, setTotalPage] = useState();
+    const [totalPage, setTotalPage] = useState({
+        pageAll: 1,
+        pageSearch: 1,
+    });
+    const [saleCodes, setSaleCodes] = useState({
+        saleCodesAll: [],
+        saleCodesSearch: [],
+    });
     const [currentPage, setCurrentPage] = useState(1);
-    const [saleCodes, setSaleCodes] = useState([]);
 
     const getSaleCodes = async () => {
         try {
             const result = await saleCodesApi.getAll(currentPage);
-            setTotalPage(result.totalPage);
-            setSaleCodes(result.saleCodes);
+            setTotalPage({ ...totalPage, pageAll: result.totalPage, pageSearch: result.totalPage });
+            setSaleCodes({ ...saleCodes, saleCodesAll: result.saleCodes, saleCodesSearch: result.saleCodes });
         } catch (err) {
             console.log('Err: ', err);
         }
@@ -90,6 +97,16 @@ function SaleCodes() {
         });
     };
 
+    const handleSearchSaleCodes = (data) => {
+        if (Object.keys(data).length !== 0) {
+            setSaleCodes({ ...saleCodes, saleCodesSearch: data.data });
+            setTotalPage({ ...totalPage, pageSearch: data.totalPage });
+        } else {
+            setSaleCodes({ ...saleCodes, saleCodesSearch: saleCodes.saleCodesAll });
+            setTotalPage({ ...totalPage, pageSearch: totalPage.pageAll });
+        }
+    };
+
     const objectSaleCode = () => {
         if (editSaleCode._id) {
             return {
@@ -110,7 +127,6 @@ function SaleCodes() {
         initialValues: objectSaleCode(),
         onSubmit: (values) => {
             const submit = async () => {
-                console.log(values);
                 try {
                     if (editSaleCode._id) {
                         await saleCodesApi.editSaleCode(values, editSaleCode._id);
@@ -135,7 +151,8 @@ function SaleCodes() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo mã khuyến mãi
             </button>
-            <PaginationOutlined count={totalPage} onClick={handlePagination} />
+            <SearchByCate type="saleCode" onSearch={handleSearchSaleCodes} />
+            <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
             <DialogSaleCode
                 formik={formik}
                 open={openCreate || openEdit}
@@ -144,7 +161,7 @@ function SaleCodes() {
                 textTitle={['Tạo mã khuyến mãi', 'Cập nhật mã khuyến mãi']}
             />
             <TableSaleCode
-                data={saleCodes}
+                data={saleCodes.saleCodesSearch}
                 onHandleOpenDialog={handleOpenDialog}
                 onHandleDelete={handleDeleteSaleCode}
             />

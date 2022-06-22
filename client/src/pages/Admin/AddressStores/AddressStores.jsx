@@ -11,6 +11,7 @@ import areasApi from '~/api/areasApi';
 import provincesApi from '~/api/provincesApi';
 import districtsApi from '~/api/districtsApi';
 import PaginationOutlined from '~/components/Pagination';
+import SearchByCate from '~/components/SearchByCate';
 
 function AddressStores() {
     const [editAddressStore, setEditAddressStore] = useState({});
@@ -21,8 +22,15 @@ function AddressStores() {
     const [areas, setAreas] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
-    const [addressStores, setAddressStores] = useState([]);
-    const [totalPage, setTotalPage] = useState();
+
+    const [totalPage, setTotalPage] = useState({
+        pageAll: 1,
+        pageSearch: 1,
+    });
+    const [addressStores, setAddressStores] = useState({
+        addressStoresAll: [],
+        addressStoresSearch: [],
+    });
     const [currentPage, setCurrentPage] = useState(1);
 
     const getAreas = async () => {
@@ -55,8 +63,12 @@ function AddressStores() {
     const getAddressStores = async () => {
         try {
             const result = await addressStoresApi.getAll(currentPage);
-            setTotalPage(result.totalPage);
-            setAddressStores(result.addressStores);
+            setTotalPage({ ...totalPage, pageAll: result.totalPage, pageSearch: result.totalPage });
+            setAddressStores({
+                ...addressStores,
+                addressStoresAll: result.addressStores,
+                addressStoresSearch: result.addressStores,
+            });
         } catch (err) {
             console.log('Err: ', err);
         }
@@ -213,6 +225,16 @@ function AddressStores() {
         formik.setFieldValue('district_Id', optionList);
     };
 
+    const handleSearchAddressStores = (data) => {
+        if (Object.keys(data).length !== 0) {
+            setAddressStores({ ...addressStores, addressStoresSearch: data.data });
+            setTotalPage({ ...totalPage, pageSearch: data.totalPage });
+        } else {
+            setAddressStores({ ...addressStores, addressStoresSearch: addressStores.addressStoresAll });
+            setTotalPage({ ...totalPage, pageSearch: totalPage.pageAll });
+        }
+    };
+
     const objectAddressStore = () => {
         if (editAddressStore._id) {
             return {
@@ -257,7 +279,8 @@ function AddressStores() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo cửa hàng
             </button>
-            <PaginationOutlined count={totalPage} onClick={handlePagination} />
+            <SearchByCate type="addressStore" onSearch={handleSearchAddressStores} />
+            <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
             <DialogAddressStore
                 formik={formik}
                 open={openCreate || openEdit}
@@ -271,7 +294,7 @@ function AddressStores() {
                 editAddressStore={editAddressStore}
             />
             <TableAddressStore
-                addressStores={addressStores}
+                addressStores={addressStores.addressStoresSearch}
                 onHandleOpenDialog={handleOpenDialog}
                 onHandleDeleteAddressStore={handleDeleteAddressStore}
             />

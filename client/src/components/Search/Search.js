@@ -31,9 +31,10 @@ function Search() {
     useEffect(() => {
         if (debounce?.trim()) {
             setLoading(true);
+            const PAGE_SIZE = 5;
             const searchProduct = async () => {
-                const products = await productApi.searchProduct(debounce);
-                setSearchResult(products);
+                const products = await productApi.searchProduct(debounce, PAGE_SIZE);
+                setSearchResult(products.data);
                 setLoading(false);
             };
             searchProduct();

@@ -9,6 +9,7 @@ import styles from './Firms.module.scss';
 import TableFirm from '~/components/Tables/TableFirm/TableFirm';
 import DialogFirm from '~/components/Form/Dialog/DialogFirm/DialogFirm';
 import PaginationOutlined from '~/components/Pagination';
+import SearchByCate from '~/components/SearchByCate';
 
 function Firms() {
     const [openPopupCreate, setOpenPopupCreate] = useState(false);
@@ -16,15 +17,25 @@ function Firms() {
     const [editFirmPopup, setEditFirmPopup] = useState({});
     const DeleteSwal = withReactContent(Swal);
 
-    const [totalPage, setTotalPage] = useState();
+    // const [totalPage, setTotalPage] = useState();
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const [firms, setFirms] = useState([]);
+
+    const [totalPage, setTotalPage] = useState({
+        pageAll: 1,
+        pageSearch: 1,
+    });
+    const [firms, setFirms] = useState({
+        firmsAll: [],
+        firmsSearch: [],
+    });
     const [currentPage, setCurrentPage] = useState(1);
-    const [firms, setFirms] = useState([]);
 
     const getFirms = async () => {
         try {
             const result = await firmsApi.getAll(currentPage);
-            setTotalPage(result.totalPage);
-            setFirms(result.firms);
+            setTotalPage({ ...totalPage, pageAll: result.totalPage, pageSearch: result.totalPage });
+            setFirms({ ...firms, firmsAll: result.firms, firmsSearch: result.firms });
         } catch (err) {
             console.log('Err: ', err);
         }
@@ -51,6 +62,16 @@ function Firms() {
     const handleClosePopup = (e) => {
         setOpenPopupCreate(false);
         setOpenPopupEdit(false);
+    };
+
+    const handleSearchFirms = (data) => {
+        if (Object.keys(data).length !== 0) {
+            setFirms({ ...firms, firmsSearch: data.data });
+            setTotalPage({ ...totalPage, pageSearch: data.totalPage });
+        } else {
+            setFirms({ ...firms, firmsSearch: firms.firmsAll });
+            setTotalPage({ ...totalPage, pageSearch: totalPage.pageAll });
+        }
     };
 
     const handleDeleteFirm = (firm) => {
@@ -133,7 +154,8 @@ function Firms() {
             <button onClick={handleOpenPopup} className={clsx(styles.createBtn)}>
                 Tạo Hãng
             </button>
-            <PaginationOutlined count={totalPage} onClick={handlePagination} />
+            <SearchByCate type="firm" onSearch={handleSearchFirms} />
+            <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
             <DialogFirm
                 formik={formik}
                 handleClose={handleClosePopup}
@@ -142,7 +164,7 @@ function Firms() {
             />
             <TableFirm
                 titles={['Name', 'Action']}
-                firms={firms}
+                firms={firms.firmsSearch}
                 handleOpenPopup={handleOpenPopup}
                 handleDeleteFirm={handleDeleteFirm}
             />

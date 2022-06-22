@@ -8,18 +8,22 @@ import SearchByCate from '~/components/SearchByCate';
 import productApi from '~/api/productsApi';
 
 function Products() {
-    const [searchProducts, setSearchProducts] = useState([]);
-    const [totalPage, setTotalPage] = useState();
+    const [totalPage, setTotalPage] = useState({
+        pageAll: 1,
+        pageSearch: 1,
+    });
+    const [products, setProducts] = useState({
+        productAll: [],
+        productSearch: [],
+    });
     const [currentPage, setCurrentPage] = useState(1);
-    const [products, setProducts] = useState([]);
 
     useEffect(() => {
         const getProducts = async () => {
             try {
                 const result = await productApi.getAll(currentPage);
-                setTotalPage(result.totalPage);
-                setProducts(result.products);
-                setSearchProducts(result.products);
+                setTotalPage({ ...totalPage, pageAll: result.totalPage, pageSearch: result.totalPage });
+                setProducts({ ...products, productAll: result.products, productSearch: result.products });
             } catch (err) {
                 console.log('Err: ', err);
             }
@@ -32,7 +36,13 @@ function Products() {
     };
 
     const handleSearchProduct = (data) => {
-        setSearchProducts(data);
+        if (Object.keys(data).length !== 0) {
+            setProducts({ ...products, productSearch: data.data });
+            setTotalPage({ ...totalPage, pageSearch: data.totalPage });
+        } else {
+            setProducts({ ...products, productSearch: products.productAll });
+            setTotalPage({ ...totalPage, pageSearch: totalPage.pageAll });
+        }
     };
 
     return (
@@ -41,10 +51,10 @@ function Products() {
                 Tạo Sản Phẩm
             </Link>
             <SearchByCate type="product" onSearch={handleSearchProduct} />
-            <PaginationOutlined onClick={handlePagination} count={totalPage} />
+            <PaginationOutlined onClick={handlePagination} count={totalPage.pageSearch} />
             <TablesProduct
                 titles={['Hình Ảnh', 'Tên Sản Phẩm', 'Danh Mục', 'Ngày Tạo', 'Actions']}
-                products={searchProducts}
+                products={products.productSearch}
             />
         </div>
     );

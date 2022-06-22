@@ -9,6 +9,7 @@ import TableProvince from '~/components/Tables/TableProvince/TableProvince';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import PaginationOutlined from '~/components/Pagination';
+import SearchByCate from '~/components/SearchByCate';
 
 function Provinces() {
     const [editProvince, setEditProvince] = useState({});
@@ -17,8 +18,15 @@ function Provinces() {
     const DeleteSwal = withReactContent(Swal);
 
     const [areas, setAreas] = useState([]);
-    const [provinces, setProvinces] = useState([]);
-    const [totalPage, setTotalPage] = useState();
+
+    const [totalPage, setTotalPage] = useState({
+        pageAll: 1,
+        pageSearch: 1,
+    });
+    const [provinces, setProvinces] = useState({
+        provincesAll: [],
+        provincesSearch: [],
+    });
     const [currentPage, setCurrentPage] = useState(1);
 
     const getAreas = async () => {
@@ -33,8 +41,8 @@ function Provinces() {
     const getProvinces = async () => {
         try {
             const result = await provincesApi.getAll(currentPage);
-            setTotalPage(result.totalPage);
-            setProvinces(result.provinces);
+            setTotalPage({ ...totalPage, pageAll: result.totalPage, pageSearch: result.totalPage });
+            setProvinces({ ...provinces, provincesAll: result.provinces, provincesSearch: result.provinces });
         } catch (err) {
             console.log('Err: ', err);
         }
@@ -129,6 +137,16 @@ function Provinces() {
         formik.setFieldValue('area_Id', optionList);
     };
 
+    const handleSearchProvinces = (data) => {
+        if (Object.keys(data).length !== 0) {
+            setProvinces({ ...provinces, provincesSearch: data.data });
+            setTotalPage({ ...totalPage, pageSearch: data.totalPage });
+        } else {
+            setProvinces({ ...provinces, provincesSearch: provinces.provincesAll });
+            setTotalPage({ ...totalPage, pageSearch: totalPage.pageAll });
+        }
+    };
+
     const objectProvince = () => {
         if (editProvince._id) {
             return {
@@ -171,7 +189,8 @@ function Provinces() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo tỉnh/thành
             </button>
-            <PaginationOutlined count={totalPage} onClick={handlePagination} />
+            <SearchByCate type="province" onSearch={handleSearchProvinces} />
+            <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
             <DialogProvince
                 formik={formik}
                 open={openCreate || openEdit}
@@ -181,7 +200,7 @@ function Provinces() {
                 editProvince={editProvince}
             />
             <TableProvince
-                provinces={provinces}
+                provinces={provinces.provincesSearch}
                 onHandleOpenDialog={handleOpenDialog}
                 onHandleDeleteProvince={handleDeleteProvince}
             />

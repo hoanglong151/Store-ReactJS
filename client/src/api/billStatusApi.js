@@ -13,6 +13,11 @@ const billStatusApi = {
     editBillStatus: (data, id) => {
         return axiosClient.patch(`/billStatus/editBillStatus/${id}`, data);
     },
+    searchBillStatus: (data, pageSize) => {
+        return axiosClient.get(`/billStatus/searchBillStatus?q=${encodeURIComponent(data)}&size=${pageSize}`, {
+            headers: { Authorization: null },
+        });
+    },
 };
 
 export default billStatusApi;

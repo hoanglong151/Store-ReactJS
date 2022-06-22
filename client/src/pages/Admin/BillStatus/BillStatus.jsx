@@ -8,22 +8,29 @@ import billStatusApi from '~/api/billStatusApi';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import PaginationOutlined from '~/components/Pagination';
+import SearchByCate from '~/components/SearchByCate';
 
 function BillStatus() {
-    const [billStatus, setBillStatus] = useState([]);
     const [editBillStatus, setEditBillStatus] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const DeleteSwal = withReactContent(Swal);
 
-    const [totalPage, setTotalPage] = useState();
+    const [totalPage, setTotalPage] = useState({
+        pageAll: 1,
+        pageSearch: 1,
+    });
+    const [billStatus, setBillStatus] = useState({
+        billStatusAll: [],
+        billStatusSearch: [],
+    });
     const [currentPage, setCurrentPage] = useState(1);
 
     const getBillStatus = async () => {
         try {
             const result = await billStatusApi.getAll(currentPage);
-            setTotalPage(result.totalPage);
-            setBillStatus(result.billStatus);
+            setTotalPage({ ...totalPage, pageAll: result.totalPage, pageSearch: result.pageSearch });
+            setBillStatus({ ...billStatus, billStatusAll: result.billStatus, billStatusSearch: result.billStatus });
         } catch (err) {
             console.log('Err: ', err);
         }
@@ -49,6 +56,16 @@ function BillStatus() {
     const handleCloseDialog = () => {
         setOpenCreate(false);
         setOpenEdit(false);
+    };
+
+    const handleSearchBillStatus = (data) => {
+        if (Object.keys(data).length !== 0) {
+            setBillStatus({ ...billStatus, billStatusSearch: data.data });
+            setTotalPage({ ...totalPage, pageSearch: data.totalPage });
+        } else {
+            setBillStatus({ ...billStatus, billStatusSearch: billStatus.billStatusAll });
+            setTotalPage({ ...totalPage, pageSearch: totalPage.pageAll });
+        }
     };
 
     const handleDeleteBillStatus = (status) => {
@@ -131,7 +148,8 @@ function BillStatus() {
             <button className={clsx(styles.createBtn)} onClick={handleOpenDialog}>
                 Tạo tình trạng
             </button>
-            <PaginationOutlined count={totalPage} onClick={handlePagination} />
+            <SearchByCate type="billStatus" onSearch={handleSearchBillStatus} />
+            <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
             <DialogOneField
                 formik={formik}
                 open={openCreate || openEdit}
@@ -141,7 +159,7 @@ function BillStatus() {
                 placeholder="Tình trạng"
             />
             <TableTwoColumn
-                data={billStatus}
+                data={billStatus.billStatusSearch}
                 onHandleOpenDialog={handleOpenDialog}
                 title={['Tình trạng', 'Chức năng']}
                 onHandleDelete={handleDeleteBillStatus}

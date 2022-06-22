@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const districtsModel = require("../model/Schema/districts.schema");
 const addressStoresModel = require("../model/Schema/addressStores.schema");
+const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getAddressStores = async (req, res) => {
   const PAGE_SIZE = 10;
@@ -86,9 +87,35 @@ const deleteAddressStore = (req, res) => {
   });
 };
 
+const searchAddressStore = async (req, res) => {
+  const result = await addressStoresModel
+    .find()
+    .populate("Areas")
+    .populate("Provinces")
+    .populate("Districts")
+    .exec();
+  const data = result.filter((value) => {
+    const removeUnicodeName = replaceUnicode(value.Name.toLowerCase());
+    const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
+    const name = removeUnicodeName.split(" ");
+    const search = removeUnicodeSearch.split(" ");
+    const contains = search.every((input) => {
+      return name.includes(input);
+    });
+    if (contains) {
+      return value;
+    } else {
+      return removeUnicodeName.toLowerCase().includes(removeUnicodeSearch);
+    }
+  });
+  const totalPage = Math.ceil(data.length / parseInt(req.query.size));
+  res.send({ data: data, totalPage: totalPage });
+};
+
 module.exports = {
   getAddressStores,
   addAddressStore,
   editAddressStore,
   deleteAddressStore,
+  searchAddressStore,
 };

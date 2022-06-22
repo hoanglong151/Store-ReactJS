@@ -13,6 +13,11 @@ const firmsApi = {
     deleteFirm: (id) => {
         return axiosClient.delete(`/firms/deleteFirm/${id}`);
     },
+    searchFirm: (data, pageSize) => {
+        return axiosClient.get(`/firms/searchFirm?q=${encodeURIComponent(data)}&size=${pageSize}`, {
+            headers: { Authorization: null },
+        });
+    },
 };
 
 export default firmsApi;

@@ -8,6 +8,7 @@ const {
   editSaleCode,
   deleteSaleCode,
   applySaleCode,
+  searchSaleCode,
 } = require("../controllers/saleCodes.controller");
 
 const router = express.Router();
@@ -21,5 +22,7 @@ router.patch("/editSaleCode/:id", validateToken, editSaleCode);
 router.delete("/deleteSaleCode/:id", validateToken, deleteSaleCode);
 
 router.post("/applySaleCode", applySaleCode);
+
+router.get("/searchSaleCode", searchSaleCode);
 
 module.exports = router;

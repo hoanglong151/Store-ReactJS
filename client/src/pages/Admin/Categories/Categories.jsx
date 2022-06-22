@@ -9,6 +9,7 @@ import DialogCategory from '~/components/Form/Dialog/DialogCategory/DialogCatego
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import PaginationOutlined from '~/components/Pagination';
+import SearchByCate from '~/components/SearchByCate';
 
 function Categories() {
     const [image, setImage] = useState('');
@@ -17,15 +18,21 @@ function Categories() {
     const [editCate, setEditCate] = React.useState(false);
     const DeleteSwal = withReactContent(Swal);
 
-    const [totalPage, setTotalPage] = useState();
+    const [totalPage, setTotalPage] = useState({
+        pageAll: 1,
+        pageSearch: 1,
+    });
+    const [categories, setCategories] = useState({
+        categoriesAll: [],
+        categoriesSearch: [],
+    });
     const [currentPage, setCurrentPage] = useState(1);
-    const [categories, setCategories] = useState([]);
 
     const getCategories = async () => {
         try {
             const result = await categoriesApi.getAll(currentPage);
-            setTotalPage(result.totalPage);
-            setCategories(result.categories);
+            setTotalPage({ ...totalPage, pageAll: result.totalPage, pageSearch: result.totalPage });
+            setCategories({ ...categories, categoriesAll: result.categories, categoriesSearch: result.categories });
         } catch (err) {
             console.log('Err: ', err);
         }
@@ -96,6 +103,16 @@ function Categories() {
         setEditCate(false);
     };
 
+    const handleSearchCategories = (data) => {
+        if (Object.keys(data).length !== 0) {
+            setCategories({ ...categories, categoriesSearch: data.data });
+            setTotalPage({ ...totalPage, pageSearch: data.totalPage });
+        } else {
+            setCategories({ ...categories, categoriesSearch: categories.categoriesAll });
+            setTotalPage({ ...totalPage, pageSearch: totalPage.pageAll });
+        }
+    };
+
     const validationSchema = Yup.object({
         name: Yup.string('Nhập Tên Danh Mục').required('Vui Lòng Nhập Tên Danh Mục'),
     });
@@ -149,7 +166,8 @@ function Categories() {
             <button onClick={handleClickOpen} className={clsx(styles.createBtn)}>
                 Tạo Danh Mục
             </button>
-            <PaginationOutlined count={totalPage} onClick={handlePagination} />
+            <SearchByCate type="category" onSearch={handleSearchCategories} />
+            <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
             <DialogCategory
                 open={createCate || editCate}
                 onHandleClose={handleClose}
@@ -161,7 +179,7 @@ function Categories() {
             />
             <TableCategory
                 titles={['Image', 'Name', 'Actions']}
-                categories={categories}
+                categories={categories.categoriesSearch}
                 onHandleClick={handleClickOpen}
                 onHandleDelete={handleDeleteCategory}
             />

@@ -13,6 +13,11 @@ const billsApi = {
     findBill: (data) => {
         return axiosClient.post('/bills/findBill', data);
     },
+    searchBill: (data, pageSize) => {
+        return axiosClient.get(`/bills/searchBill?q=${encodeURIComponent(data)}&size=${pageSize}`, {
+            headers: { Authorization: null },
+        });
+    },
 };
 
 export default billsApi;

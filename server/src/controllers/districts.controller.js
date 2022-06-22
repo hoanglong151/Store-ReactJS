@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const provincesModel = require("../model/Schema/provinces.schema");
 const districtsModel = require("../model/Schema/districts.schema");
+const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getDistricts = async (req, res) => {
   const PAGE_SIZE = 10;
@@ -79,4 +80,34 @@ const deleteDistrict = async (req, res) => {
   });
 };
 
-module.exports = { getDistricts, addDistrict, editDistrict, deleteDistrict };
+const searchDistrict = async (req, res) => {
+  const result = await districtsModel
+    .find()
+    .populate("Areas")
+    .populate("Provinces")
+    .exec();
+  const data = result.filter((value) => {
+    const removeUnicodeName = replaceUnicode(value.Name.toLowerCase());
+    const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
+    const name = removeUnicodeName.split(" ");
+    const search = removeUnicodeSearch.split(" ");
+    const contains = search.every((input) => {
+      return name.includes(input);
+    });
+    if (contains) {
+      return value;
+    } else {
+      return removeUnicodeName.toLowerCase().includes(removeUnicodeSearch);
+    }
+  });
+  const totalPage = Math.ceil(data.length / parseInt(req.query.size));
+  res.send({ data: data, totalPage: totalPage });
+};
+
+module.exports = {
+  getDistricts,
+  addDistrict,
+  editDistrict,
+  deleteDistrict,
+  searchDistrict,
+};
