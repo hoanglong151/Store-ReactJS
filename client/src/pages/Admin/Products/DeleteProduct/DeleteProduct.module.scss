@@ -25,7 +25,7 @@
         margin-left: 5rem;
     }
 
-    .titlePrice {
+    .title-price {
         font-size: 2rem;
         font-weight: bold;
     }
@@ -41,7 +41,7 @@
         margin-right: 1rem;
     }
 
-    .salePrice {
+    .sale-price {
         color: #bbb;
         text-decoration: line-through;
     }
@@ -51,12 +51,12 @@
     font-size: 1.6rem !important;
 }
 
-.wrapperType {
+.wrapper-type {
     margin: 0 -1rem;
     user-select: none;
 }
 
-.wrapperItem {
+.wrapper-item {
     display: flex;
 }
 
@@ -71,17 +71,17 @@
     overflow: hidden;
 }
 
-.typeDescription,
-.typePrice {
+.type-description,
+.type-price {
     margin: 0.8rem;
 }
 
-.typeDescription {
+.type-description {
     font-size: 1.5rem;
     font-weight: 600;
 }
 
-.typePrice {
+.type-price {
     font-size: 1.3rem;
     letter-spacing: 1px;
 }
@@ -106,24 +106,24 @@
     }
 }
 
-.soldOut {
+.sold-out {
     opacity: 0.5;
     cursor: default;
 }
 
-.priceInfo {
+.price-info {
     margin: 1rem 0 2rem 0;
 }
 
-.showDescription {
+.show-description {
     margin-left: 1rem;
     text-transform: capitalize;
 }
 
-.wrapperColor {
+.wrapper-color {
     margin-bottom: 2rem;
 }
 
-.titleSelectColor {
+.title-select-color {
     margin: 1rem;
 }

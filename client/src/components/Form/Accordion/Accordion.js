@@ -11,12 +11,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import clsx from 'clsx';
+import classnames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './Accordion.module.scss';
 import Input from '../Input/Input';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 
+const cx = classnames.bind(styles);
 export default function AccordionBasic(props) {
     const { onHandleAddType, formik, typesProduct, onHandleDeleteType } = props;
     return (
@@ -28,10 +29,10 @@ export default function AccordionBasic(props) {
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <button className={clsx(styles.btn)} onClick={onHandleAddType} type="button">
+                    <button className={cx('btn')} onClick={onHandleAddType} type="button">
                         Thêm Loại
                     </button>
-                    <div className={clsx(styles.formInput)}>
+                    <div className={cx('form-input')}>
                         <Input
                             placeholder="Màu Sắc"
                             id="types.color"
@@ -85,7 +86,6 @@ export default function AccordionBasic(props) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {console.log(typesProduct)}
                                 {typesProduct.map((type, index) => (
                                     <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                         <TableCell component="th" scope="row">
@@ -99,7 +99,7 @@ export default function AccordionBasic(props) {
                                         <TableCell align="right">{type.Amount}</TableCell>
                                         <TableCell align="right">
                                             <button
-                                                className={clsx(styles.btn)}
+                                                className={cx('btn')}
                                                 type="button"
                                                 onClick={() => onHandleDeleteType(index)}
                                             >

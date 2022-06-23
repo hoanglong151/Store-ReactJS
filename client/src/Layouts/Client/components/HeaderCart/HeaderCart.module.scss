@@ -1,0 +1,33 @@
+.header {
+    display: flex;
+    align-items: center;
+    position: relative;
+    color: var(--white);
+    width: 50vw;
+    margin: var(--margin-2rem) auto;
+}
+
+.btn-back {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    color: var(--white);
+
+    .icon-back {
+        transform: translateX(0);
+        transition: all 0.15s linear;
+    }
+
+    &:hover .icon-back {
+        transform: translateX(-5px);
+    }
+}
+
+.text-back {
+    padding-left: 0.5rem;
+}
+
+.cart {
+    margin: 0 auto;
+}

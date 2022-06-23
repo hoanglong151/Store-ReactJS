@@ -1,9 +1,11 @@
 import React from 'react';
-import clsx from 'clsx';
+import classnames from 'classnames/bind';
 import styles from './ErrorMessage.module.scss';
 
+const cx = classnames.bind(styles);
+
 function ErrorMessage({ children }) {
-    return <div className={clsx(styles.errorMessage)}>{children}</div>;
+    return <div className={cx('error-message')}>{children}</div>;
 }
 
 export default ErrorMessage;

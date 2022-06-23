@@ -1,0 +1,64 @@
+.loading-area {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #000;
+
+    .loader {
+        width: 20rem;
+        height: 20rem;
+        line-height: 20rem;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin: -10rem 0 0 -10rem;
+        font-size: 3rem;
+        color: #fff;
+        perspective: 20rem;
+    }
+
+    .load_anim1,
+    .load_anim2 {
+        position: absolute;
+        width: 20rem;
+        height: 20rem;
+        border-radius: 50%;
+        border: 0.5rem solid;
+        border-left-color: #10ac84;
+        border-top-color: #ff9f43;
+        border-right-color: #0984e3;
+        border-bottom-color: #d63031;
+        left: 50%;
+        top: 50%;
+        margin: -10rem 0 0 -10rem;
+        animation: loadAnim 3s;
+        animation-iteration-count: infinite;
+    }
+
+    .load_anim2 {
+        animation: loadAnim2 3s;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes loadAnim {
+        0% {
+            transform: rotate3d(1, 1, 1, 0deg);
+        }
+        100% {
+            transform: rotate3d(1, 1, 1, 360deg);
+        }
+    }
+
+    @keyframes loadAnim2 {
+        0% {
+            transform: rotate3d(1, 1, 1, 0deg);
+        }
+        100% {
+            transform: rotate3d(1, 1, 1, -360deg);
+        }
+    }
+}

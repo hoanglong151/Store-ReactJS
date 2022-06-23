@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import clsx from 'clsx';
-import styles from './Products.module.scss';
 import CardProduct from '~/components/Cards/CardProduct/CardProduct';
-import { useSelector } from 'react-redux';
 import SidebarCategory from '~/components/SidebarCategory';
 import SidebarFirm from '~/components/SidebarFirm';
 import ButtonShowMore from '~/components/ShowMore';
 import { useState } from 'react';
 import { useSortProductByTitle } from '~/hooks';
 import { categoriesApi, firmsApi } from '~/api';
+
+// ClassName
+import classNames from 'classnames/bind';
+import styles from './Products.module.scss';
+
+const cx = classNames.bind(styles);
 
 function Products() {
     const { state } = useLocation();
@@ -89,56 +92,56 @@ function Products() {
     };
 
     return (
-        <div className={clsx(styles.wrapper)}>
-            <h1 className={clsx(styles.heading)}>Danh Sách Sản Phẩm</h1>
+        <div className={cx('wrapper')}>
+            <h1 className={cx('heading')}>Danh Sách Sản Phẩm</h1>
             <div>
-                <h3 className={clsx(styles.title)}>Danh Mục</h3>
+                <h3 className={cx('title')}>Danh Mục</h3>
                 {categories.map((cate) => (
                     <SidebarCategory key={cate._id} name={cate.Name} link={cate._id} select={select} />
                 ))}
             </div>
             <div>
-                <h3 className={clsx(styles.title)}>Hãng</h3>
+                <h3 className={cx('title')}>Hãng</h3>
                 {firms.map((firm) => (
                     <SidebarFirm key={firm._id} name={firm.Name} select={select} firmID={firm._id} />
                 ))}
             </div>
             <div>
-                <h3 className={clsx(styles.title)}>Tiêu chí</h3>
+                <h3 className={cx('title')}>Tiêu chí</h3>
                 <button
-                    className={clsx(styles.btn, {
-                        [styles.active]: active.High,
+                    className={cx('btn', {
+                        active: active.High,
                     })}
                     onClick={handleHighPrice}
                 >
                     Giá cao
                 </button>
                 <button
-                    className={clsx(styles.btn, {
-                        [styles.active]: active.Low,
+                    className={cx('btn', {
+                        ['active']: active.Low,
                     })}
                     onClick={handleLowPrice}
                 >
                     Giá thấp
                 </button>
                 <button
-                    className={clsx(styles.btn, {
-                        [styles.active]: active.Hot,
+                    className={cx('btn', {
+                        ['active']: active.Hot,
                     })}
                     onClick={handleProductHot}
                 >
                     Nổi bật
                 </button>
                 <button
-                    className={clsx(styles.btn, {
-                        [styles.active]: active.New,
+                    className={cx('btn', {
+                        ['active']: active.New,
                     })}
                     onClick={handleProductNew}
                 >
                     Mới nhất
                 </button>
             </div>
-            <div className={clsx(styles.products)}>
+            <div className={cx('products')}>
                 {sortProducts
                     .map((product) => <CardProduct key={product._id} boxShadow product={product} />)
                     .slice(0, showProducts)}

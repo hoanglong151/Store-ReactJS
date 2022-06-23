@@ -1,0 +1,23 @@
+.wrapper {
+    display: flex;
+    overflow: hidden;
+}
+
+.menu-left,
+.menu-right,
+.slider {
+    margin-top: var(--margin-2rem);
+}
+
+.menu-left,
+.menu-right {
+    width: 22rem;
+    flex-shrink: 0;
+}
+
+.slider {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    overflow: hidden;
+}

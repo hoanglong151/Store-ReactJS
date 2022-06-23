@@ -1,22 +1,22 @@
-.reviewImages {
+.review-images {
     display: flex;
     width: 15rem;
     height: 15rem;
     border-radius: 1rem;
     background-color: #ccc;
 
-    .reviewImage {
+    .review-image {
         width: 100%;
         height: 100%;
         object-fit: contain;
     }
 }
 
-.inputImage {
+.input-image {
     display: none;
 }
 
-.uploadImages {
+.upload-images {
     display: block;
     background-color: var(--primary-admin);
     padding: 1rem;
@@ -28,6 +28,6 @@
     transition: all 0.25s linear;
 }
 
-.uploadImages:hover {
+.upload-images:hover {
     background-color: red;
 }

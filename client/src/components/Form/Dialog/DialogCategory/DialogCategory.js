@@ -6,8 +6,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Input from '../../Input/Input';
 import SelectImage from '../../SelectImage/SelectImage';
-import clsx from 'clsx';
+import classnames from 'classnames/bind';
 import styles from './DialogCategory.module.scss';
+
+const cx = classnames.bind(styles);
 
 export default function DialogCategory(props) {
     const { open, onHandleClose, title, formik, onHandleImage, image, editCate } = props;
@@ -23,7 +25,7 @@ export default function DialogCategory(props) {
                         value={formik.values.name}
                         placeholder="Tên Danh Mục"
                         errors={formik.touched.name && formik.errors.name}
-                        className={clsx(styles.input)}
+                        className={cx('input')}
                     />
 
                     <SelectImage name="image" id="image" images={image} onChange={onHandleImage} />

@@ -1,14 +1,15 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { getCarts } from '~/app/reducerCart';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from '~/routes';
-import { DefaultLayout } from '~/components/Layouts/Admin';
-import { DefaultLayout as DefaultLayoutClient } from '~/components/Layouts/Client';
-import Login from './pages/Admin/Authentication/Login/Login';
+import { DefaultLayout } from '~/Layouts/Admin';
+import { DefaultLayout as DefaultLayoutClient } from '~/Layouts/Client';
+import Login from './pages/Admin/Authentication/Login';
 import PrivateRoutes from './routes/PrivateRoutes';
+import Loading from './components/Loading';
 
 function App() {
     const dispatch = useDispatch();

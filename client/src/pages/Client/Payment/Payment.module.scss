@@ -3,44 +3,44 @@
     margin: var(--margin-2rem) auto;
 }
 
-.paymentInfo {
+.payment-info {
     padding: 1.5rem;
     border-radius: var(--border-radius);
     background-color: var(--white);
     margin-bottom: 2rem;
 }
 
-.shipMethod {
+.ship-method {
     display: flex;
     align-items: center;
 }
 
-.wrapMethod {
+.wrap-method {
     display: flex;
     align-items: center;
     margin-right: 2rem;
     margin-top: 1rem;
 }
 
-.inputWidth {
+.input-width {
     width: 2rem !important;
     height: 2rem;
     margin-bottom: unset;
 }
 
-.textShipMethod {
+.text-ship-method {
     padding-left: 0.5rem;
     width: 100%;
 }
 
-.wrapAddress {
+.wrap-address {
     background-color: #f3f4f6;
     margin: 1rem 0.5rem;
     border-radius: var(--border-radius);
     padding: 1rem;
 }
 
-.wrapAreaCity {
+.wrap-area-city {
     display: flex;
     align-items: center;
     justify-content: space-between;

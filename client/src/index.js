@@ -6,8 +6,8 @@ import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
-import theme from '~/components/GlobalStyles/GlobalStylesMUI';
-import GlobalStyles from '~/components/GlobalStyles';
+import theme from '~/styles/GlobalStylesMUI';
+import GlobalStyles from '~/styles/index';
 
 ReactDOM.createRoot(document.querySelector('#root')).render(
     <React.StrictMode>

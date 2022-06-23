@@ -1,34 +1,34 @@
 // Public Routers
-import UserHome from '~/pages/Client/Home/Home';
-import UserProductDetail from '~/pages/Client/ProductDetail/ProductDetail';
-import UserProductsCategory from '~/pages/Client/ProductsCategory/ProductsCategory';
-import UserProductsCategoryFirm from '~/pages/Client/ProductsCategoryFirm/ProductsCategoryFirm';
-import UserCartProduct from '~/pages/Client/CartProduct/CartProduct';
-import UserPayment from '~/pages/Client/Payment/Payment';
-import UserFindBill from '~/pages/Client/FindBill/FindBill';
+import UserHome from '~/pages/Client/Home';
+import UserProductDetail from '~/pages/Client/ProductDetail';
+import UserProductsCategory from '~/pages/Client/ProductsCategory';
+import UserProductsCategoryFirm from '~/pages/Client/ProductsCategoryFirm';
+import UserCartProduct from '~/pages/Client/CartProduct';
+import UserPayment from '~/pages/Client/Payment';
+import UserFindBill from '~/pages/Client/FindBill';
 import UserProducts from '~/pages/Client/Products';
 
 // Private Routers
-import AdminProducts from '~/pages/Admin/Products/Products';
-import AdminAddProduct from '~/pages/Admin/Products/AddProduct/AddProduct';
-import AdminEditProduct from '~/pages/Admin/Products/EditProduct/EditProduct';
-import AdminDetailProduct from '~/pages/Admin/Products/DetailProduct/DetailProduct';
-import AdminDeleteProduct from '~/pages/Admin/Products/DeleteProduct/DeleteProduct';
-import AdminCategories from '~/pages/Admin/Categories/Categories';
+import AdminProducts from '~/pages/Admin/Products';
+import AdminAddProduct from '~/pages/Admin/Products/AddProduct';
+import AdminEditProduct from '~/pages/Admin/Products/EditProduct';
+import AdminDetailProduct from '~/pages/Admin/Products/DetailProduct';
+import AdminDeleteProduct from '~/pages/Admin/Products/DeleteProduct';
+import AdminCategories from '~/pages/Admin/Categories';
 import AdminHome from '~/pages/Admin/Home/Home';
-import AdminBills from '~/pages/Admin/Bills/Bills';
-import AdminFirms from '~/pages/Admin/Firms/Firms';
-import AdminAreas from '~/pages/Admin/Areas/Areas';
-import AdminProvinces from '~/pages/Admin/Provinces/Provinces';
-import AdminDistricts from '~/pages/Admin/Districts/Districts';
-import AdminSaleCodes from '~/pages/Admin/SaleCodes/SaleCodes';
-import AdminAddressStores from '~/pages/Admin/AddressStores/AddressStores';
-import AdminBillStatus from '~/pages/Admin/BillStatus/BillStatus';
-import AdminBillDetail from '~/pages/Admin/Bills/DetailBill/DetailBill';
+import AdminBills from '~/pages/Admin/Bills';
+import AdminFirms from '~/pages/Admin/Firms';
+import AdminAreas from '~/pages/Admin/Areas';
+import AdminProvinces from '~/pages/Admin/Provinces';
+import AdminDistricts from '~/pages/Admin/Districts';
+import AdminSaleCodes from '~/pages/Admin/SaleCodes';
+import AdminAddressStores from '~/pages/Admin/AddressStores';
+import AdminBillStatus from '~/pages/Admin/BillStatus';
+import AdminBillDetail from '~/pages/Admin/Bills/DetailBill';
 
 // Layout
-import NoSidebar from '~/components/Layouts/Client/NoSidebar';
-import CartLayout from '~/components/Layouts/Client/CartLayout/CartLayout';
+import NoSidebar from '~/Layouts/Client/NoSidebar';
+import CartLayout from '~/Layouts/Client/CartLayout/CartLayout';
 
 const publicRoutes = [
     { path: '/', component: UserHome },

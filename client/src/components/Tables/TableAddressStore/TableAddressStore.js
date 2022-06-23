@@ -6,8 +6,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import clsx from 'clsx';
-import styles from './TableAddressStore.module.scss';
+import classnames from 'classnames/bind';
+
+const cx = classnames.bind();
 
 function TableAddressStore(props) {
     const { addressStores, onHandleOpenDialog, onHandleDeleteAddressStore } = props;
@@ -43,14 +44,11 @@ function TableAddressStore(props) {
                             </TableCell>
                             <TableCell align="right">{store.Name}</TableCell>
                             <TableCell align="right">
-                                <button
-                                    className={clsx(styles.btn, styles.editBtn)}
-                                    onClick={() => onHandleOpenDialog(store)}
-                                >
+                                <button className={cx('btn', 'btn-edit')} onClick={() => onHandleOpenDialog(store)}>
                                     Edit
                                 </button>
                                 <button
-                                    className={clsx(styles.btn, styles.deleteBtn)}
+                                    className={cx('btn', 'btn-delete')}
                                     onClick={() => onHandleDeleteAddressStore(store)}
                                 >
                                     Delete

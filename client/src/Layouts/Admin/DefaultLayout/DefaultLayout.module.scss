@@ -1,0 +1,31 @@
+.wrapper {
+    display: flex;
+    height: 100rem;
+
+    .sidebar {
+        width: 25rem;
+        transition: all 0.15s linear;
+        border-right: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-mobile {
+        width: 8rem;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .header {
+            height: 6rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            background-color: var(--primary-content);
+            flex: 1;
+            padding: 2rem;
+        }
+    }
+}

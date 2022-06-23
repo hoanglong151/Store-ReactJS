@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import clsx from 'clsx';
+import classnames from 'classnames/bind';
 import styles from './SearchByCate.module.scss';
 import {
     addressStoresApi,
@@ -14,6 +14,8 @@ import {
     saleCodesApi,
 } from '~/api';
 import { useDebounce } from '~/hooks';
+
+const cx = classnames.bind(styles);
 
 function SearchByCate(props) {
     const { type, onSearch } = props;
@@ -79,9 +81,9 @@ function SearchByCate(props) {
     };
 
     return (
-        <div className={clsx(styles.wrapper)}>
+        <div className={cx('wrapper')}>
             <input
-                className={clsx(styles.input)}
+                className={cx('input')}
                 placeholder="Tìm kiếm tại đây"
                 onChange={(e) => handleSearch(e.target.value)}
                 value={searchInput}

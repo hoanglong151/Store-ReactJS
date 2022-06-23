@@ -1,4 +1,4 @@
-.wrapperCart {
+.wrapper-cart {
     position: relative;
     display: flex;
     background-color: var(--white);
@@ -8,7 +8,7 @@
     margin-bottom: 2rem;
 }
 
-.btnClose {
+.btn-close {
     position: absolute;
     top: 0;
     right: 0;
@@ -25,20 +25,20 @@
     margin-right: 2rem;
 }
 
-.nameProduct {
+.name-product {
     margin: 0;
 }
 
-.priceProduct {
+.price-product {
     margin: 1rem 0;
 }
 
-.numberProduct {
+.number-product {
     display: flex;
     align-items: center;
 }
 
-.selectNumber {
+.select-number {
     display: flex;
     align-items: center;
     border: 1px solid #ccc;
@@ -57,13 +57,13 @@
     padding: 0 1rem;
 }
 
-.priceActive {
+.price-active {
     color: red;
     font-weight: 600;
     font-size: 2rem;
 }
 
-.priceOld {
+.price-old {
     color: #aaa;
     font-size: 1.4rem;
     text-decoration: line-through;

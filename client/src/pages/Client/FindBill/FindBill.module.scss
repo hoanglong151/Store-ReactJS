@@ -1,8 +1,8 @@
 .wrapper {
     margin: 5rem 0;
 }
-.wrapperFormBill,
-.wrapperFindBill {
+.wrapper-form-bill,
+.wrapper-find-bill {
     width: 80%;
     margin: var(--margin-2rem) auto;
     background-color: #efefef;
@@ -14,7 +14,7 @@
     margin-bottom: 2rem;
     text-transform: uppercase;
 }
-.wrapperInfo {
+.wrapper-info {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -36,25 +36,25 @@
     cursor: pointer;
 }
 
-.wrapperProduct {
+.wrapper-product {
     display: flex;
     margin: 0 -1rem;
 }
 
-.infoBill,
-.infoPrice {
+.info-bill,
+.info-price {
     margin: 0 1rem;
 }
 
-.infoBill {
+.info-bill {
     flex: 1;
 }
 
-.infoPrice {
+.info-price {
     flex-basis: 30%;
 }
 
-.wrapperCart {
+.wrapper-cart {
     position: relative;
     display: flex;
     padding: 1.5rem;
@@ -63,11 +63,11 @@
     border-radius: 1rem;
 }
 
-.customerInfo {
+.customer-info {
     margin: 2rem;
 }
 
-.wrapperInfo {
+.wrapper-info {
     display: flex;
     justify-content: center;
     padding: 1.5rem;
@@ -75,19 +75,19 @@
     align-items: center;
 }
 
-.wrapperInfoPrice {
+.wrapper-info-price {
     padding: 1.5rem;
     background-color: var(--white);
     border-radius: 1rem;
     margin: 2rem;
 }
 
-.saleCode,
-.salePrice {
+.sale-code,
+.sale-price {
     padding-left: 2rem;
 }
 
-.titleInfo {
+.title-info {
     display: inline-block;
     font-weight: 600;
     margin: 0.5rem 0.5rem 0.5rem 0;
@@ -99,26 +99,26 @@
     margin-right: 2rem;
 }
 
-.nameProduct {
+.name-product {
     margin: 0;
 }
 
-.priceProduct {
+.price-product {
     margin: 1rem 0;
 }
 
-.numberProduct {
+.number-product {
     display: flex;
     align-items: center;
 }
 
-.priceActive {
+.price-active {
     color: red;
     font-weight: 600;
     font-size: 2rem;
 }
 
-.priceOld {
+.price-old {
     color: #aaa;
     font-size: 1.4rem;
     text-decoration: line-through;

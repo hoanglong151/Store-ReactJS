@@ -1,7 +1,9 @@
 import React from 'react';
-import clsx from 'clsx';
-import styles from './SidebarCategory.module.scss';
 import { Link } from 'react-router-dom';
+import classnames from 'classnames/bind';
+import styles from './SidebarCategory.module.scss';
+
+const cx = classnames.bind(styles);
 
 function SidebarCategory(props) {
     const { name, link, className, select } = props;
@@ -9,7 +11,7 @@ function SidebarCategory(props) {
         <Link
             to={`/category`}
             state={{ cateID: link, select: select }}
-            className={clsx(styles.category, { [styles.itemCate]: className })}
+            className={cx('category', { 'item-cate': className })}
         >
             {name}
         </Link>

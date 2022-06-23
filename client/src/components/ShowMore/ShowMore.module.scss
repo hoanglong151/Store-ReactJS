@@ -1,16 +1,4 @@
-.btn {
-    display: block;
-    background-color: transparent;
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--white);
-    color: var(--white);
-    margin: 2rem auto 0;
-    font-weight: 600;
-    transition: all 0.15s linear;
-
-    &:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-        cursor: pointer;
-    }
+.btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
 }

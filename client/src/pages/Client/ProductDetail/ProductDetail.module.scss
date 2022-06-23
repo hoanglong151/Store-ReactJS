@@ -13,7 +13,7 @@
         margin-left: 5rem;
     }
 
-    .titlePrice {
+    .title-price {
         display: inline-block;
         font-size: 2rem;
         font-weight: bold;
@@ -32,18 +32,18 @@
         margin-right: 1rem;
     }
 
-    .salePrice {
+    .sale-price {
         color: #bbb;
         text-decoration: line-through;
     }
 }
 
-.wrapperType {
+.wrapper-type {
     margin: 0 -1rem;
     user-select: none;
 }
 
-.wrapperItem {
+.wrapper-item {
     display: flex;
 }
 
@@ -58,23 +58,23 @@
     overflow: hidden;
 }
 
-.typeDescription,
-.typePrice {
+.type-description,
+.type-price {
     margin: 0.8rem;
 }
 
-.typeDescription {
+.type-description {
     font-size: 1.5rem;
     font-weight: 600;
     text-transform: capitalize;
 }
 
-.typePrice {
+.type-price {
     font-size: 1.3rem;
     letter-spacing: 1px;
 }
 
-.titleSelectColor {
+.title-select-color {
     margin: 1rem;
 }
 
@@ -98,16 +98,16 @@
     }
 }
 
-.soldOut {
+.sold-out {
     opacity: 0.5;
     cursor: default;
 }
 
-.priceInfo {
+.price-info {
     margin-bottom: 2rem;
 }
 
-.showDescription {
+.show-description {
     margin-left: 1rem;
     text-transform: capitalize;
 }
@@ -121,12 +121,12 @@
     cursor: pointer;
 }
 
-.methodPayment,
-.addCart {
+.method-payment,
+.add-cart {
     margin: 0;
 }
 
-.addCart {
+.add-cart {
     text-transform: uppercase;
     margin: 0.5rem 0;
 }

@@ -1,0 +1,85 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin: 0 2rem;
+    .logo {
+        height: 100%;
+        .logo-img {
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .action {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        .info-account {
+            margin-left: 4rem;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            cursor: pointer;
+            user-select: none;
+            .img {
+                height: 4rem;
+                width: 4rem;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
+
+        .notify,
+        .menu-user {
+            background-color: transparent;
+        }
+
+        .user-name {
+            padding: 0 1rem;
+        }
+
+        .notify {
+            background-color: #f4f6f8;
+            height: 4rem;
+            width: 4rem;
+            border-radius: 50%;
+            font-size: 2rem;
+            position: relative;
+            padding: 0;
+
+            .num-notifi {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background-color: red;
+                color: var(--primary-content);
+                border-radius: 50%;
+                padding: 0.5rem;
+                font-size: 1.1rem;
+            }
+        }
+    }
+}
+
+.info-auth {
+    width: 16rem;
+    background-color: var(--white);
+    list-style: none;
+    border-radius: 0.5rem;
+    margin-top: -0.5rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+    .item-info {
+        &:hover {
+            background-color: #eee;
+        }
+
+        .btn-info {
+            display: block;
+            padding: 1rem;
+            cursor: pointer;
+        }
+    }
+}

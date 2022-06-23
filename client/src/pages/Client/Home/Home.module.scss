@@ -1,9 +1,9 @@
-.sidebarCategories {
+.sidebar-categories {
     display: flex;
     margin: 0 -0.5rem;
 }
-.newProducts,
-.sellProducts,
+.new-products,
+.sell-products,
 .products {
     background-color: var(--primary-client-background-color);
     border-radius: var(--border-radius);
@@ -22,30 +22,30 @@
     margin: 1rem 0;
 }
 
-.showAll {
+.show-all {
     display: flex;
     align-items: center;
     color: var(--white);
 
-    & .arrowShowAll {
+    & .arrow-show-all {
         transition: all 0.15s linear;
         transform: translate(0, 0);
     }
 
-    &:hover .arrowShowAll {
+    &:hover .arrow-show-all {
         transform: translate(0.5rem, 0);
     }
 }
 
-.textShowAll {
+.text-show-all {
     padding-right: 0.5rem;
 }
 
-.yourSelf {
+.your-self {
     color: #000;
 }
 
-.wrapProducts {
+.wrap-products {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     row-gap: 1rem;

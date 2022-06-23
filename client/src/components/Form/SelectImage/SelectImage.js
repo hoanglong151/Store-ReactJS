@@ -1,20 +1,22 @@
 import React from 'react';
-import clsx from 'clsx';
+import classnames from 'classnames/bind';
 import styles from './SelectImage.module.scss';
+
+const cx = classnames.bind(styles);
 
 function SelectImage(props) {
     const { onChange, images, id, name } = props;
     return (
         <>
-            <label className={clsx(styles.uploadImages)} htmlFor={id}>
+            <label className={cx('upload-images')} htmlFor={id}>
                 Upload Images
             </label>
-            <input onChange={onChange} id={id} name={name} multiple className={clsx(styles.inputImage)} type="file" />
-            <div className={clsx(styles.reviewImages)}>
+            <input onChange={onChange} id={id} name={name} multiple className={cx('input-image')} type="file" />
+            <div className={cx('review-images')}>
                 {typeof images === 'string' ? (
-                    <img className={clsx(styles.reviewImage)} src={images} />
+                    <img className={cx('review-image')} src={images} />
                 ) : (
-                    images.map((image, index) => <img key={index} className={clsx(styles.reviewImage)} src={image} />)
+                    images.map((image, index) => <img key={index} className={cx('review-image')} src={image} />)
                 )}
             </div>
         </>
