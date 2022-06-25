@@ -16,14 +16,14 @@ const cartSlice = createSlice({
     reducers: {
         addProductToCart: (state, action) => {
             const product = {
-                _id: action.payload.product._id,
-                Name: action.payload.product.Name,
-                Image: action.payload.product.Image,
-                Price: action.payload.typeSelect.Price,
-                Sale: action.payload.typeSelect.Sale,
-                Description: action.payload.typeSelect.Name,
-                Color: action.payload.typeByColor.Color,
-                TypeProductID: action.payload.typeSelect._id,
+                _id: action.payload._id,
+                Name: action.payload.Name,
+                Image: action.payload.Image,
+                Price: action.payload.Price,
+                Sale: action.payload.Sale,
+                Description: action.payload.Description,
+                Color: action.payload.Color,
+                TypeProductID: action.payload.TypeProductID,
                 NumberProduct: 1,
             };
             const currentPrice = product.Sale ? product.Sale : product.Price;

@@ -13,24 +13,11 @@ const cx = classnames.bind(styles);
 function Header(props) {
     const { openButtonCategory } = props;
     const [firmByProduct, setFirmByProduct] = useState([]);
-    const [firms, setFirms] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const { cartProducts } = useSelector((state) => state.cart);
-
-    const getCategories = async () => {
-        const result = await categoriesApi.getAll();
-        setCategories(result.categories);
-    };
-
-    const getFirms = async () => {
-        const result = await firmsApi.getAll();
-        setFirms(result.firms);
-    };
-
-    useEffect(() => {
-        getCategories();
-        getFirms();
-    }, []);
+    const state = useSelector((state) => state);
+    const { cart, category, firm } = state;
+    const { categories } = category;
+    const { firms } = firm;
+    const { cartProducts } = cart;
 
     const handleGetCategory = (category) => {
         const getFirmsID = category.Products.reduce((pre, next) => {

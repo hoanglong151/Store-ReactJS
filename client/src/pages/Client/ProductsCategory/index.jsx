@@ -4,20 +4,24 @@ import CardProduct from '~/components/Cards/CardProduct/CardProduct';
 import SidebarFirm from '~/components/SidebarFirm';
 import { useSortProductByTitle } from '~/hooks';
 import ButtonShowMore from '~/components/ShowMore';
-import { categoriesApi, firmsApi } from '~/api';
 
 import classnames from 'classnames/bind';
 import styles from './ProductsCategory.module.scss';
+import { useSelector } from 'react-redux';
 
 const cx = classnames.bind(styles);
 
 function ProductsCategory() {
     const { state } = useLocation();
     const { cateID, select } = state;
+    const data = useSelector((state) => state);
+    const { firm, category, typeProduct } = data;
+    const { categories } = category;
+    const { firms } = firm;
+    const { typeProducts } = typeProduct;
+
     const [products, setProducts] = useState([]);
     const [getFirmByProduct, setGetFirmByProduct] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [firms, setFirms] = useState([]);
     const [selectName, setSelectName] = useState('');
     const [active, setActive] = useState({
         High: false,
@@ -27,21 +31,6 @@ function ProductsCategory() {
     const [showProducts, setShowProducts] = useState(10);
     const productSortByTitle = useSortProductByTitle(products, select);
     const [sortProducts, setSortProducts] = useState([]);
-
-    const getFirms = async () => {
-        const result = await firmsApi.getAll();
-        setFirms(result.firms);
-    };
-
-    const getCategories = async () => {
-        const result = await categoriesApi.getAll();
-        setCategories(result.categories);
-    };
-
-    useEffect(() => {
-        getCategories();
-        getFirms();
-    }, []);
 
     useEffect(() => {
         setSortProducts(productSortByTitle);
@@ -62,17 +51,17 @@ function ProductsCategory() {
     }, [select]);
 
     useEffect(() => {
-        const getCategory = categories.find((selector) => selector._id === cateID);
-        if (getCategory) {
-            const getFirmsID = getCategory.Products.reduce((pre, next) => {
-                return pre.indexOf(next.Firm_ID) === -1 ? [...pre, next.Firm_ID] : pre;
-            }, []);
-            const filterFirms = firms.filter((firm, index) => {
-                return getFirmsID.includes(firm._id);
-            });
-            setGetFirmByProduct(filterFirms);
-            setProducts(getCategory.Products);
-        }
+        const getProducts = typeProducts.filter((product) => {
+            return product.Product.Category_ID.includes(cateID) && product.Amount !== 0;
+        });
+        const getFirmsID = getProducts.reduce((pre, next) => {
+            return pre.indexOf(next.Product.Firm_ID) === -1 ? [...pre, next.Product.Firm_ID] : pre;
+        }, []);
+        const filterFirms = firms.filter((firm) => {
+            return getFirmsID.includes(firm._id);
+        });
+        setGetFirmByProduct(filterFirms);
+        setProducts(getProducts);
     }, [cateID, categories, firms]);
 
     const handleShowMoreProducts = (numberProduct) => {

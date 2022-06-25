@@ -11,12 +11,18 @@ import { categoriesApi, firmsApi } from '~/api';
 // ClassName
 import classNames from 'classnames/bind';
 import styles from './Products.module.scss';
+import { useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function Products() {
     const { state } = useLocation();
-    const { products, select, productsDefault } = state;
+    const { products, select } = state;
+    const data = useSelector((state) => state);
+    const { typeProduct, category, firm } = data;
+    const { categories } = category;
+    const { typeProducts } = typeProduct;
+    const { firms } = firm;
     const [showProducts, setShowProducts] = useState(10);
     const [sortProducts, setSortProducts] = useState(products);
     const [active, setActive] = useState({
@@ -25,25 +31,8 @@ function Products() {
         Hot: select === 'HOT',
         New: select === 'NEW',
     });
-    const productHot = useSortProductByTitle(productsDefault, 'HOT');
-    const productNew = useSortProductByTitle(productsDefault, 'NEW');
-    const [firms, setFirms] = useState([]);
-    const [categories, setCategories] = useState([]);
-
-    const getCategories = async () => {
-        const result = await categoriesApi.getAll();
-        setCategories(result.categories);
-    };
-
-    const getFirms = async () => {
-        const result = await firmsApi.getAll();
-        setFirms(result.firms);
-    };
-
-    useEffect(() => {
-        getCategories();
-        getFirms();
-    }, []);
+    const productHot = useSortProductByTitle(typeProducts, 'HOT');
+    const productNew = useSortProductByTitle(typeProducts, 'NEW');
 
     const handleShowMoreProducts = (numberProduct) => {
         setShowProducts(showProducts + numberProduct);

@@ -3,16 +3,21 @@ import { useLocation } from 'react-router-dom';
 import CardProduct from '~/components/Cards/CardProduct/CardProduct';
 import { useSortProductByTitle } from '~/hooks';
 import ButtonShowMore from '~/components/ShowMore';
-import { categoriesApi, firmsApi } from '~/api';
 
 import classnames from 'classnames/bind';
 import styles from './ProductsCategoryFirm.module.scss';
+import { useSelector } from 'react-redux';
 
 const cx = classnames.bind(styles);
 
 function ProductsCategoryFirm() {
     const { state } = useLocation();
     const { cateID, firmID, select } = state;
+    const data = useSelector((state) => state);
+    const { firm, category, typeProduct } = data;
+    const { categories } = category;
+    const { firms } = firm;
+    const { typeProducts } = typeProduct;
     const [products, setProducts] = useState([]);
     const [showProducts, setShowProducts] = useState(10);
     const [selectName, setSelectName] = useState('');
@@ -21,25 +26,8 @@ function ProductsCategoryFirm() {
         Low: false,
         Select: select,
     });
-    const [categories, setCategories] = useState([]);
-    const [firms, setFirms] = useState([]);
     const productSortByTitle = useSortProductByTitle(products, select);
     const [sortProducts, setSortProducts] = useState([]);
-
-    const getFirms = async () => {
-        const result = await firmsApi.getAll();
-        setFirms(result.firms);
-    };
-
-    const getCategories = async () => {
-        const result = await categoriesApi.getAll();
-        setCategories(result.categories);
-    };
-
-    useEffect(() => {
-        getCategories();
-        getFirms();
-    }, []);
 
     useEffect(() => {
         setSortProducts(productSortByTitle);
@@ -61,21 +49,18 @@ function ProductsCategoryFirm() {
 
     useEffect(() => {
         if (cateID) {
-            const getCategory = categories.find((selector) => selector._id === cateID);
-            if (getCategory) {
-                const getProducts = getCategory.Products.filter((product, index) => {
-                    return product.Firm_ID === firmID;
-                });
-                setProducts(getProducts);
-            }
+            const getProducts = typeProducts.filter((product) => {
+                return product.Product.Category_ID.includes(cateID) && product.Amount !== 0;
+            });
+            const filterProductByFirms = getProducts.filter((product) => {
+                return product.Product.Firm_ID === firmID;
+            });
+            setProducts(filterProductByFirms);
         } else {
-            const getFirm = firms.find((selector) => selector._id === firmID);
-            if (getFirm) {
-                const getProducts = getFirm.Products.filter((product, index) => {
-                    return product.Firm_ID === firmID;
-                });
-                setProducts(getProducts);
-            }
+            const getProducts = typeProducts.filter((product, index) => {
+                return product.Product.Firm_ID === firmID;
+            });
+            setProducts(getProducts);
         }
     }, [firmID, categories, firms]);
 

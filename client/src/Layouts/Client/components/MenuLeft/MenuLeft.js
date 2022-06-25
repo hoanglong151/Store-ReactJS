@@ -3,28 +3,16 @@ import classnames from 'classnames/bind';
 import styles from './MenuLeft.module.scss';
 import { Link } from 'react-router-dom';
 import { categoriesApi, firmsApi } from '~/api';
+import { useSelector } from 'react-redux';
 
 const cx = classnames.bind(styles);
 
 function MenuLeft() {
     const [firmByProduct, setFirmByProduct] = useState([]);
-    const [firms, setFirms] = useState([]);
-    const [categories, setCategories] = useState([]);
-
-    const getCategories = async () => {
-        const result = await categoriesApi.getAll();
-        setCategories(result.categories);
-    };
-
-    const getFirms = async () => {
-        const result = await firmsApi.getAll();
-        setFirms(result.firms);
-    };
-
-    useEffect(() => {
-        getCategories();
-        getFirms();
-    }, []);
+    const state = useSelector((state) => state);
+    const { category, firm } = state;
+    const { categories } = category;
+    const { firms } = firm;
 
     const handleGetCategory = (category) => {
         const getFirmsID = category.Products.reduce((pre, next) => {

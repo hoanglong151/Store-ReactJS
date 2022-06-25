@@ -26,8 +26,8 @@ function TotalPriceCart(props) {
         <div className={cx('wrap-payment-info')}>
             <div className={cx('wrap-sale-code')}>
                 <h3 className={cx('title-sale-code')}>Mã khuyến mãi:</h3>
-                <Input value={saleCode} onChange={(e) => setSaleCode(e.target.value)} />
-                <button className={styles.btnSale} onClick={handleApplySaleCode} type="button">
+                <Input value={saleCode} className={cx('mb0')} onChange={(e) => setSaleCode(e.target.value)} />
+                <button className={cx('btn-sale')} onClick={handleApplySaleCode} type="button">
                     Áp dụng
                 </button>
             </div>
@@ -35,7 +35,7 @@ function TotalPriceCart(props) {
                 <h3 className={cx('title-total-price')}>Tổng tiền tạm tính:</h3>
                 <span className={cx('total-price')}>{new Intl.NumberFormat('de-DE').format(totalPrice)} đ</span>
             </div>
-            <div className={cx('wrap-total-priceSale')}>
+            <div className={cx('wrap-total-price-sale')}>
                 {totalPriceSale !== 0 && (
                     <>
                         <h3 className={cx('title-total-priceSale')}>Tổng tiền sau khi giảm:</h3>

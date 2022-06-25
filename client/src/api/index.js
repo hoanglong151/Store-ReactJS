@@ -7,5 +7,6 @@ export { default as categoriesApi } from './categoriesApi';
 export { default as districtsApi } from './districtsApi';
 export { default as firmsApi } from './firmsApi';
 export { default as productsApi } from './productsApi';
+export { default as typeProductsApi } from './typeProductsApi';
 export { default as provincesApi } from './provincesApi';
 export { default as saleCodesApi } from './saleCodesApi';

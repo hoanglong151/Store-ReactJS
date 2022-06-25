@@ -30,11 +30,18 @@ function Bill() {
     const [selectDistrict, setSelectDistrict] = useState();
     const [selectBillStatus, setSelectBillStatus] = useState({});
     const [selectAddressStore, setSelectAddressStore] = useState();
-    const [name, setName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
-    const [address, setAddress] = useState('');
-    const [other, setOther] = useState('');
+    // const [name, setName] = useState('');
+    // const [phone, setPhone] = useState('');
+    // const [email, setEmail] = useState('');
+    // const [address, setAddress] = useState('');
+    // const [other, setOther] = useState('');
+    const [info, setInfo] = useState({
+        name: '',
+        phone: '',
+        email: '',
+        address: '',
+        other: '',
+    });
     const SuccessSwal = withReactContent(Swal);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -59,19 +66,19 @@ function Bill() {
         setDistricts(result.districts);
     };
 
+    const getBillStatus = async () => {
+        const billStatus = await billStatusApi.getAll();
+        setSelectBillStatus(billStatus[0]);
+    };
+
     useEffect(() => {
         getAreas();
         getAddressStores();
         getProvinces();
         getDistricts();
-    }, []);
-
-    useEffect(() => {
-        const getBillStatus = async () => {
-            const billStatus = await billStatusApi.getAll();
-            setSelectBillStatus(billStatus[0]);
-        };
         getBillStatus();
+        const info = JSON.parse(sessionStorage.getItem('Info'));
+        setInfo(info);
     }, []);
 
     const selectProvinces = useMemo(() => {
@@ -188,39 +195,44 @@ function Bill() {
     };
 
     const handleSetName = (e) => {
-        setName(e.target.value);
+        setInfo({ ...info, name: e.target.value });
+        sessionStorage.setItem('Info', JSON.stringify({ ...info, name: e.target.value }));
         formik.setFieldValue('name', e.target.value);
     };
     const handleSetPhone = (e) => {
-        setPhone(e.target.value);
+        setInfo({ ...info, phone: e.target.value });
+        sessionStorage.setItem('Info', JSON.stringify({ ...info, phone: e.target.value }));
         formik.setFieldValue('phone', e.target.value);
     };
     const handleSetEmail = (e) => {
-        setEmail(e.target.value);
+        setInfo({ ...info, email: e.target.value });
+        sessionStorage.setItem('Info', JSON.stringify({ ...info, email: e.target.value }));
         formik.setFieldValue('email', e.target.value);
     };
     const handleSetAddress = (e) => {
-        setAddress(e.target.value);
+        setInfo({ ...info, address: e.target.value });
+        sessionStorage.setItem('Info', JSON.stringify({ ...info, address: e.target.value }));
         formik.setFieldValue('address', e.target.value);
     };
     const handleSetOther = (e) => {
-        setOther(e.target.value);
+        setInfo({ ...info, other: e.target.value });
+        sessionStorage.setItem('Info', JSON.stringify({ ...info, other: e.target.value }));
         formik.setFieldValue('other', e.target.value);
     };
 
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            name: name,
-            phone: phone,
-            email: email,
-            shipPayment: selectMethodShip,
+            name: info.name || '',
+            phone: info.phone || '',
+            email: info.email || '',
+            shipPayment: 'Nhận tại cửa hàng',
             area: selectArea?.value || '',
             province: selectProvince?.value || '',
             district: selectDistrict?.value || '',
             addressStore: selectAddressStore?.value || '',
-            address: address,
-            other: other,
+            address: info.address || '',
+            other: info.other || '',
             cart: cart || {},
             billStatus: selectBillStatus || {},
         },

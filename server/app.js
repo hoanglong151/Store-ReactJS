@@ -16,6 +16,7 @@ const connect = require("./src/model/connect.model");
 // Import Routes
 const categories = require("./src/routes/categories.route");
 const products = require("./src/routes/products.route");
+const typeProducts = require("./src/routes/typeProducts.route");
 const firms = require("./src/routes/firms.route");
 const areas = require("./src/routes/areas.route");
 const billStatus = require("./src/routes/billStatus.route");
@@ -37,6 +38,7 @@ connect();
 // Routes
 app.use("/categories", categories);
 app.use("/products", products);
+app.use("/typeProducts", typeProducts);
 app.use("/firms", firms);
 app.use("/areas", areas);
 app.use("/billStatus", billStatus);

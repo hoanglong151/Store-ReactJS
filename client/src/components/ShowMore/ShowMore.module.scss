@@ -1,4 +1,13 @@
-.btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    cursor: pointer;
+.wrapper {
+    .show-more {
+        display: block;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        transition: all 0.15s linear;
+        margin: 2rem auto;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+    }
 }

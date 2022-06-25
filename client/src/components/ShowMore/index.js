@@ -7,9 +7,11 @@ const cx = classnames.bind(styles);
 function ShowMore(props) {
     const { showMore, onClick } = props;
     return (
-        <button className={cx('btn')} onClick={() => onClick(showMore)}>
-            Xem thêm sản phẩm
-        </button>
+        <div className={cx('wrapper')}>
+            <button className={cx('btn', 'show-more')} onClick={() => onClick(showMore)}>
+                Xem thêm sản phẩm
+            </button>
+        </div>
     );
 }
 
