@@ -15,7 +15,17 @@ const cartSlice = createSlice({
     },
     reducers: {
         addProductToCart: (state, action) => {
-            const product = {
+            let newState = {};
+
+            const getIndexExistProduct = current(state.cartProducts).findIndex((item) => {
+                return item.TypeProductID === action.payload.TypeProductID;
+            });
+
+            const updateExistProduct = current(state.cartProducts).find((item) => {
+                return item.TypeProductID === action.payload.TypeProductID;
+            });
+
+            let product = {
                 _id: action.payload._id,
                 Name: action.payload.Name,
                 Image: action.payload.Image,
@@ -24,15 +34,22 @@ const cartSlice = createSlice({
                 Description: action.payload.Description,
                 Color: action.payload.Color,
                 TypeProductID: action.payload.TypeProductID,
-                NumberProduct: 1,
+                NumberProduct: (updateExistProduct && updateExistProduct.NumberProduct + 1) || 1,
             };
             const currentPrice = product.Sale ? product.Sale : product.Price;
-            const newState = {
+
+            newState = {
                 ...state,
                 cartProducts: [...state.cartProducts, product],
                 totalPrice: state.totalPrice + currentPrice,
                 totalPriceSale: state.totalPriceSale + currentPrice,
             };
+
+            if (getIndexExistProduct !== -1) {
+                newState.cartProducts.splice(getIndexExistProduct, 1);
+            }
+            // console.log(getIndexExistProduct, newState.cartProducts.splice(getIndexExistProduct, 1));
+
             localStorage.setItem('cart', JSON.stringify(newState));
             return newState;
         },

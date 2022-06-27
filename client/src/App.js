@@ -9,7 +9,6 @@ import { DefaultLayout } from '~/Layouts/Admin';
 import { DefaultLayout as DefaultLayoutClient } from '~/Layouts/Client';
 import Login from './pages/Admin/Authentication/Login';
 import PrivateRoutes from './routes/PrivateRoutes';
-import { fetchProducts } from '~/app/reducerProduct';
 import { fetchCategories } from '~/app/reducerCategory';
 import { fetchFirms } from '~/app/reducerFirm';
 import { fetchTypeProducts } from '~/app/reducerTypeProduct';
@@ -27,16 +26,13 @@ function App() {
     }, []);
 
     useEffect(() => {
+        setLoading(true);
         const callApi = async () => {
-            setLoading(true);
             try {
-                const resultProduct = dispatch(fetchProducts());
                 const resultCategory = dispatch(fetchCategories());
                 const resultFirm = dispatch(fetchFirms());
                 const resultTypeProduct = dispatch(fetchTypeProducts());
-                Promise.all([resultProduct, resultCategory, resultFirm, resultTypeProduct]).then(() =>
-                    setLoading(false),
-                );
+                Promise.all([resultCategory, resultFirm, resultTypeProduct]).then(() => setLoading(false));
             } catch (err) {
                 console.log('Call API Err');
             }

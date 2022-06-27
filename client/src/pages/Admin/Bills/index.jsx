@@ -67,6 +67,7 @@ function Bills() {
             const getBill = next.Bill.map((item) => item);
             return pre.concat(getBill);
         }, []);
+        console.log(getBills);
         return billStatus.map((status) => {
             return getBills.filter((bill) => bill.BillStatus._id === status.value).length;
         });

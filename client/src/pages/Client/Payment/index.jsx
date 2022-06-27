@@ -30,11 +30,6 @@ function Bill() {
     const [selectDistrict, setSelectDistrict] = useState();
     const [selectBillStatus, setSelectBillStatus] = useState({});
     const [selectAddressStore, setSelectAddressStore] = useState();
-    // const [name, setName] = useState('');
-    // const [phone, setPhone] = useState('');
-    // const [email, setEmail] = useState('');
-    // const [address, setAddress] = useState('');
-    // const [other, setOther] = useState('');
     const [info, setInfo] = useState({
         name: '',
         phone: '',
@@ -68,7 +63,7 @@ function Bill() {
 
     const getBillStatus = async () => {
         const billStatus = await billStatusApi.getAll();
-        setSelectBillStatus(billStatus[0]);
+        setSelectBillStatus(billStatus.billStatus[0]);
     };
 
     useEffect(() => {
@@ -78,7 +73,9 @@ function Bill() {
         getDistricts();
         getBillStatus();
         const info = JSON.parse(sessionStorage.getItem('Info'));
-        setInfo(info);
+        if (info) {
+            setInfo(info);
+        }
     }, []);
 
     const selectProvinces = useMemo(() => {
@@ -99,7 +96,7 @@ function Bill() {
         });
         setSelectProvince(convertProvince[0]);
         return convertProvince;
-    }, [selectArea]);
+    }, [selectArea, provinces]);
 
     const selectDistricts = useMemo(() => {
         const getDistrictsByAreaAndProvince = districts.filter((district) => {
@@ -121,7 +118,7 @@ function Bill() {
                 label: value.Name,
             };
         });
-    }, [selectArea, selectProvince]);
+    }, [selectArea, selectProvince, districts]);
 
     const selectAddressStores = useMemo(() => {
         const getAddressStoresByAreaAndProvinceAndDistrict = addressStores.filter((store) => {
@@ -150,7 +147,7 @@ function Bill() {
                 label: value.Name,
             };
         });
-    }, [selectArea, selectProvince, selectDistrict]);
+    }, [selectArea, selectProvince, selectDistrict, addressStores]);
 
     const convertSelects = useMemo(() => {
         const newAreas = areas.map((area) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import classnames from 'classnames';
+import classnames from 'classnames/bind';
 import styles from './CardProductSearch.module.scss';
 import { Link } from 'react-router-dom';
 
@@ -9,9 +9,11 @@ function CardProductSearch(props) {
     const { product } = props;
     return (
         <Link to={`/product/detail`} state={{ product: product }} className={cx('wrapper')}>
-            <img src={product.Image[0]} className={cx('img')} />
+            <img src={product.Product.Image[0]} className={cx('img')} />
             <div className={cx('wrapper-info')}>
-                <p className={cx('name-product')}>{product.NameProduct}</p>
+                <p className={cx('name-product')}>
+                    {product.Product.Name} - ({product.Name}/{product.Color})
+                </p>
 
                 {product.sale === 0 ? (
                     <span className={cx('new-price')}>{new Intl.NumberFormat('de-DE').format(product.Price)} đ</span>

@@ -6,7 +6,7 @@ import Tippy from '@tippyjs/react/headless';
 import WrapperPopper from '~/components/Popper';
 import CardProductItem from '~/components/Cards/CardProductSearch/CardProductSearch';
 import { faCircleXmark, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import productApi from '~/api/productsApi';
+import { typeProductsApi } from '~/api';
 import { useDebounce, useSortProductByTitle } from '~/hooks';
 
 const cx = classnames.bind(styles);
@@ -35,7 +35,7 @@ function Search() {
             setLoading(true);
             const PAGE_SIZE = 5;
             const searchProduct = async () => {
-                const products = await productApi.searchProduct(debounce, PAGE_SIZE);
+                const products = await typeProductsApi.searchTypeProduct(debounce, PAGE_SIZE);
                 setSearchResult(products.data);
                 setLoading(false);
             };
