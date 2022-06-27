@@ -1,4 +1,5 @@
 const typeProductsModel = require("../model/Schema/typeProducts.schema");
+const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getTypeProducts = async (req, res) => {
   const PAGE_SIZE = 10;
@@ -46,4 +47,33 @@ const getTypeProducts = async (req, res) => {
   }
 };
 
-module.exports = { getTypeProducts };
+const searchTypeProducts = async (req, res) => {
+  const result = await typeProductsModel
+    .find()
+    .populate("Product")
+    .populate({
+      path: "Product",
+      populate: {
+        path: "TypesProduct",
+        model: "typeProducts",
+      },
+    });
+  const data = result.filter((value) => {
+    const removeUnicodeName = replaceUnicode(value.Product.Name.toLowerCase());
+    const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
+    const name = removeUnicodeName.split(" ");
+    const search = removeUnicodeSearch.split(" ");
+    const contains = search.every((input) => {
+      return name.includes(input);
+    });
+    if (contains) {
+      return value;
+    } else {
+      return removeUnicodeName.toLowerCase().includes(removeUnicodeSearch);
+    }
+  });
+  const totalPage = Math.ceil(data.length / parseInt(req.query.size));
+  res.send({ data: data, totalPage: totalPage });
+};
+
+module.exports = { getTypeProducts, searchTypeProducts };

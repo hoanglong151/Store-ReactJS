@@ -49,6 +49,7 @@ const updateBill = (req, res) => {
 };
 
 const paymentBill = (req, res) => {
+  console.log(req.body, req.body.billStatus);
   req.body.cart.cartProducts.map((product) => {
     typeProductsModel.findById(product.TypeProductID, (err, type) => {
       const amount = type.Amount;
