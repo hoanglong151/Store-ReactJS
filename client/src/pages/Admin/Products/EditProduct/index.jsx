@@ -3,7 +3,6 @@ import { useLocation, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { categoriesApi, firmsApi, productsApi } from '~/api';
 import Label from '~/components/Form/Label/Label';
 import Input from '~/components/Form/Input/Input';
@@ -44,6 +43,7 @@ function EditProduct() {
             const result = await firmsApi.getAll();
             setFirms(result.firms);
         };
+
         getCategories();
         getFirms();
     }, []);
@@ -54,15 +54,9 @@ function EditProduct() {
             value: category._id,
             label: category.Name,
         }));
-        const getIndexCreateDate = product.CreateDate.indexOf('T');
-        const formatCreateDate = product.CreateDate.slice(0, getIndexCreateDate);
-        const getIndexUpdateDate = product.UpdateDate ? product.UpdateDate.indexOf('T') : null;
-        const formatUpdateDate = product.UpdateDate ? product.UpdateDate.slice(0, getIndexUpdateDate) : null;
         const editProduct = {
             ...product,
             Category_ID: mapCategoriesProduct,
-            CreateDate: formatCreateDate,
-            UpdateDate: formatUpdateDate,
             Firm_ID: { value: product.Firm_ID._id, label: product.Firm_ID.Name },
         };
         setProductEdit(editProduct);
@@ -71,12 +65,6 @@ function EditProduct() {
         setImages(product.Image);
         setSelect(mapCategories);
     }, []);
-
-    const today = new Date();
-    let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(today);
-    let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(today);
-    let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(today);
-    const getNowDate = `${ye}-${mo}-${da}`;
 
     const options = categories?.map((cate, index) => {
         return {
@@ -116,8 +104,6 @@ function EditProduct() {
                 amount: 0,
                 sold: 0,
             },
-            createDate: productEdit?.CreateDate ? productEdit.CreateDate : '',
-            updateDate: productEdit?.UpdateDate ? productEdit.UpdateDate : getNowDate,
         },
         // validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -175,6 +161,7 @@ function EditProduct() {
         const optionList = options.map((option, index) => {
             return option.value;
         });
+        setSelect(optionList);
         formik.setFieldValue('category_Id', optionList);
     };
 
@@ -201,22 +188,6 @@ function EditProduct() {
         <div className={cx('wrapper')}>
             <h1 className={cx('header')}>Cập Nhật Sản Phẩm</h1>
             <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
-                <Label>Ngày Tạo</Label>
-                <Input
-                    id="createDate"
-                    name="createDate"
-                    onChange={formik.handleChange}
-                    value={formik.values.createDate}
-                    type="date"
-                />
-                <Label>Ngày Cập Nhật</Label>
-                <Input
-                    id="updateDate"
-                    name="updateDate"
-                    onChange={formik.handleChange}
-                    value={formik.values.updateDate ? formik.values.updateDate : getNowDate}
-                    type="date"
-                />
                 <Label>Tên Sản Phẩm</Label>
                 <Input
                     id="name"
@@ -235,12 +206,7 @@ function EditProduct() {
                     multiple
                 />
                 <Label>Hãng</Label>
-                <Selects
-                    onChangeSelect={handleSelectFirm}
-                    select={productEdit.Firm_ID}
-                    data={optionsFirm}
-                    multiple={false}
-                />
+                <Selects onChangeSelect={handleSelectFirm} select={productEdit.Firm_ID} data={optionsFirm} />
                 <Label>Loại</Label>
                 <Accordion
                     onHandleDeleteType={handleDeleteType}

@@ -11,13 +11,9 @@ const Products = new Schema(
       { type: Schema.Types.ObjectId, ref: "categories", required: true },
     ],
     Firm_ID: { type: Schema.Types.ObjectId, ref: "firms", required: true },
-    TypesProduct: [
-      { type: Schema.Types.ObjectId, ref: "typeProducts", required: true },
-    ],
-    UpdateDate: Date,
-    CreateDate: Date,
   },
   {
+    timestamps: true,
     versionKey: false,
     _id: false,
   }

@@ -9,29 +9,9 @@ const getFirms = async (req, res) => {
   let firms;
   const skipFirms = page * PAGE_SIZE - PAGE_SIZE;
   if (page) {
-    firms = await firmsModel
-      .find()
-      .populate("Products")
-      .populate({
-        path: "Products",
-        populate: {
-          path: "TypesProduct",
-          model: "typeProducts",
-        },
-      })
-      .skip(skipFirms)
-      .limit(PAGE_SIZE);
+    firms = await firmsModel.find().skip(skipFirms).limit(PAGE_SIZE);
   } else {
-    firms = await firmsModel
-      .find()
-      .populate("Products")
-      .populate({
-        path: "Products",
-        populate: {
-          path: "TypesProduct",
-          model: "typeProducts",
-        },
-      });
+    firms = await firmsModel.find();
   }
   firmsModel.countDocuments((err, total) => {
     if (err) {
@@ -40,7 +20,7 @@ const getFirms = async (req, res) => {
     }
     if (total) {
       const totalPage = Math.ceil(total / PAGE_SIZE);
-      res.send({ firms: firms, totalPage: totalPage });
+      res.json({ firms: firms, totalPage: totalPage });
     }
   });
 };
@@ -60,7 +40,7 @@ const addFirm = (req, res) => {
       if (err) {
         return res.status(404);
       }
-      res.send(data);
+      res.json(data);
     });
   });
 };
@@ -72,7 +52,7 @@ const editFirm = (req, res) => {
 
   firmsModel.findByIdAndUpdate(req.params.id, editFirm, async (err, data) => {
     try {
-      res.send(data);
+      res.json(data);
     } catch (err) {
       res.status(404);
     }
@@ -81,17 +61,17 @@ const editFirm = (req, res) => {
 
 const deleteFirm = async (req, res) => {
   const getFirm = await firmsModel.findById(req.params.id).exec();
-  if (getFirm.Products.length === 0) {
-    firmsModel.findByIdAndDelete(getFirm._id, (err, data) => {
-      res.send(data);
-    });
-  } else {
-    res.send({ exist: "Existed" });
-  }
+  // if (getFirm.Products.length === 0) {
+  firmsModel.findByIdAndDelete(getFirm._id, (err, data) => {
+    res.json(data);
+  });
+  // } else {
+  //   res.send({ exist: "Existed" });
+  // }
 };
 
 const searchFirm = async (req, res) => {
-  const result = await firmsModel.find().populate("Products").exec();
+  const result = await firmsModel.find().exec();
   const data = result.filter((value) => {
     const removeUnicodeName = replaceUnicode(value.Name.toLowerCase());
     const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
@@ -107,7 +87,7 @@ const searchFirm = async (req, res) => {
     }
   });
   const totalPage = Math.ceil(data.length / parseInt(req.query.size));
-  res.send({ data: data, totalPage: totalPage });
+  res.json({ data: data, totalPage: totalPage });
 };
 
 module.exports = { getFirms, addFirm, editFirm, deleteFirm, searchFirm };

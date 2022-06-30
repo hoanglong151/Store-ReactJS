@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Header.module.scss';
 import classnames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,6 +6,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
 import Tippy from '@tippyjs/react/headless';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const cx = classnames.bind(styles);
 
@@ -13,6 +14,16 @@ function Header() {
     const [visible, setVisible] = useState(false);
     const navigate = useNavigate();
     const user = JSON.parse(sessionStorage.getItem('auth'));
+    const { bills } = useSelector((state) => state.bill);
+
+    // useEffect(() => {
+    //     bills.map((bill) => {
+    //         const arr = bill.Bill.filter((item) => {
+    //             return item.BillStatus.Name === 'Chờ xử lý';
+    //         });
+    //         console.log(arr);
+    //     });
+    // }, []);
 
     const handleHideVisible = () => {
         setVisible(false);

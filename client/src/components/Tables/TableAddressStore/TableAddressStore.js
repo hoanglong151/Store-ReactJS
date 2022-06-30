@@ -28,20 +28,10 @@ function TableAddressStore(props) {
                     {addressStores.map((store) => (
                         <TableRow key={store._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                             <TableCell component="th" scope="row">
-                                {store?.Areas.map((area) => {
-                                    return area.Name;
-                                }).join(', ')}
+                                {store.Areas.Name}
                             </TableCell>
-                            <TableCell align="right">
-                                {store?.Provinces.map((province) => {
-                                    return province.Name;
-                                }).join(', ')}
-                            </TableCell>
-                            <TableCell align="right">
-                                {store?.Districts.map((district) => {
-                                    return district.Name;
-                                }).join(', ')}
-                            </TableCell>
+                            <TableCell align="right">{store.Provinces.Name}</TableCell>
+                            <TableCell align="right">{store.Districts.Name}</TableCell>
                             <TableCell align="right">{store.Name}</TableCell>
                             <TableCell align="right">
                                 <button className={cx('btn', 'btn-edit')} onClick={() => onHandleOpenDialog(store)}>

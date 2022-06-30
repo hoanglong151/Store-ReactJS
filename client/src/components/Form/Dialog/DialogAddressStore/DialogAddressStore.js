@@ -26,15 +26,13 @@ function DialogAddressStore(props) {
             <form onSubmit={formik.handleSubmit}>
                 <DialogTitle>{editAddressStore._id ? 'Cập Nhật Địa Chỉ Cửa Hàng' : 'Tạo Địa Chỉ Cửa Hàng'}</DialogTitle>
                 <DialogContent>
-                    <Selects multiple data={areas} select={editAddressStore.Areas} onChangeSelect={handleSelectArea} />
+                    <Selects data={areas} select={editAddressStore.Areas} onChangeSelect={handleSelectArea} />
                     <Selects
-                        multiple
                         data={provinces}
                         select={editAddressStore.Provinces}
                         onChangeSelect={handleSelectProvince}
                     />
                     <Selects
-                        multiple
                         data={districts}
                         select={editAddressStore.Districts}
                         onChangeSelect={handleSelectDistrict}

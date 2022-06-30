@@ -6,7 +6,7 @@ import styles from './Selects.module.scss';
 const cx = classnames.bind(styles);
 
 function Selects(props) {
-    const { onChangeSelect, data, select, multiple, className, placeholder } = props;
+    const { onChangeSelect, data, select, multiple, className, placeholder, id, name, errors } = props;
     const customStyles = {
         menu: (provided, state) => ({
             ...provided,
@@ -15,9 +15,11 @@ function Selects(props) {
     };
     return (
         <Select
+            name={name}
+            id={id}
             styles={customStyles}
             onChange={onChangeSelect}
-            className={cx('select', { [className]: className })}
+            className={cx('select', { [className]: className, error: errors })}
             closeMenuOnSelect={!multiple}
             value={select}
             isMulti={multiple}

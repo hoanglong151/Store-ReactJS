@@ -8,6 +8,7 @@ const SaleCodes = new Schema(
     Sale: Number,
   },
   {
+    timestamps: true,
     versionKey: false,
     _id: false,
   }

@@ -7,30 +7,9 @@ const Bills = new Schema(
     Name: String,
     Phone: String,
     Email: String,
-    Bill: [
-      {
-        BillID: Schema.Types.ObjectId,
-        ShipPayment: String,
-        Areas: {
-          type: Schema.Types.ObjectId,
-          ref: "areas",
-        },
-        Provinces: { type: Schema.Types.ObjectId, ref: "provinces" },
-        Districts: { type: Schema.Types.ObjectId, ref: "districts" },
-        AddressStores: {
-          type: Schema.Types.ObjectId,
-          ref: "addressStores",
-        },
-        Address: String,
-        Other: String,
-        Cart: Object,
-        BillStatus: Object,
-        CreateDate: Date,
-        UpdateDate: Date,
-      },
-    ],
   },
   {
+    timestamps: true,
     versionKey: false,
     _id: false,
   }

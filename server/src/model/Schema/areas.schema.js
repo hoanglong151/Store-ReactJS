@@ -5,14 +5,9 @@ const Areas = new Schema(
   {
     _id: Schema.Types.ObjectId,
     Name: String,
-    Provinces: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "provinces",
-      },
-    ],
   },
   {
+    timestamps: true,
     versionKey: false,
     _id: false,
   }

@@ -118,40 +118,25 @@ function AddressStores() {
         });
     }, [districts]);
 
-    const handleOpenDialog = (adressStore) => {
-        if (adressStore?._id) {
-            const convertSelectArea = adressStore.Areas.map((area) => {
-                return {
-                    value: area._id,
-                    label: area.Name,
-                };
-            });
-            const getProvinceIDArea = adressStore.Areas.map((area) => {
-                return area._id;
-            });
-            const convertSelectProvince = adressStore.Provinces.map((province) => {
-                return {
-                    value: province._id,
-                    label: province.Name,
-                };
-            });
-            const getProvinceIDProvince = adressStore.Provinces.map((province) => {
-                return province._id;
-            });
-            const convertSelectDistrict = adressStore.Districts.map((district) => {
-                return {
-                    value: district._id,
-                    label: district.Name,
-                };
-            });
-            const getProvinceIDDistrict = adressStore.Districts.map((district) => {
-                return district._id;
-            });
-            formik.setFieldValue('area_Id', getProvinceIDArea);
-            formik.setFieldValue('province_Id', getProvinceIDProvince);
-            formik.setFieldValue('addressStore_Id', getProvinceIDDistrict);
+    const handleOpenDialog = (addressStore) => {
+        if (addressStore?._id) {
+            const convertSelectArea = {
+                value: addressStore.Areas._id,
+                label: addressStore.Areas.Name,
+            };
+            const convertSelectProvince = {
+                value: addressStore.Provinces._id,
+                label: addressStore.Provinces.Name,
+            };
+            const convertSelectDistrict = {
+                value: addressStore.Districts._id,
+                label: addressStore.Districts.Name,
+            };
+            formik.setFieldValue('area_Id', addressStore.Areas._id);
+            formik.setFieldValue('province_Id', addressStore.Provinces._id);
+            formik.setFieldValue('addressStore_Id', addressStore.Districts._id);
             setEditAddressStore({
-                ...adressStore,
+                ...addressStore,
                 Areas: convertSelectArea,
                 Provinces: convertSelectProvince,
                 Districts: convertSelectDistrict,
@@ -207,28 +192,19 @@ function AddressStores() {
         });
     };
 
-    const handleSelectArea = (options) => {
-        const optionList = options.map((option, index) => {
-            return option.value;
-        });
-        setEditAddressStore({ ...editAddressStore, Areas: options });
-        formik.setFieldValue('area_Id', optionList);
+    const handleSelectArea = (option) => {
+        setEditAddressStore({ ...editAddressStore, Areas: option });
+        formik.setFieldValue('area_Id', option.value);
     };
 
-    const handleSelectProvince = (options) => {
-        const optionList = options.map((option, index) => {
-            return option.value;
-        });
-        setEditAddressStore({ ...editAddressStore, Provinces: options });
-        formik.setFieldValue('province_Id', optionList);
+    const handleSelectProvince = (option) => {
+        setEditAddressStore({ ...editAddressStore, Provinces: option });
+        formik.setFieldValue('province_Id', option.value);
     };
 
-    const handleSelectDistrict = (options) => {
-        const optionList = options.map((option, index) => {
-            return option.value;
-        });
-        setEditAddressStore({ ...editAddressStore, Districts: options });
-        formik.setFieldValue('district_Id', optionList);
+    const handleSelectDistrict = (option) => {
+        setEditAddressStore({ ...editAddressStore, Districts: option });
+        formik.setFieldValue('district_Id', option.value);
     };
 
     const handleSearchAddressStores = (data) => {
@@ -250,9 +226,9 @@ function AddressStores() {
         } else {
             return {
                 name: '',
-                area_Id: [],
-                province_Id: [],
-                addressStore_Id: [],
+                area_Id: '',
+                province_Id: '',
+                addressStore_Id: '',
             };
         }
     };

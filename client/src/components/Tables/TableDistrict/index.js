@@ -12,6 +12,7 @@ const cx = classnames.bind();
 
 function TableDistrict(props) {
     const { districts, onHandleOpenDialog, onHandleDeleteDistrict } = props;
+    console.log(districts);
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -27,15 +28,9 @@ function TableDistrict(props) {
                     {districts.map((district) => (
                         <TableRow key={district._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                             <TableCell component="th" scope="row">
-                                {district?.Areas.map((area) => {
-                                    return area.Name;
-                                }).join(', ')}
+                                {district.Areas.Name}
                             </TableCell>
-                            <TableCell align="right">
-                                {district?.Provinces.map((province) => {
-                                    return province.Name;
-                                }).join(', ')}
-                            </TableCell>
+                            <TableCell align="right">{district.Provinces.Name}</TableCell>
                             <TableCell align="right">{district.Name}</TableCell>
                             <TableCell align="right">
                                 <button className={cx('btn', 'btn-edit')} onClick={() => onHandleOpenDialog(district)}>

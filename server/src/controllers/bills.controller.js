@@ -1,4 +1,5 @@
 const billsModel = require("../model/Schema/bills.schema");
+const detailBillsModel = require("../model/Schema/detailBills.schema");
 const typeProductsModel = require("../model/Schema/typeProducts.schema");
 const mongoose = require("mongoose");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
@@ -10,12 +11,12 @@ const findBill = (req, res) => {
         (bill) => bill.BillID.toString() === req.body.billID
       );
       if (getBill === undefined) {
-        res.send({
+        res.json({
           Invalid:
             "Quý khách cung cấp thông tin chưa chính xác, vui lòng kiểm tra lại!",
         });
       } else {
-        res.send({
+        res.json({
           Name: result.Name,
           Phone: result.Phone,
           Email: result.Email,
@@ -24,7 +25,7 @@ const findBill = (req, res) => {
       }
     });
   } else {
-    res.send({
+    res.json({
       Invalid: "Quý khách vui lòng cung cấp đầy đủ thông tin",
     });
   }
@@ -49,13 +50,12 @@ const updateBill = (req, res) => {
 };
 
 const paymentBill = (req, res) => {
-  console.log(req.body, req.body.billStatus);
   req.body.cart.cartProducts.map((product) => {
     typeProductsModel.findById(product.TypeProductID, (err, type) => {
       const amount = type.Amount;
       type.Amount -= product.NumberProduct;
       if (type.Amount < 0) {
-        res.status(200).send({
+        res.status(200).json({
           Product: `${product.Name}`,
           Amount: `Hiện tại chỉ còn ${amount} sản phẩm. Bạn có thể đặt ${amount} sản phẩm. Mong bạn thông cảm vì sự bất tiện này!`,
         });
@@ -66,7 +66,6 @@ const paymentBill = (req, res) => {
             console.log("Update Type Product: ", err);
           }
         });
-
         billsModel.findOne(
           { Name: req.body.name, Phone: req.body.phone },
           async (err, data) => {
@@ -78,37 +77,11 @@ const paymentBill = (req, res) => {
                 Name: req.body.name,
                 Phone: req.body.phone,
                 Email: req.body.email,
-                Bill: [
-                  {
-                    BillID: BillID,
-                    ShipPayment: req.body.shipPayment,
-                    Areas: req.body.area,
-                    Provinces: req.body.province,
-                    Districts: req.body.district,
-                    Other: req.body.other,
-                    Cart: req.body.cart,
-                    BillStatus: req.body.billStatus,
-                    CreateDate: new Date(),
-                  },
-                ],
+                Bill: [BillID],
               };
 
-              if (req.body.address !== "") {
-                bill.Bill[0].Address = req.body.address;
-              } else {
-                bill.Bill[0].AddressStores = req.body.addressStore;
-              }
-
-              await billsModel.create(bill, (err, data) => {
-                if (err) {
-                  console.log("LỖI: ", err);
-                  return err;
-                }
-                res.send(data);
-              });
-            } else {
-              const bill = {
-                BillID: BillID,
+              const detailBill = {
+                _id: BillID,
                 ShipPayment: req.body.shipPayment,
                 Areas: req.body.area,
                 Provinces: req.body.province,
@@ -120,20 +93,53 @@ const paymentBill = (req, res) => {
               };
 
               if (req.body.address !== "") {
-                bill.Address = req.body.address;
+                detailBill.Address = req.body.address;
               } else {
-                bill.AddressStores = req.body.addressStore;
+                detailBill.AddressStores = req.body.addressStore;
+              }
+
+              await detailBillsModel.create(detailBill);
+              billsModel.create(bill, (err, data) => {
+                res.json(data);
+              });
+            } else {
+              const detailBill = {
+                _id: BillID,
+                ShipPayment: req.body.shipPayment,
+                Areas: req.body.area,
+                Provinces: req.body.province,
+                Districts: req.body.district,
+                Other: req.body.other,
+                Cart: req.body.cart,
+                BillStatus: req.body.billStatus,
+                CreateDate: new Date(),
+              };
+
+              if (req.body.address !== "") {
+                detailBill.Address = req.body.address;
+              } else {
+                detailBill.AddressStores = req.body.addressStore;
               }
 
               billsModel.findByIdAndUpdate(
                 data._id,
-                { $push: { Bill: bill } },
+                { $push: { Bill: BillID } },
                 (err, data) => {
                   if (err) {
                     console.log("LỖI: ", err);
                     return err;
                   }
-                  res.send(data);
+                  return data;
+                }
+              );
+              const resultDetailBill = await detailBillsModel.create(
+                detailBill,
+                (err, data) => {
+                  if (err) {
+                    console.log("LỖI: ", err);
+                    return err;
+                  }
+                  res.status(200).json(data);
                 }
               );
             }
@@ -144,9 +150,40 @@ const paymentBill = (req, res) => {
   });
 };
 
+const pendingBill = async (req, res) => {
+  const bills = await billsModel
+    .find({ "Bill.BillStatus.Name": "Chờ xử lý" })
+    .populate({
+      path: "Bill",
+      populate: {
+        path: "Areas",
+      },
+    })
+    .populate({
+      path: "Bill",
+      populate: {
+        path: "Districts",
+      },
+    })
+    .populate({
+      path: "Bill",
+      populate: {
+        path: "Provinces",
+      },
+    })
+    .populate({
+      path: "Bill",
+      populate: {
+        path: "AddressStores",
+      },
+    });
+
+  res.status(200).json({ bills: bills });
+};
+
 const getBills = async (req, res) => {
   const PAGE_SIZE = 10;
-  const page = parseInt(req.query.page);
+  const page = parseInt(req?.query.page);
   let bills;
   const skipBills = page * PAGE_SIZE - PAGE_SIZE;
   if (page) {
@@ -265,4 +302,11 @@ const searchBill = async (req, res) => {
   res.send({ data: data, totalPage: totalPage });
 };
 
-module.exports = { findBill, updateBill, paymentBill, getBills, searchBill };
+module.exports = {
+  findBill,
+  updateBill,
+  paymentBill,
+  getBills,
+  searchBill,
+  pendingBill,
+};

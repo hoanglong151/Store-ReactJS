@@ -8,6 +8,7 @@ const {
   paymentBill,
   getBills,
   searchBill,
+  pendingBill,
 } = require("../controllers/bills.controller");
 
 const router = express.Router();
@@ -21,5 +22,7 @@ router.post("/paymentBill", paymentBill);
 router.get("/", validateToken, getBills);
 
 router.get("/searchBill", searchBill);
+
+router.get("/pendingBill", pendingBill);
 
 module.exports = router;

@@ -12,6 +12,7 @@ const cx = classnames.bind();
 
 function TableProvince(props) {
     const { provinces, onHandleOpenDialog, onHandleDeleteProvince } = props;
+    console.log(provinces);
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -26,9 +27,7 @@ function TableProvince(props) {
                     {provinces.map((province) => (
                         <TableRow key={province._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                             <TableCell component="th" scope="row">
-                                {province?.Areas.map((area) => {
-                                    return area.Name;
-                                }).join(', ')}
+                                {province.Areas.Name}
                             </TableCell>
                             <TableCell align="right">{province.Name}</TableCell>
                             <TableCell align="right">

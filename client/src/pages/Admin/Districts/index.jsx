@@ -92,26 +92,16 @@ function District() {
 
     const handleOpenDialog = (district) => {
         if (district?._id) {
-            const convertSelectArea = district.Areas.map((area) => {
-                return {
-                    value: area._id,
-                    label: area.Name,
-                };
-            });
-            const getProvinceIDArea = district.Areas.map((area) => {
-                return area._id;
-            });
-            const convertSelectProvince = district.Provinces.map((province) => {
-                return {
-                    value: province._id,
-                    label: province.Name,
-                };
-            });
-            const getProvinceIDProvince = district.Provinces.map((province) => {
-                return province._id;
-            });
-            formik.setFieldValue('area_Id', getProvinceIDArea);
-            formik.setFieldValue('province_Id', getProvinceIDProvince);
+            const convertSelectArea = {
+                value: district.Areas._id,
+                label: district.Areas.Name,
+            };
+            const convertSelectProvince = {
+                value: district.Provinces._id,
+                label: district.Provinces.Name,
+            };
+            formik.setFieldValue('area_Id', district.Areas._id);
+            formik.setFieldValue('province_Id', district.Provinces._id);
             setEditDistrict({ ...district, Areas: convertSelectArea, Provinces: convertSelectProvince });
             setOpenEdit(true);
         } else {
@@ -163,20 +153,14 @@ function District() {
         });
     };
 
-    const handleSelectArea = (options) => {
-        const optionList = options.map((option, index) => {
-            return option.value;
-        });
-        setEditDistrict({ ...editDistrict, Areas: options });
-        formik.setFieldValue('area_Id', optionList);
+    const handleSelectArea = (option) => {
+        setEditDistrict({ ...editDistrict, Areas: option });
+        formik.setFieldValue('area_Id', option.value);
     };
 
-    const handleSelectProvince = (options) => {
-        const optionList = options.map((option, index) => {
-            return option.value;
-        });
-        setEditDistrict({ ...editDistrict, Provinces: options });
-        formik.setFieldValue('province_Id', optionList);
+    const handleSelectProvince = (option) => {
+        setEditDistrict({ ...editDistrict, Provinces: option });
+        formik.setFieldValue('province_Id', option.value);
     };
 
     const handleSearchDistricts = (data) => {
@@ -198,8 +182,8 @@ function District() {
         } else {
             return {
                 name: '',
-                area_Id: [],
-                province_Id: [],
+                area_Id: '',
+                province_Id: '',
             };
         }
     };

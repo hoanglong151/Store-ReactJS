@@ -48,7 +48,6 @@ const cartSlice = createSlice({
             if (getIndexExistProduct !== -1) {
                 newState.cartProducts.splice(getIndexExistProduct, 1);
             }
-            // console.log(getIndexExistProduct, newState.cartProducts.splice(getIndexExistProduct, 1));
 
             localStorage.setItem('cart', JSON.stringify(newState));
             return newState;
@@ -88,7 +87,9 @@ const cartSlice = createSlice({
             return newState;
         },
         remove: (state, action) => {
+            let newState;
             const result = current(state.cartProducts).filter((product) => {
+                console.log('Product: ', product);
                 if (product._id !== action.payload._id) {
                     return product;
                 } else if (
@@ -100,13 +101,24 @@ const cartSlice = createSlice({
                     return product;
                 }
             });
+            console.log('Result: ', result);
             const currentPrice = action.payload.Sale ? action.payload.Sale : action.payload.Price;
-            const newState = {
-                ...state,
-                cartProducts: result,
-                totalPrice: state.totalPrice - currentPrice * action.payload.NumberProduct,
-                totalPriceSale: state.totalPriceSale - currentPrice * action.payload.NumberProduct,
-            };
+            if (result.length !== 0) {
+                newState = {
+                    ...state,
+                    cartProducts: result,
+                    totalPrice: state.totalPrice - currentPrice * action.payload.NumberProduct,
+                    totalPriceSale: state.totalPriceSale - currentPrice * action.payload.NumberProduct,
+                };
+            } else {
+                newState = {
+                    ...state,
+                    cartProducts: result,
+                    totalPrice: state.totalPrice - currentPrice * action.payload.NumberProduct,
+                    totalPriceSale: 0,
+                };
+            }
+
             localStorage.setItem('cart', JSON.stringify(newState));
             return newState;
         },

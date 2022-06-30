@@ -70,16 +70,11 @@ function Provinces() {
 
     const handleOpenDialog = (province) => {
         if (province?._id) {
-            const convertSelect = province.Areas.map((area) => {
-                return {
-                    value: area._id,
-                    label: area.Name,
-                };
-            });
-            const getProvinceID = province.Areas.map((area) => {
-                return area._id;
-            });
-            formik.setFieldValue('area_Id', getProvinceID);
+            const convertSelect = {
+                value: province.Areas._id,
+                label: province.Areas.Name,
+            };
+            formik.setFieldValue('area_Id', province.Areas._id);
             setEditProvince({ ...province, Areas: convertSelect });
             setOpenEdit(true);
         } else {
@@ -131,12 +126,9 @@ function Provinces() {
         });
     };
 
-    const handleSelectArea = (options) => {
-        const optionList = options.map((option, index) => {
-            return option.value;
-        });
-        setEditProvince({ ...editProvince, Areas: options });
-        formik.setFieldValue('area_Id', optionList);
+    const handleSelectArea = (option) => {
+        setEditProvince({ ...editProvince, Areas: option });
+        formik.setFieldValue('area_Id', option.value);
     };
 
     const handleSearchProvinces = (data) => {
@@ -158,7 +150,7 @@ function Provinces() {
         } else {
             return {
                 name: '',
-                area_Id: [],
+                area_Id: '',
             };
         }
     };

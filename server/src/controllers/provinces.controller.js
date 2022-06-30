@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const provincesModel = require("../model/Schema/provinces.schema");
-const areasModel = require("../model/Schema/areas.schema");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getProvinces = async (req, res) => {
@@ -25,7 +24,7 @@ const getProvinces = async (req, res) => {
     }
     if (total) {
       const totalPage = Math.ceil(total / PAGE_SIZE);
-      res.send({ provinces: provinces, totalPage: totalPage });
+      res.json({ provinces: provinces, totalPage: totalPage });
     }
   });
 };
@@ -42,16 +41,7 @@ const addProvince = (req, res) => {
       console.log("LỖI: ", err);
       return err;
     }
-    req.body.area_Id.map((value) => {
-      areasModel.findByIdAndUpdate(
-        value,
-        { $push: { Provinces: id } },
-        (err, data) => {
-          if (err) return err;
-        }
-      );
-    });
-    res.send(data);
+    res.json(data);
   });
 };
 
@@ -63,14 +53,14 @@ const editProvince = (req, res) => {
 
   provincesModel.findByIdAndUpdate(req.params.id, editProvince, (err, data) => {
     if (err) return err;
-    res.send(data);
+    res.json(data);
   });
 };
 
 const deleteProvince = async (req, res) => {
   const getProvince = await provincesModel.findById(req.params.id).exec();
   provincesModel.findByIdAndDelete(getProvince._id, (err, data) => {
-    res.send(data);
+    res.json(data);
   });
 };
 
@@ -91,7 +81,7 @@ const searchProvince = async (req, res) => {
     }
   });
   const totalPage = Math.ceil(data.length / parseInt(req.query.size));
-  res.send({ data: data, totalPage: totalPage });
+  res.json({ data: data, totalPage: totalPage });
 };
 
 module.exports = {

@@ -12,7 +12,7 @@ const {
 
 const router = express.Router();
 
-router.get("/", validateToken, getBillStatus);
+router.get("/", getBillStatus);
 
 router.post("/addBillStatus", validateToken, addBillStatus);
 

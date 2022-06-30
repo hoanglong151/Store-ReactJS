@@ -24,13 +24,8 @@ function DialogDistrict(props) {
             <form onSubmit={formik.handleSubmit}>
                 <DialogTitle>Tạo Quận/Huyện</DialogTitle>
                 <DialogContent>
-                    <Selects multiple data={areas} select={editDistrict.Areas} onChangeSelect={handleSelectArea} />
-                    <Selects
-                        multiple
-                        data={provinces}
-                        select={editDistrict.Provinces}
-                        onChangeSelect={handleSelectProvince}
-                    />
+                    <Selects data={areas} select={editDistrict.Areas} onChangeSelect={handleSelectArea} />
+                    <Selects data={provinces} select={editDistrict.Provinces} onChangeSelect={handleSelectProvince} />
                     <Input
                         id="name"
                         name="name"

@@ -29,7 +29,7 @@ const getDistricts = async (req, res) => {
     }
     if (total) {
       const totalPage = Math.ceil(total / PAGE_SIZE);
-      res.send({ districts: districts, totalPage: totalPage });
+      res.json({ districts: districts, totalPage: totalPage });
     }
   });
 };
@@ -47,16 +47,7 @@ const addDistrict = (req, res) => {
       console.log("LỖI: ", err);
       return err;
     }
-    req.body.province_Id.map((value) => {
-      provincesModel.findByIdAndUpdate(
-        value,
-        { $push: { Districts: id } },
-        (err, data) => {
-          if (err) return err;
-        }
-      );
-    });
-    res.send(data);
+    res.json(data);
   });
 };
 
@@ -69,14 +60,14 @@ const editDistrict = (req, res) => {
 
   districtsModel.findByIdAndUpdate(req.params.id, editDistrict, (err, data) => {
     if (err) return err;
-    res.send(data);
+    res.json(data);
   });
 };
 
 const deleteDistrict = async (req, res) => {
   const getDistrict = await districtsModel.findById(req.params.id).exec();
   districtsModel.findByIdAndDelete(getDistrict._id, (err, data) => {
-    res.send(data);
+    res.json(data);
   });
 };
 
@@ -101,7 +92,7 @@ const searchDistrict = async (req, res) => {
     }
   });
   const totalPage = Math.ceil(data.length / parseInt(req.query.size));
-  res.send({ data: data, totalPage: totalPage });
+  res.json({ data: data, totalPage: totalPage });
 };
 
 module.exports = {

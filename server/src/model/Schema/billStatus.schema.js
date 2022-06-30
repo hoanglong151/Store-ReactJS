@@ -7,6 +7,7 @@ const BillStatus = new Schema(
     Name: String,
   },
   {
+    timestamps: true,
     versionKey: false,
     _id: false,
   }

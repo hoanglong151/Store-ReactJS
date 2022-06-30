@@ -5,14 +5,9 @@ const Firms = new Schema(
   {
     _id: Schema.Types.ObjectId,
     Name: String,
-    Products: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "products",
-      },
-    ],
   },
   {
+    timestamps: true,
     versionKey: false,
     _id: false,
   }

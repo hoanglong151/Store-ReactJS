@@ -22,7 +22,7 @@ const getSaleCodes = async (req, res) => {
     }
     if (total) {
       const totalPage = Math.ceil(total / PAGE_SIZE);
-      res.send({ saleCodes: saleCodes, totalPage: totalPage });
+      res.json({ saleCodes: saleCodes, totalPage: totalPage });
     }
   });
 };
@@ -39,7 +39,7 @@ const addSaleCode = (req, res) => {
       console.log("LỖI: ", err);
       return err;
     }
-    res.send(data);
+    res.json(data);
   });
 };
 
@@ -51,19 +51,19 @@ const editSaleCode = (req, res) => {
 
   saleCodesModel.findByIdAndUpdate(req.params.id, editSaleCode, (err, data) => {
     if (err) return err;
-    res.send(data);
+    res.json(data);
   });
 };
 
 const deleteSaleCode = (req, res) => {
   saleCodesModel.findByIdAndDelete(req.params.id, (err, data) => {
-    res.send(data);
+    res.json(data);
   });
 };
 
 const applySaleCode = (req, res) => {
   saleCodesModel.findOne({ Name: req.body.code }, (err, data) => {
-    res.send(data);
+    res.json(data);
   });
 };
 
@@ -84,7 +84,7 @@ const searchSaleCode = async (req, res) => {
     }
   });
   const totalPage = Math.ceil(data.length / parseInt(req.query.size));
-  res.send({ data: data, totalPage: totalPage });
+  res.json({ data: data, totalPage: totalPage });
 };
 
 module.exports = {

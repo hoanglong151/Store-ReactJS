@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const areasModel = require("../model/Schema/areas.schema");
+const provincesModel = require("../model/Schema/provinces.schema");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getAreas = async (req, res) => {
@@ -53,13 +54,13 @@ const editArea = (req, res) => {
 
 const deleteArea = async (req, res) => {
   const getArea = await areasModel.findById(req.params.id).exec();
-  if (getArea.Provinces.length === 0) {
-    areasModel.findByIdAndDelete(getArea._id, (err, data) => {
-      res.send(data);
-    });
-  } else {
-    res.send({ exist: "Existed" });
-  }
+  // if (getArea.Provinces.length === 0) {
+  areasModel.findByIdAndDelete(getArea._id, (err, data) => {
+    res.send(data);
+  });
+  // } else {
+  //   res.send({ exist: "Existed" });
+  // }
 };
 
 const searchArea = async (req, res) => {

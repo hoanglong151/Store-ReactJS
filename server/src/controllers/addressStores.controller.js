@@ -31,7 +31,7 @@ const getAddressStores = async (req, res) => {
     }
     if (total) {
       const totalPage = Math.ceil(total / PAGE_SIZE);
-      res.send({ addressStores: addressStores, totalPage: totalPage });
+      res.json({ addressStores: addressStores, totalPage: totalPage });
     }
   });
 };
@@ -50,16 +50,7 @@ const addAddressStore = (req, res) => {
       console.log("LỖI: ", err);
       return err;
     }
-    req.body.district_Id.map((value) => {
-      districtsModel.findByIdAndUpdate(
-        value,
-        { $push: { AddressStore: id } },
-        (err, data) => {
-          if (err) return err;
-        }
-      );
-    });
-    res.send(data);
+    res.json(data);
   });
 };
 
@@ -76,14 +67,14 @@ const editAddressStore = (req, res) => {
     editAddressStore,
     (err, data) => {
       if (err) return err;
-      res.send(data);
+      res.json(data);
     }
   );
 };
 
 const deleteAddressStore = (req, res) => {
   addressStoresModel.findByIdAndDelete(req.params.id, (err, data) => {
-    res.send(data);
+    res.json(data);
   });
 };
 
@@ -109,7 +100,7 @@ const searchAddressStore = async (req, res) => {
     }
   });
   const totalPage = Math.ceil(data.length / parseInt(req.query.size));
-  res.send({ data: data, totalPage: totalPage });
+  res.json({ data: data, totalPage: totalPage });
 };
 
 module.exports = {

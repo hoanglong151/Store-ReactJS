@@ -13,6 +13,7 @@ const TypeProducts = new Schema(
     Product: { type: Schema.Types.ObjectId, ref: "products", required: true },
   },
   {
+    timestamps: true,
     versionKey: false,
     _id: false,
   }

@@ -51,7 +51,7 @@ function DetailProduct() {
 
     useEffect(() => {
         if (productDetail.TypesProduct) {
-            const result = productDetail.TypesProduct.reduce((pre, next, i) => {
+            const result = productDetail.TypesProduct.reduce((pre, next) => {
                 if (pre.length !== 0) {
                     const getTypeByColor = pre.find((item) => item.Color === next.Color);
                     const getTypeByColorIndex = pre.findIndex((item) => item.Color === next.Color);
@@ -109,6 +109,7 @@ function DetailProduct() {
                 }
                 return pre;
             }, []);
+            console.log('Result: ', result);
             setFilterType(result);
             const data = result.find((product) => product.Color == typeSelect.Color);
             setTypeByColor(data);
@@ -120,7 +121,11 @@ function DetailProduct() {
             <div className={cx('images')}>
                 <Sliders data={productDetail.Image || []} />
                 <div className={cx('action')}>
-                    <Link to={`/Admin/EditProduct/${productDetail._id}`} className={cx('btn')}>
+                    <Link
+                        to={`/Admin/EditProduct/${productDetail._id}`}
+                        state={{ product: product }}
+                        className={cx('btn')}
+                    >
                         Edit
                     </Link>
                 </div>

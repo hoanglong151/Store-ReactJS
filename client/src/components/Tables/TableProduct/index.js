@@ -37,7 +37,7 @@ export default function TablesProduct(props) {
                                 {data.Category_ID.map((category, index) => category.Name).join(', ')}
                             </TableCell>
                             <TableCell align="left">
-                                {new Date(data.CreateDate).toLocaleDateString('en-GB', {
+                                {new Date(data.createdAt).toLocaleDateString('en-GB', {
                                     year: 'numeric',
                                     month: 'numeric',
                                     day: 'numeric',

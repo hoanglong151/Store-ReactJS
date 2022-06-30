@@ -22,7 +22,7 @@ const getBillStatus = async (req, res) => {
     }
     if (total) {
       const totalPage = Math.ceil(total / PAGE_SIZE);
-      res.send({ billStatus: billStatus, totalPage: totalPage });
+      res.json({ billStatus: billStatus, totalPage: totalPage });
     }
   });
 };
@@ -38,7 +38,7 @@ const addBillStatus = (req, res) => {
       console.log("LỖI: ", err);
       return err;
     }
-    res.send(data);
+    res.json(data);
   });
 };
 
@@ -52,14 +52,14 @@ const editBillStatus = (req, res) => {
     editBillStatus,
     (err, data) => {
       if (err) return err;
-      res.send(data);
+      res.json(data);
     }
   );
 };
 
 const deleteBillStatus = (req, res) => {
   billStatusModel.findByIdAndDelete(req.params.id, (err, data) => {
-    res.send(data);
+    res.json(data);
   });
 };
 
@@ -80,7 +80,7 @@ const searchBillStatus = async (req, res) => {
     }
   });
   const totalPage = Math.ceil(data.length / parseInt(req.query.size));
-  res.send({ data: data, totalPage: totalPage });
+  res.json({ data: data, totalPage: totalPage });
 };
 
 module.exports = {

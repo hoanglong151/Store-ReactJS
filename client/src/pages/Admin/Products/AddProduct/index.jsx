@@ -50,12 +50,6 @@ function AddProduct() {
     const [images, setImage] = useState([]);
     const [typesProduct, setTypesProduct] = useState([]);
 
-    const today = new Date();
-    let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(today);
-    let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(today);
-    let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(today);
-    const getNowDate = `${ye}-${mo}-${da}`;
-
     const optionsCate = categories.map((cate, index) => {
         return {
             value: cate._id,
@@ -93,12 +87,9 @@ function AddProduct() {
                 amount: 0,
                 sold: 0,
             },
-            createDate: getNowDate,
-            updateDate: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            console.log('Values: ', values);
             const submit = async () => {
                 const fd = new FormData();
                 for (let key in values) {
@@ -174,14 +165,6 @@ function AddProduct() {
         <div className={cx('wrapper')}>
             <h1 className={cx('header')}>Tạo Sản Phẩm</h1>
             <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
-                <Label>Ngày Tạo</Label>
-                <Input
-                    id="createDate"
-                    name="createDate"
-                    onChange={formik.handleChange}
-                    value={formik.values.createDate ? formik.values.createDate : getNowDate}
-                    type="date"
-                />
                 <Label>Tên Sản Phẩm</Label>
                 <Input
                     placeholder="Tên Sản Phẩm"

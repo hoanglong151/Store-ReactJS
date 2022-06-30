@@ -13,7 +13,6 @@ import { fetchCategories } from '~/app/reducerCategory';
 import { fetchFirms } from '~/app/reducerFirm';
 import { fetchTypeProducts } from '~/app/reducerTypeProduct';
 import Loading from './components/Loading';
-
 function App() {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
@@ -26,8 +25,8 @@ function App() {
     }, []);
 
     useEffect(() => {
-        setLoading(true);
         const callApi = async () => {
+            setLoading(true);
             try {
                 const resultCategory = dispatch(fetchCategories());
                 const resultFirm = dispatch(fetchFirms());

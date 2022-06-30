@@ -5,14 +5,15 @@ const helmet = require("helmet");
 const app = express();
 const port = 3001;
 const morgan = require("morgan");
+require("./src/configs/socketIO.config");
 require("dotenv").config({ path: __dirname + "\\.env" });
-require("./src/model/connectFirebase.model");
+require("./src/configs/connectFirebase.config");
 
 app.use(helmet());
 app.use(cors());
 morgan("tiny");
 // Import Database
-const connect = require("./src/model/connect.model");
+const connect = require("./src/configs/connect.config");
 // Import Routes
 const categories = require("./src/routes/categories.route");
 const products = require("./src/routes/products.route");

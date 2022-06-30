@@ -143,7 +143,7 @@ function DeleteProduct() {
                             },
                         }).then((action) => {
                             if (action.isConfirmed) {
-                                navigate('/Admin/Products');
+                                // navigate('/Admin/Products');
                             }
                         });
                     }

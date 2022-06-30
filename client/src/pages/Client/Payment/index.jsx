@@ -14,6 +14,8 @@ import { emptyCart } from '~/app/reducerCart';
 import { addressStoresApi, areasApi, districtsApi, provincesApi } from '~/api';
 import classnames from 'classnames/bind';
 import styles from './Payment.module.scss';
+import { io } from 'socket.io-client';
+import * as yup from 'yup';
 
 const cx = classnames.bind(styles);
 
@@ -217,13 +219,29 @@ function Bill() {
         formik.setFieldValue('other', e.target.value);
     };
 
+    const validationSchema = yup.object({
+        name: yup.string().required('nhap vao'),
+        phone: yup.string().required('nhap vao'),
+        email: yup.string().required('nhap vao'),
+        addressStore: yup.string().when('shipPayment', {
+            is: 'Nhận tại cửa hàng',
+            then: yup.string().required('Nhap vao Address Cua Hang'),
+        }),
+        address: yup.string().when('shipPayment', {
+            is: 'Giao hàng tận nơi',
+            then: yup.string().required('Nhap vao Address'),
+        }),
+        district: yup.string().required('Vui long nhap'),
+    });
+
     const formik = useFormik({
         enableReinitialize: true,
+        validationSchema: validationSchema,
         initialValues: {
             name: info.name || '',
             phone: info.phone || '',
             email: info.email || '',
-            shipPayment: 'Nhận tại cửa hàng',
+            shipPayment: selectMethodShip,
             area: selectArea?.value || '',
             province: selectProvince?.value || '',
             district: selectDistrict?.value || '',
@@ -248,8 +266,10 @@ function Bill() {
                         title: 'Đặt Hàng Thành Công',
                         text: 'Đơn Hàng Của Bạn Đang Chờ Xử Lý. Chúng Tôi Sẽ Liên Hệ Với Bạn Sớm Nhất',
                         confirmButtonText: 'OK',
-                    }).then((result) => {
-                        if (result.isConfirmed) {
+                    }).then((confirm) => {
+                        if (confirm.isConfirmed) {
+                            const socket = io(process.env.REACT_APP_WEB_SOCKET);
+                            socket.emit('payment', { bill: result });
                             localStorage.setItem('cart', null);
                             dispatch(emptyCart());
                             navigate('/');
@@ -319,6 +339,8 @@ function Bill() {
                         <div className={cx('wrap-address')}>
                             <div className={cx('wrap-area-city')}>
                                 <Selects
+                                    name="area"
+                                    id="area"
                                     select={selectArea}
                                     data={convertSelects?.Areas || []}
                                     onChangeSelect={handleSelectArea}
@@ -332,6 +354,9 @@ function Bill() {
                                 />
                             </div>
                             <Selects
+                                name="district"
+                                id="district"
+                                errors={formik.errors.district && formik.touched.district}
                                 data={selectDistricts}
                                 select={selectDistrict}
                                 onChangeSelect={handleSelectDistrict}
@@ -340,11 +365,14 @@ function Bill() {
                             />
                             {selectMethodShip === 'Nhận tại cửa hàng' ? (
                                 <Selects
+                                    name="addressStore"
+                                    id="addressStore"
                                     data={selectAddressStores}
                                     select={selectAddressStore}
                                     onChangeSelect={handleSelectAddressStore}
                                     className={cx('mb0')}
                                     placeholder="Chọn địa chỉ cửa hàng"
+                                    errors={formik.errors.addressStore && formik.touched.addressStore}
                                 />
                             ) : (
                                 <Input

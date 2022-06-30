@@ -16,7 +16,7 @@ function DialogProvince(props) {
             <form onSubmit={formik.handleSubmit}>
                 <DialogTitle>Tạo Tỉnh/Thành</DialogTitle>
                 <DialogContent style={{ minHeight: '15rem' }}>
-                    <Selects multiple data={areas} select={editProvince.Areas} onChangeSelect={handleSelectArea} />
+                    <Selects data={areas} select={editProvince.Areas} onChangeSelect={handleSelectArea} />
                     <Input
                         id="name"
                         name="name"

@@ -8,6 +8,7 @@ const Users = new Schema(
     Password: String,
   },
   {
+    timestamps: true,
     versionKey: false,
     _id: false,
   }

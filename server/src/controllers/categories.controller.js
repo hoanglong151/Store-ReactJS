@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const categoriesModel = require("../model/Schema/categories.schema");
-const { storage } = require("../model/connectFirebase.model");
+const { storage } = require("../configs/connectFirebase.config");
 const {
   ref,
   uploadBytes,
@@ -18,27 +18,10 @@ const getCategories = async (req, res) => {
   if (page) {
     categories = await categoriesModel
       .find()
-      .populate("Products")
-      .populate({
-        path: "Products",
-        populate: {
-          path: "TypesProduct",
-          model: "typeProducts",
-        },
-      })
       .skip(skipCategories)
       .limit(PAGE_SIZE);
   } else {
-    categories = await categoriesModel
-      .find()
-      .populate("Products")
-      .populate({
-        path: "Products",
-        populate: {
-          path: "TypesProduct",
-          model: "typeProducts",
-        },
-      });
+    categories = await categoriesModel.find();
   }
 
   categoriesModel.countDocuments((err, total) => {
@@ -48,7 +31,7 @@ const getCategories = async (req, res) => {
     }
     if (total) {
       const totalPage = Math.ceil(total / PAGE_SIZE);
-      res.send({ categories: categories, totalPage: totalPage });
+      res.json({ categories: categories, totalPage: totalPage });
     }
   });
 };
@@ -78,18 +61,18 @@ const addCategory = async (req, res) => {
       console.log("LỖI: ", err);
       return err;
     }
-    res.send(cate);
+    res.json(cate);
   });
 };
 
 const deleteCategory = (req, res) => {
   categoriesModel.findById(req.params.id, (err, cate) => {
-    if (cate.Products.length === 0) {
-      categoriesModel.findByIdAndDelete(req.params.id, (err, cate) => {
-        console.log(cate);
-      });
-    }
-    res.send(cate);
+    // if (cate.Products.length === 0) {
+    categoriesModel.findByIdAndDelete(req.params.id, (err, cate) => {
+      console.log(cate);
+    });
+    // }
+    res.json(cate);
   });
 };
 
@@ -134,12 +117,12 @@ const editCategory = async (req, res) => {
       console.log("LỖI: ", err);
       return err;
     }
-    res.send(cate);
+    res.json(cate);
   });
 };
 
 const searchCategory = async (req, res) => {
-  const result = await categoriesModel.find().populate("Products").exec();
+  const result = await categoriesModel.find().exec();
   const data = result.filter((value) => {
     const removeUnicodeName = replaceUnicode(value.Name.toLowerCase());
     const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
@@ -155,7 +138,7 @@ const searchCategory = async (req, res) => {
     }
   });
   const totalPage = Math.ceil(data.length / parseInt(req.query.size));
-  res.send({ data: data, totalPage: totalPage });
+  res.json({ data: data, totalPage: totalPage });
 };
 
 module.exports = {

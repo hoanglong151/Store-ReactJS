@@ -7,6 +7,9 @@ const billsApi = {
     getAll: (page) => {
         return axiosClient.get(`/bills?page=${page}`);
     },
+    getBillPending: () => {
+        return axiosClient.get(`/bills/pendingBill`);
+    },
     updateBill: (data) => {
         return axiosClient.patch('/bills/updateBill', data);
     },
