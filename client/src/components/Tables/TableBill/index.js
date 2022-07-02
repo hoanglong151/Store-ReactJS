@@ -49,7 +49,7 @@ function Row(props) {
                 </TableCell>
                 <TableCell align="right">{row.Phone}</TableCell>
                 <TableCell align="right">{row.Email}</TableCell>
-                <TableCell align="right">{row.Bill.length}</TableCell>
+                <TableCell align="right">{row.DetailBills.length}</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -72,11 +72,11 @@ function Row(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {row.Bill.map((bill, index) => (
+                                    {row.DetailBills.map((bill, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{bill.BillID}</TableCell>
                                             <TableCell component="th" scope="row">
-                                                {new Date(bill.CreateDate).toLocaleDateString('en-GB', {
+                                                {new Date(bill.createdAt).toLocaleDateString('en-GB', {
                                                     year: 'numeric',
                                                     month: 'numeric',
                                                     day: 'numeric',
@@ -110,20 +110,6 @@ function Row(props) {
                                                 >
                                                     Cập Nhật
                                                 </button>
-                                                <Dialog open={openDialog} onClose={handleCloseDialog}>
-                                                    <DialogTitle>Cập nhật tình trạng đơn hàng</DialogTitle>
-                                                    <DialogContent style={{ height: '25rem' }}>
-                                                        <Selects
-                                                            data={billStatus}
-                                                            select={billStatusSelect}
-                                                            onChangeSelect={handleSelectStatus}
-                                                        />
-                                                    </DialogContent>
-                                                    <DialogActions>
-                                                        <Button onClick={handleCloseDialog}>Hủy</Button>
-                                                        <Button onClick={handleUpdateStatusBill}>Cập nhật</Button>
-                                                    </DialogActions>
-                                                </Dialog>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -133,6 +119,17 @@ function Row(props) {
                     </Collapse>
                 </TableCell>
             </TableRow>
+
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>Cập nhật tình trạng đơn hàng</DialogTitle>
+                <DialogContent style={{ height: '25rem' }}>
+                    <Selects data={billStatus} select={billStatusSelect} onChangeSelect={handleSelectStatus} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>Hủy</Button>
+                    <Button onClick={handleUpdateStatusBill}>Cập nhật</Button>
+                </DialogActions>
+            </Dialog>
         </React.Fragment>
     );
 }
@@ -164,7 +161,7 @@ function TableBill(props) {
                 <TableBody>
                     {rows.map((row) => {
                         return (
-                            row.Bill.length !== 0 && (
+                            row.DetailBills.length !== 0 && (
                                 <Row
                                     key={row._id}
                                     row={row}

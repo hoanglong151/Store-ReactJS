@@ -1,15 +1,25 @@
+@import '../../../styles//Mixin.scss';
 .wrapper {
     background-color: #95a9a9;
-}
-.body {
-    width: 85vw;
-    margin: 0 auto;
+    .body {
+        width: 85vw;
+        margin: 0 auto;
+    }
+
+    .sidebar {
+        margin-bottom: var(--margin-2rem);
+    }
+
+    .footer {
+        background-color: var(--primary-client-background-color);
+    }
 }
 
-.sidebar {
-    margin-bottom: var(--margin-2rem);
-}
-
-.footer {
-    background-color: var(--primary-client-background-color);
+@include respond(tab) {
+    .wrapper {
+        .body {
+            width: 95vw;
+            margin: 0 auto;
+        }
+    }
 }

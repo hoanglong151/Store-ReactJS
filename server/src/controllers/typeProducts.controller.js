@@ -11,27 +11,34 @@ const getTypeProducts = async (req, res) => {
       typeProducts = await typeProductsModel
         .find()
         .populate("Product")
-        .populate({
-          path: "Product",
-          populate: {
-            path: "TypesProduct",
-            model: "typeProducts",
-          },
-        })
         .skip(skipProduct)
         .limit(PAGE_SIZE);
     } else {
-      typeProducts = await typeProductsModel
-        .find()
-        .populate("Product")
-        .populate({
-          path: "Product",
-          populate: {
-            path: "TypesProduct",
-            model: "typeProducts",
-          },
-        });
+      typeProducts = await typeProductsModel.find().populate("Product");
     }
+
+    const allProductByTypes = typeProducts.map((type) => {
+      const getTypesOfProduct = typeProducts.filter(
+        (item) => item.Product._id === type.Product._id
+      );
+      return {
+        _id: type._id,
+        Type: type.Name,
+        Color: type.Color,
+        Price: type.Price,
+        Sale: type.Sale,
+        Amount: type.Amount,
+        Sold: type.Sold,
+        ID_Product: type.Product._id,
+        Name: type.Product.Name,
+        Image: type.Product.Image,
+        Description: type.Product.Description,
+        Category_ID: type.Product.Category_ID,
+        Firm_ID: type.Product.Firm_ID,
+        CreateAt: type.createdAt,
+        TypesProduct: getTypesOfProduct,
+      };
+    });
     typeProductsModel.countDocuments((err, total) => {
       if (err) {
         console.log("Err: ", err);
@@ -39,25 +46,16 @@ const getTypeProducts = async (req, res) => {
       }
       if (total) {
         const totalPage = Math.ceil(total / PAGE_SIZE);
-        res.send({ typeProducts: typeProducts, totalPage: totalPage });
+        res.json({ typeProducts: allProductByTypes, totalPage: totalPage });
       }
     });
   } catch (Error) {
-    res.send("Toang", Error);
+    res.json("Toang", Error);
   }
 };
 
 const searchTypeProducts = async (req, res) => {
-  const result = await typeProductsModel
-    .find()
-    .populate("Product")
-    .populate({
-      path: "Product",
-      populate: {
-        path: "TypesProduct",
-        model: "typeProducts",
-      },
-    });
+  const result = await typeProductsModel.find().populate("Product");
   const data = result.filter((value) => {
     const removeUnicodeName = replaceUnicode(value.Product.Name.toLowerCase());
     const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());

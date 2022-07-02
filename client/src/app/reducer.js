@@ -3,14 +3,14 @@ import reducerCart from './reducerCart';
 import reducerTypeProduct from './reducerTypeProduct';
 import reducerCategory from './reducerCategory';
 import reducerFirm from './reducerFirm';
-import reducerBill from './reducerBill';
+import reducerDetailBill from './reducerDetailBill';
 
 const reducer = combineReducers({
     cart: reducerCart,
     typeProduct: reducerTypeProduct,
     category: reducerCategory,
     firm: reducerFirm,
-    bill: reducerBill,
+    detailBill: reducerDetailBill,
 });
 
 export default reducer;

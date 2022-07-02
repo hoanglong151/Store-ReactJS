@@ -1,3 +1,4 @@
+@import '../../../../styles/Mixin.scss';
 .wrapper {
     width: 85vw;
     margin: 0 auto;
@@ -65,5 +66,30 @@
 
     &:hover {
         color: red;
+    }
+}
+
+@include respond(tab) {
+    .wrapper {
+        width: 95vw;
+        .footer-image {
+            flex-wrap: wrap;
+        }
+        .item {
+            width: 50%;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .footer-info {
+            flex-wrap: wrap;
+        }
+
+        .support-client,
+        .general-info,
+        .general-policy,
+        .support {
+            width: 50%;
+            margin: 2rem 0;
+        }
     }
 }

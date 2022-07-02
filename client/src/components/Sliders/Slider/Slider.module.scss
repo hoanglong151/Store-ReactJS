@@ -1,3 +1,4 @@
+@import '../../../styles/Mixin.scss';
 .wrap-image {
     width: 100%;
     height: 40rem;
@@ -25,6 +26,19 @@
             width: 100%;
             height: 100%;
             border-radius: 0.5rem;
+        }
+    }
+}
+
+@include respond(tab) {
+    .wrap-image {
+        height: 20rem;
+    }
+
+    .slick-thumb {
+        overflow-x: scroll;
+        li {
+            width: 5rem;
         }
     }
 }

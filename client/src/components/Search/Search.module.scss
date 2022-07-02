@@ -1,3 +1,4 @@
+@import '../../styles/Mixin.scss';
 .search,
 .search-products {
     width: 35rem;
@@ -51,4 +52,10 @@
 .input-search {
     flex: 1;
     padding: 1rem 1rem 1rem 3rem;
+}
+
+@include respond(tab) {
+    .search {
+        width: 30rem;
+    }
 }

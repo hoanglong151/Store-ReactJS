@@ -6,10 +6,8 @@ const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const findBill = (req, res) => {
   if (req.body.phone !== "" && req.body.billID !== "") {
-    billsModel.findOne({ Phone: req.body.phone }, (err, result) => {
-      const getBill = result.Bill.find(
-        (bill) => bill.BillID.toString() === req.body.billID
-      );
+    billsModel.findOne({ Phone: req.body.phone }, async (err, result) => {
+      const getBill = await detailBillsModel.findById(req.body.billID);
       if (getBill === undefined) {
         res.json({
           Invalid:
@@ -31,154 +29,97 @@ const findBill = (req, res) => {
   }
 };
 
-const updateBill = (req, res) => {
-  billsModel.findOne({ _id: req.body.customerID }, (err, result) => {
-    const getBill = result.Bill.find(
-      (value) => value.BillID.toString() === req.body.billID
-    );
-    getBill.BillStatus._id = req.body.statusBill.value;
-    getBill.BillStatus.Name = req.body.statusBill.label;
+const paymentBill = async (req, res) => {
+  const id = new mongoose.Types.ObjectId().toString();
+  const bill = {
+    _id: id,
+    Name: req.body.name,
+    Phone: req.body.phone,
+    Email: req.body.email,
+  };
 
-    billsModel.findByIdAndUpdate(req.body.customerID, result, (err, data) => {
-      if (err) {
-        console.log("LỖI: ", err);
-        return err;
-      }
-      res.send(data);
-    });
-  });
-};
+  const BillID = new mongoose.Types.ObjectId().toString();
+  const detailBill = {
+    _id: BillID,
+    ShipPayment: req.body.shipPayment,
+    Areas: req.body.area,
+    Provinces: req.body.province,
+    Districts: req.body.district,
+    Other: req.body.other,
+    Cart: req.body.cart,
+    BillStatus: req.body.billStatus,
+  };
 
-const paymentBill = (req, res) => {
-  req.body.cart.cartProducts.map((product) => {
-    typeProductsModel.findById(product.TypeProductID, (err, type) => {
-      const amount = type.Amount;
-      type.Amount -= product.NumberProduct;
-      if (type.Amount < 0) {
-        res.status(200).json({
-          Product: `${product.Name}`,
-          Amount: `Hiện tại chỉ còn ${amount} sản phẩm. Bạn có thể đặt ${amount} sản phẩm. Mong bạn thông cảm vì sự bất tiện này!`,
-        });
+  if (req.body.address !== "") {
+    detailBill.Address = req.body.address;
+  } else {
+    detailBill.AddressStores = req.body.addressStore;
+  }
+
+  const checkAmountProduct = await Promise.all(
+    req.body.cart.cartProducts.map(async (product) => {
+      const getTypeProduct = await typeProductsModel.findById(
+        product.TypeProductID
+      );
+      const amount = getTypeProduct.Amount;
+      getTypeProduct.Amount -= product.NumberProduct;
+      if (getTypeProduct.Amount < 0) {
+        return {
+          result: -1,
+          product: product.Name,
+          amount: amount,
+        };
       } else {
-        type.Sold += product.NumberProduct;
-        typeProductsModel.findByIdAndUpdate(type._id, type, (err, result) => {
+        return {
+          result: 1,
+        };
+      }
+    })
+  );
+
+  const result = checkAmountProduct.find((sold) => sold.result === -1);
+  if (result) {
+    res.json({
+      Product: `${result.product}`,
+      Amount: `Hiện tại chỉ còn ${result.amount} sản phẩm. Bạn có thể đặt ${result.amount} sản phẩm. Mong bạn thông cảm vì sự bất tiện này!`,
+    });
+  } else {
+    req.body.cart.cartProducts.map(async (product) => {
+      const getTypeProduct = await typeProductsModel.findById(
+        product.TypeProductID
+      );
+      getTypeProduct.Sold += product.NumberProduct;
+      typeProductsModel.findByIdAndUpdate(
+        getTypeProduct._id,
+        getTypeProduct,
+        (err, data) => {
           if (err) {
             console.log("Update Type Product: ", err);
           }
-        });
-        billsModel.findOne(
-          { Name: req.body.name, Phone: req.body.phone },
-          async (err, data) => {
-            const BillID = new mongoose.Types.ObjectId().toString();
-            if (data === null) {
-              const id = new mongoose.Types.ObjectId().toString();
-              const bill = {
-                _id: id,
-                Name: req.body.name,
-                Phone: req.body.phone,
-                Email: req.body.email,
-                Bill: [BillID],
-              };
-
-              const detailBill = {
-                _id: BillID,
-                ShipPayment: req.body.shipPayment,
-                Areas: req.body.area,
-                Provinces: req.body.province,
-                Districts: req.body.district,
-                Other: req.body.other,
-                Cart: req.body.cart,
-                BillStatus: req.body.billStatus,
-                CreateDate: new Date(),
-              };
-
-              if (req.body.address !== "") {
-                detailBill.Address = req.body.address;
-              } else {
-                detailBill.AddressStores = req.body.addressStore;
-              }
-
-              await detailBillsModel.create(detailBill);
-              billsModel.create(bill, (err, data) => {
-                res.json(data);
-              });
-            } else {
-              const detailBill = {
-                _id: BillID,
-                ShipPayment: req.body.shipPayment,
-                Areas: req.body.area,
-                Provinces: req.body.province,
-                Districts: req.body.district,
-                Other: req.body.other,
-                Cart: req.body.cart,
-                BillStatus: req.body.billStatus,
-                CreateDate: new Date(),
-              };
-
-              if (req.body.address !== "") {
-                detailBill.Address = req.body.address;
-              } else {
-                detailBill.AddressStores = req.body.addressStore;
-              }
-
-              billsModel.findByIdAndUpdate(
-                data._id,
-                { $push: { Bill: BillID } },
-                (err, data) => {
-                  if (err) {
-                    console.log("LỖI: ", err);
-                    return err;
-                  }
-                  return data;
-                }
-              );
-              const resultDetailBill = await detailBillsModel.create(
-                detailBill,
-                (err, data) => {
-                  if (err) {
-                    console.log("LỖI: ", err);
-                    return err;
-                  }
-                  res.status(200).json(data);
-                }
-              );
-            }
-          }
-        );
-      }
-    });
-  });
-};
-
-const pendingBill = async (req, res) => {
-  const bills = await billsModel
-    .find({ "Bill.BillStatus.Name": "Chờ xử lý" })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "Areas",
-      },
-    })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "Districts",
-      },
-    })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "Provinces",
-      },
-    })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "AddressStores",
-      },
+        }
+      );
     });
 
-  res.status(200).json({ bills: bills });
+    const checkCustomer = await billsModel.findOne({
+      Name: req.body.name,
+      Phone: req.body.phone,
+    });
+
+    if (checkCustomer) {
+      detailBill.BillID = checkCustomer._id;
+      detailBillsModel.create(detailBill, (err, data) => {
+        if (err) return err;
+        return res.json(data);
+      });
+    } else {
+      detailBill.BillID = id;
+      await detailBillsModel.create(detailBill);
+      billsModel.create(bill, (err, data) => {
+        if (err) return err;
+        return res.json(data);
+      });
+    }
+  }
 };
 
 const getBills = async (req, res) => {
@@ -187,62 +128,26 @@ const getBills = async (req, res) => {
   let bills;
   const skipBills = page * PAGE_SIZE - PAGE_SIZE;
   if (page) {
-    bills = await billsModel
-      .find()
-      .populate({
-        path: "Bill",
-        populate: {
-          path: "Areas",
-        },
-      })
-      .populate({
-        path: "Bill",
-        populate: {
-          path: "Districts",
-        },
-      })
-      .populate({
-        path: "Bill",
-        populate: {
-          path: "Provinces",
-        },
-      })
-      .populate({
-        path: "Bill",
-        populate: {
-          path: "AddressStores",
-        },
-      })
-      .skip(skipBills)
-      .limit(PAGE_SIZE);
+    bills = await billsModel.find().skip(skipBills).limit(PAGE_SIZE);
   } else {
-    bills = await billsModel
-      .find()
-      .populate({
-        path: "Bill",
-        populate: {
-          path: "Areas",
-        },
-      })
-      .populate({
-        path: "Bill",
-        populate: {
-          path: "Districts",
-        },
-      })
-      .populate({
-        path: "Bill",
-        populate: {
-          path: "Provinces",
-        },
-      })
-      .populate({
-        path: "Bill",
-        populate: {
-          path: "AddressStores",
-        },
-      });
+    bills = await billsModel.find();
   }
+
+  const detailBills = await detailBillsModel.find();
+
+  const getAllDetailByBills = bills.map((bill) => {
+    const getDetailBill = detailBills.filter((item) => {
+      return item.BillID.toString() === bill._id.toString();
+    });
+    return {
+      _id: bill._id,
+      Name: bill.Name,
+      Phone: bill.Phone,
+      Email: bill.Email,
+      CreateAt: bill.createdAt,
+      DetailBills: getDetailBill,
+    };
+  });
 
   billsModel.countDocuments((err, total) => {
     if (err) {
@@ -251,39 +156,13 @@ const getBills = async (req, res) => {
     }
     if (total) {
       const totalPage = Math.ceil(total / PAGE_SIZE);
-      res.send({ bills: bills, totalPage: totalPage });
+      res.json({ bills: getAllDetailByBills, totalPage: totalPage });
     }
   });
 };
 
 const searchBill = async (req, res) => {
-  const result = await billsModel
-    .find()
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "Areas",
-      },
-    })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "Districts",
-      },
-    })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "Provinces",
-      },
-    })
-    .populate({
-      path: "Bill",
-      populate: {
-        path: "AddressStores",
-      },
-    })
-    .exec();
+  const result = await billsModel.find().exec();
   const data = result.filter((value) => {
     const removeUnicodeName = replaceUnicode(value.Name.toLowerCase());
     const removeUnicodeSearch = replaceUnicode(req.query.q.toLowerCase());
@@ -298,15 +177,30 @@ const searchBill = async (req, res) => {
       return removeUnicodeName.toLowerCase().includes(removeUnicodeSearch);
     }
   });
+
+  const detailBills = await detailBillsModel.find();
+
+  const getAllDetailByBills = data.map((bill) => {
+    const getDetailBill = detailBills.filter((item) => {
+      return item.BillID.toString() === bill._id.toString();
+    });
+    return {
+      _id: bill._id,
+      Name: bill.Name,
+      Phone: bill.Phone,
+      Email: bill.Email,
+      CreateAt: bill.CreateAt,
+      DetailBills: getDetailBill,
+    };
+  });
+
   const totalPage = Math.ceil(data.length / parseInt(req.query.size));
-  res.send({ data: data, totalPage: totalPage });
+  res.json({ data: getAllDetailByBills, totalPage: totalPage });
 };
 
 module.exports = {
   findBill,
-  updateBill,
   paymentBill,
   getBills,
   searchBill,
-  pendingBill,
 };

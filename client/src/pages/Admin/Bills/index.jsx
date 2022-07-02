@@ -4,10 +4,14 @@ import withReactContent from 'sweetalert2-react-content';
 import TableBill from '~/components/Tables/TableBill';
 import billsApi from '~/api/billsApi';
 import billStatusApi from '~/api/billStatusApi';
+import { detailBillsApi } from '~/api';
 import PaginationOutlined from '~/components/Pagination';
 import SearchByCate from '~/components/SearchByCate';
 import classnames from 'classnames/bind';
 import styles from './Bills.module.scss';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchDetailBills } from '~/app/reducerDetailBill';
+import { useLocation } from 'react-router-dom';
 
 const cx = classnames.bind(styles);
 
@@ -17,6 +21,8 @@ function Bills() {
     const [openDialog, setOpenDialog] = React.useState(false);
     const [convertBillStatusGet, setConvertBillStatusGet] = useState();
     const [editBill, setEditBill] = useState({});
+    const { detailBills } = useSelector((state) => state.detailBill);
+    const dispatch = useDispatch();
 
     const UpdateSwal = withReactContent(Swal);
 
@@ -61,18 +67,7 @@ function Bills() {
         };
         callApi();
         getAllBillStatus();
-    }, [openDialog, currentPage]);
-
-    const numberBill = useMemo(() => {
-        const getBills = bills.billsSearch.reduce((pre, next) => {
-            const getBill = next.Bill.map((item) => item);
-            return pre.concat(getBill);
-        }, []);
-        console.log(getBills);
-        return billStatus.map((status) => {
-            return getBills.filter((bill) => bill.BillStatus._id === status.value).length;
-        });
-    }, [bills]);
+    }, [openDialog, currentPage, detailBills]);
 
     const handleSelectStatus = (status) => {
         setConvertBillStatusGet(status);
@@ -89,11 +84,11 @@ function Bills() {
     };
 
     const handleUpdateStatusBill = async () => {
-        const result = await billsApi.updateBill({
-            customerID: editBill.customer._id,
-            billID: editBill.bill.BillID,
+        const result = await detailBillsApi.updateBillStatus({
+            billID: editBill.bill._id,
             statusBill: convertBillStatusGet,
         });
+        dispatch(fetchDetailBills());
         if (result) {
             setOpenDialog(false);
             UpdateSwal.fire({
@@ -108,15 +103,16 @@ function Bills() {
 
     const handleFilterByStatus = (status) => {
         const getBillByStatus = bills.billsSearch.map((bill) => {
-            const getItemByBill = bill.Bill.filter((item) => {
-                return item.BillStatus._id === status.value;
+            const getItemByBill = bill.DetailBills.filter((item) => {
+                return item.BillStatus._id === status._id;
             });
             const newBill = {
                 ...bill,
-                Bill: getItemByBill,
+                DetailBills: getItemByBill,
             };
             return newBill;
         });
+
         setBillsByStatus(getBillByStatus);
     };
 
@@ -137,14 +133,14 @@ function Bills() {
     return (
         <div>
             <div>
+                <SearchByCate type="bill" onSearch={handleSearchBills} />
+                <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
                 <button className={cx('btn')} onClick={handleAllBills}>
                     Tất cả
                 </button>
-                <SearchByCate type="bill" onSearch={handleSearchBills} />
-                <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
-                {billStatus.map((status, index) => (
-                    <button key={status.value} className={cx('btn')} onClick={() => handleFilterByStatus(status)}>
-                        {status.label} <span className={cx('number-bill')}>({numberBill[index]})</span>
+                {detailBills.map((status, index) => (
+                    <button key={status._id} className={cx('btn')} onClick={() => handleFilterByStatus(status)}>
+                        {status.status} <span className={cx('number-bill')}>{status.billByStatus.length}</span>
                     </button>
                 ))}
             </div>

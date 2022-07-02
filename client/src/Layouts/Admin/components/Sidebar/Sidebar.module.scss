@@ -78,6 +78,21 @@
     z-index: 1;
 }
 
+.d-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.count-bill-pending {
+    margin-left: auto;
+    color: var(--main-color);
+    font-weight: 600;
+    border: 1px solid var(--main-color);
+    padding: 0.3rem 0.6rem;
+    border-radius: 100%;
+}
+
 .open-menu {
     color: var(--primary-admin);
 }
@@ -101,5 +116,9 @@
         span ~ svg {
             display: none;
         }
+    }
+
+    .count-bill-pending {
+        display: none;
     }
 }

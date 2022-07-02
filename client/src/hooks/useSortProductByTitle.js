@@ -15,7 +15,7 @@ function useSortProductByTitle(products, title = 'CHEAP') {
             case 'NEW':
                 const getProductsNew = [...products]
                     .sort((pre, next) => {
-                        return new Date(next.Product.CreateDate) - new Date(pre.Product.CreateDate);
+                        return new Date(next.CreateAt) - new Date(pre.CreateAt);
                     })
                     .filter((item) => item.Amount !== 0);
                 setProduct(getProductsNew);

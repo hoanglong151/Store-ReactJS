@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames/bind';
 import styles from './Sidebar.module.scss';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -19,12 +19,19 @@ import {
     faTruck,
 } from '@fortawesome/free-solid-svg-icons';
 import { faSalesforce } from '@fortawesome/free-brands-svg-icons';
+import { useSelector } from 'react-redux';
 
 const cx = classnames.bind(styles);
 function Siderbar(props) {
     const { onClick, toggleMenu } = props;
     const [toggleMenuArea, setToggleMenuArea] = useState(false);
     const { state } = useLocation();
+    const { detailBills } = useSelector((state) => state.detailBill);
+
+    const countBillPending = useMemo(() => {
+        const result = detailBills.find((status) => status.status === 'Chờ xử lý');
+        return result?.billByStatus.length;
+    }, [detailBills]);
 
     useEffect(() => {
         state?.openSubMenu ? setToggleMenuArea(true) : setToggleMenuArea(false);
@@ -52,9 +59,13 @@ function Siderbar(props) {
                     <FontAwesomeIcon icon={faList} />
                     <span className={cx('title-menu')}>Hãng</span>
                 </NavLink>
-                <NavLink to="/Admin/Bills" className={({ isActive }) => cx('link-menu', { ['active']: isActive })}>
+                <NavLink
+                    to="/Admin/Bills"
+                    className={({ isActive }) => cx('link-menu', 'd-flex', { ['active']: isActive })}
+                >
                     <FontAwesomeIcon icon={faSackDollar} />
                     <span className={cx('title-menu')}>Hóa Đơn</span>
+                    <span className={cx('count-bill-pending')}>{countBillPending}</span>
                 </NavLink>
                 <NavLink to="/Admin/SaleCodes" className={({ isActive }) => cx('link-menu', { ['active']: isActive })}>
                     <FontAwesomeIcon icon={faSalesforce} />

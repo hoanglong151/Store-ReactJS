@@ -52,10 +52,10 @@ function ProductsCategory() {
 
     useEffect(() => {
         const getProducts = typeProducts.filter((product) => {
-            return product.Product.Category_ID.includes(cateID) && product.Amount !== 0;
+            return product.Category_ID.includes(cateID) && product.Amount !== 0;
         });
         const getFirmsID = getProducts.reduce((pre, next) => {
-            return pre.indexOf(next.Product.Firm_ID) === -1 ? [...pre, next.Product.Firm_ID] : pre;
+            return pre.indexOf(next.Firm_ID) === -1 ? [...pre, next.Firm_ID] : pre;
         }, []);
         const filterFirms = firms.filter((firm) => {
             return getFirmsID.includes(firm._id);

@@ -31,34 +31,12 @@
             }
         }
 
-        .notify,
         .menu-user {
             background-color: transparent;
         }
 
         .user-name {
             padding: 0 1rem;
-        }
-
-        .notify {
-            background-color: #f4f6f8;
-            height: 4rem;
-            width: 4rem;
-            border-radius: 50%;
-            font-size: 2rem;
-            position: relative;
-            padding: 0;
-
-            .num-notifi {
-                position: absolute;
-                top: 0;
-                right: 0;
-                background-color: red;
-                color: var(--primary-content);
-                border-radius: 50%;
-                padding: 0.5rem;
-                font-size: 1.1rem;
-            }
         }
     }
 }

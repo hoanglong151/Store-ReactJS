@@ -20,7 +20,7 @@ function ProductDetail() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const getAllTypeOfProduct = product.Product.TypesProduct.reduce((pre, next) => {
+        const getAllTypeOfProduct = product.TypesProduct.reduce((pre, next) => {
             if (pre.length === 0) {
                 return [
                     ...pre,
@@ -66,7 +66,7 @@ function ProductDetail() {
         setTypeSelect({
             _id: product._id,
             Color: product.Color,
-            Type: product.Name,
+            Type: product.Type,
             Amount: product.Amount,
             Price: product.Price,
             Sale: product.Sale,
@@ -84,9 +84,9 @@ function ProductDetail() {
 
     const handleAddToCart = (type) => {
         const itemProduct = {
-            _id: product.Product._id,
-            Name: product.Product.Name,
-            Image: product.Product.Image,
+            _id: product.ID_Product,
+            Name: product.Name,
+            Image: product.Image,
             Price: type.Price,
             Sale: type.Sale,
             Description: type.Type,
@@ -100,12 +100,12 @@ function ProductDetail() {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('images')}>
-                <Sliders data={product.Product.Image || []} />
+                <Sliders data={product.Image || []} />
             </div>
             <div className={cx('content')}>
                 <h1>Giới Thiệu Sản Phẩm</h1>
                 <h2>
-                    {product.Product.Name}
+                    {product.Name}
                     <span className={cx('show-description')}>{`(${typeSelect.Type} ${
                         typeSelect.Color && '- ' + typeSelect.Color
                     })`}</span>
@@ -179,7 +179,7 @@ function ProductDetail() {
                     <h3 className={cx('add-cart')}>Mua Ngay</h3>
                     <p className={cx('method-payment')}>(Giao tận nơi hoặc lấy tại cửa hàng)</p>
                 </button>
-                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.Product.Description) }} />
+                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.Description) }} />
             </div>
         </div>
     );

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import authenticationApi from '~/api/authenticationApi';
 import { io } from 'socket.io-client';
-import { fetchBills } from '~/app/reducerBill';
+import { fetchDetailBills } from '~/app/reducerDetailBill';
 import { useDispatch } from 'react-redux';
 
 const socket = io(process.env.REACT_APP_WEB_SOCKET);
@@ -17,7 +17,7 @@ function PrivateRoutes({ children }) {
                 sessionStorage.removeItem('accessToken');
                 navigate('/Admin/Login');
             } else {
-                dispatch(fetchBills());
+                dispatch(fetchDetailBills());
             }
         };
         validation();
@@ -25,7 +25,8 @@ function PrivateRoutes({ children }) {
 
     useEffect(() => {
         socket.on('message', async (arg) => {
-            dispatch(fetchBills());
+            console.log(arg);
+            dispatch(fetchDetailBills());
         });
     }, [socket]);
     return <>{checkLogin ? children : <Navigate to="/Admin/Login" />}</>;

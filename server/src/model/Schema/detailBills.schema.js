@@ -19,6 +19,7 @@ const DetailBills = new Schema(
     Other: String,
     Cart: Object,
     BillStatus: Object,
+    BillID: { type: Schema.Types.ObjectId, ref: "bills" },
   },
   {
     timestamps: true,

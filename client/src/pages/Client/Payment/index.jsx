@@ -11,6 +11,7 @@ import billsApi from '~/api/billsApi';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { emptyCart } from '~/app/reducerCart';
+import { fetchTypeProducts } from '~/app/reducerTypeProduct';
 import { addressStoresApi, areasApi, districtsApi, provincesApi } from '~/api';
 import classnames from 'classnames/bind';
 import styles from './Payment.module.scss';
@@ -81,74 +82,48 @@ function Bill() {
     }, []);
 
     const selectProvinces = useMemo(() => {
-        const getProvinceByArea = provinces.filter((province) => {
-            const getProvince = province.Areas.find((area) => {
-                if (area._id === selectArea?.value) {
-                    return province;
-                }
+        const getProvinceByArea = provinces
+            .filter((province) => {
+                return province.Areas._id === selectArea?.value;
+            })
+            .map((item) => {
+                return { value: item._id, label: item.Name };
             });
-            return getProvince;
-        });
-
-        const convertProvince = getProvinceByArea.map((value) => {
-            return {
-                value: value._id,
-                label: value.Name,
-            };
-        });
-        setSelectProvince(convertProvince[0]);
-        return convertProvince;
+        setSelectProvince(getProvinceByArea[0]);
+        return getProvinceByArea;
     }, [selectArea, provinces]);
 
     const selectDistricts = useMemo(() => {
-        const getDistrictsByAreaAndProvince = districts.filter((district) => {
-            const getDistrict = district.Areas.find((area) => {
-                if (area._id === selectArea?.value) {
-                    return district.Provinces.find((province) => {
-                        if (province._id === selectProvince?.value) {
-                            return district;
-                        }
-                    });
+        const getDistrictsByAreaAndProvince = districts
+            .filter((district) => {
+                if (district.Areas._id === selectArea?.value && district.Provinces._id === selectProvince?.value) {
+                    return district;
                 }
+            })
+            .map((item) => {
+                return { value: item._id, label: item.Name };
             });
-            return getDistrict;
-        });
-
-        return getDistrictsByAreaAndProvince.map((value) => {
-            return {
-                value: value._id,
-                label: value.Name,
-            };
-        });
+        return getDistrictsByAreaAndProvince;
     }, [selectArea, selectProvince, districts]);
 
     const selectAddressStores = useMemo(() => {
-        const getAddressStoresByAreaAndProvinceAndDistrict = addressStores.filter((store) => {
-            const getStore = store.Areas.find((area) => {
-                if (area._id === selectArea?.value) {
-                    return store.Provinces.find((province) => {
-                        if (province._id === selectProvince?.value) {
-                            if (selectDistrict?.value) {
-                                return store.Districts.find((district) => {
-                                    if (district._id == selectDistrict?.value) {
-                                        return store;
-                                    }
-                                });
-                            }
-                            return store;
-                        }
-                    });
+        const getAddressStoresByAreaAndProvinceAndDistrict = addressStores
+            .filter((store) => {
+                if (
+                    store.Areas._id === selectArea?.value &&
+                    store.Provinces._id === selectProvince?.value &&
+                    store.Districts._id === selectDistrict?.value
+                ) {
+                    return store;
                 }
+            })
+            .map((item) => {
+                return {
+                    value: item._id,
+                    label: item.Name,
+                };
             });
-            return getStore;
-        });
-
-        return getAddressStoresByAreaAndProvinceAndDistrict.map((value) => {
-            return {
-                value: value._id,
-                label: value.Name,
-            };
-        });
+        return getAddressStoresByAreaAndProvinceAndDistrict;
     }, [selectArea, selectProvince, selectDistrict, addressStores]);
 
     const convertSelects = useMemo(() => {
@@ -220,18 +195,18 @@ function Bill() {
     };
 
     const validationSchema = yup.object({
-        name: yup.string().required('nhap vao'),
-        phone: yup.string().required('nhap vao'),
-        email: yup.string().required('nhap vao'),
+        name: yup.string().required('Vui lòng nhập đầy đủ họ tên'),
+        phone: yup.string().required('Vui lòng nhập số điện thoại'),
+        email: yup.string().required('Vui lòng nhập email'),
         addressStore: yup.string().when('shipPayment', {
             is: 'Nhận tại cửa hàng',
-            then: yup.string().required('Nhap vao Address Cua Hang'),
+            then: yup.string().required('Vui lòng chọn địa chỉ cửa hàng bạn muốn nhận'),
         }),
         address: yup.string().when('shipPayment', {
             is: 'Giao hàng tận nơi',
-            then: yup.string().required('Nhap vao Address'),
+            then: yup.string().required('Vui lòng nhập địa chỉ giao hàng'),
         }),
-        district: yup.string().required('Vui long nhap'),
+        district: yup.string().required('Vui lòng chọn Quận/Huyện'),
     });
 
     const formik = useFormik({
@@ -272,6 +247,7 @@ function Bill() {
                             socket.emit('payment', { bill: result });
                             localStorage.setItem('cart', null);
                             dispatch(emptyCart());
+                            dispatch(fetchTypeProducts());
                             navigate('/');
                         }
                     });

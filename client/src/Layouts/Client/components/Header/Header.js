@@ -6,7 +6,6 @@ import { faCartShopping, faChevronRight, faTruckFast } from '@fortawesome/free-s
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import SearchProduct from '~/components/Search';
-import { categoriesApi, firmsApi } from '~/api';
 
 const cx = classnames.bind(styles);
 
@@ -14,15 +13,18 @@ function Header(props) {
     const { openButtonCategory } = props;
     const [firmByProduct, setFirmByProduct] = useState([]);
     const state = useSelector((state) => state);
-    const { cart, category, firm } = state;
+    const { cart, category, firm, typeProduct } = state;
     const { categories } = category;
     const { firms } = firm;
     const { cartProducts } = cart;
+    const { typeProducts } = typeProduct;
 
     const handleGetCategory = (category) => {
-        const getFirmsID = category.Products.reduce((pre, next) => {
-            return pre.indexOf(next.Firm_ID) === -1 ? [...pre, next.Firm_ID] : pre;
-        }, []);
+        const getFirmsID = typeProducts.map((type) => {
+            if (type.Category_ID.includes(category._id)) {
+                return type.Firm_ID;
+            }
+        });
         const getFirms = firms.filter((firm, index) => {
             return getFirmsID.includes(firm._id);
         });
@@ -39,7 +41,10 @@ function Header(props) {
                 </Link>
                 {openButtonCategory && (
                     <div className={cx('button-category')}>
-                        <span>Danh mục sản phẩm</span>
+                        {/* PC */}
+                        <span className={cx('category-title-pc')}>Danh mục sản phẩm</span>
+                        {/* Tablet */}
+                        <span className={cx('category-title-tablet')}>Danh mục</span>
                         <div className={cx('menu')}>
                             <ul className={cx('categories')}>
                                 {categories.map((category, index) => (

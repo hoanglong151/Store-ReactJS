@@ -1,3 +1,4 @@
+@import '../../../styles/Mixin.scss';
 .wrapper {
     margin: var(--margin-2rem) 0;
 }
@@ -34,4 +35,12 @@
 
 .active {
     background-color: rgba(255, 255, 255, 0.3);
+}
+
+@include respond(tab) {
+    .wrapper {
+        .products {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
 }

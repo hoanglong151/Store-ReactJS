@@ -11,6 +11,10 @@ io.on("connection", (socket) => {
     // socket.broadcast.emit("message", { message: "Update Bills" });
     io.emit("message", { message: "Update Bills" });
   });
+  socket.on("updateBill", (arg) => {
+    // socket.broadcast.emit("message", { message: "Update Bills" });
+    io.emit("message", { message: "Update Bills" });
+  });
 });
 
 httpServer.listen(8080);

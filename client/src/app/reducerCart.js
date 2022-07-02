@@ -54,7 +54,7 @@ const cartSlice = createSlice({
         },
         increase: (state, action) => {
             const result = current(state.cartProducts).map((product) => {
-                if (product._id === action.payload._id) {
+                if (product.TypeProductID === action.payload.TypeProductID) {
                     product = action.payload;
                 }
                 return product;
@@ -71,7 +71,7 @@ const cartSlice = createSlice({
         },
         decrease: (state, action) => {
             const result = current(state.cartProducts).map((product) => {
-                if (product._id === action.payload._id) {
+                if (product.TypeProductID === action.payload.TypeProductID) {
                     product = action.payload;
                 }
                 return product;
@@ -89,8 +89,7 @@ const cartSlice = createSlice({
         remove: (state, action) => {
             let newState;
             const result = current(state.cartProducts).filter((product) => {
-                console.log('Product: ', product);
-                if (product._id !== action.payload._id) {
+                if (product.TypeProductID !== action.payload.TypeProductID) {
                     return product;
                 } else if (
                     (product.Description !== action.payload.Description &&
@@ -101,7 +100,6 @@ const cartSlice = createSlice({
                     return product;
                 }
             });
-            console.log('Result: ', result);
             const currentPrice = action.payload.Sale ? action.payload.Sale : action.payload.Price;
             if (result.length !== 0) {
                 newState = {

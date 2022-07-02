@@ -1,3 +1,4 @@
+@import '../../../styles/Mixin.scss';
 .sidebar-categories {
     display: flex;
     margin: 0 -0.5rem;
@@ -55,4 +56,12 @@
 .products {
     background-color: var(--white);
     border-radius: var(--border-radius);
+}
+
+@include respond(tab) {
+    .wrapper {
+        .wrap-products {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
 }

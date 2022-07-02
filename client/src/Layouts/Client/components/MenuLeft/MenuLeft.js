@@ -10,14 +10,17 @@ const cx = classnames.bind(styles);
 function MenuLeft() {
     const [firmByProduct, setFirmByProduct] = useState([]);
     const state = useSelector((state) => state);
-    const { category, firm } = state;
+    const { category, firm, typeProduct } = state;
     const { categories } = category;
     const { firms } = firm;
+    const { typeProducts } = typeProduct;
 
     const handleGetCategory = (category) => {
-        const getFirmsID = category.Products.reduce((pre, next) => {
-            return pre.indexOf(next.Firm_ID) === -1 ? [...pre, next.Firm_ID] : pre;
-        }, []);
+        const getFirmsID = typeProducts.map((type) => {
+            if (type.Category_ID.includes(category._id)) {
+                return type.Firm_ID;
+            }
+        });
         const getFirms = firms.filter((firm, index) => {
             return getFirmsID.includes(firm._id);
         });

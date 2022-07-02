@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styles from './Header.module.scss';
 import classnames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { faBell } from '@fortawesome/free-regular-svg-icons';
 import Tippy from '@tippyjs/react/headless';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 const cx = classnames.bind(styles);
 
@@ -14,16 +12,6 @@ function Header() {
     const [visible, setVisible] = useState(false);
     const navigate = useNavigate();
     const user = JSON.parse(sessionStorage.getItem('auth'));
-    const { bills } = useSelector((state) => state.bill);
-
-    // useEffect(() => {
-    //     bills.map((bill) => {
-    //         const arr = bill.Bill.filter((item) => {
-    //             return item.BillStatus.Name === 'Chờ xử lý';
-    //         });
-    //         console.log(arr);
-    //     });
-    // }, []);
 
     const handleHideVisible = () => {
         setVisible(false);
@@ -34,6 +22,7 @@ function Header() {
         sessionStorage.removeItem('auth');
         navigate('/Admin/Login');
     };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('logo')}>
@@ -43,17 +32,13 @@ function Header() {
                 />
             </div>
             <div className={cx('action')}>
-                <button className={cx('notify')}>
-                    <FontAwesomeIcon icon={faBell} />
-                    <span className={cx('num-notifi')}>1</span>
-                </button>
                 <Tippy
                     interactive={true}
                     visible={visible}
                     render={(attrs) => (
                         <ul {...attrs} tabIndex="-1" className={cx('info-auth')}>
                             <li className={cx('item-info')}>
-                                <p className={cx('btn-nfo')} onClick={handleLogout}>
+                                <p className={cx('btn-info')} onClick={handleLogout}>
                                     Đăng Xuất
                                 </p>
                             </li>

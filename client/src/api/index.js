@@ -10,3 +10,4 @@ export { default as productsApi } from './productsApi';
 export { default as typeProductsApi } from './typeProductsApi';
 export { default as provincesApi } from './provincesApi';
 export { default as saleCodesApi } from './saleCodesApi';
+export { default as detailBillsApi } from './detailBillsApi';

@@ -50,15 +50,15 @@ function ProductsCategoryFirm() {
     useEffect(() => {
         if (cateID) {
             const getProducts = typeProducts.filter((product) => {
-                return product.Product.Category_ID.includes(cateID) && product.Amount !== 0;
+                return product.Category_ID.includes(cateID) && product.Amount !== 0;
             });
             const filterProductByFirms = getProducts.filter((product) => {
-                return product.Product.Firm_ID === firmID;
+                return product.Firm_ID === firmID;
             });
             setProducts(filterProductByFirms);
         } else {
             const getProducts = typeProducts.filter((product, index) => {
-                return product.Product.Firm_ID === firmID;
+                return product.Firm_ID === firmID;
             });
             setProducts(getProducts);
         }
