@@ -1,5 +1,6 @@
 @import 'normalize.css';
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import './Mixin.scss';
 
 :root {
     --primary-admin: #21b6fb;
@@ -19,6 +20,7 @@
 html {
     font-family: 'Roboto', sans-serif;
     font-size: 62.5%;
+    scroll-behavior: smooth;
 }
 * {
     box-sizing: border-box;
@@ -61,4 +63,27 @@ a {
 
 .btn-detail {
     background-color: var(--primary-admin);
+}
+
+.go-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    color: var(--white);
+    font-size: 4rem;
+    cursor: pointer;
+    transition: all 0.15s linear;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
+
+@include respond(smartphone) {
+    .go-to-top {
+        color: var(--main-color);
+        bottom: 2rem;
+        right: 1rem;
+        font-size: 3rem;
+    }
 }

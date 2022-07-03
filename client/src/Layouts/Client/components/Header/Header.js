@@ -84,11 +84,11 @@ function Header(props) {
                 <SearchProduct />
                 <div className={cx('other')}>
                     <Link to="/findBill" className={cx('truck')}>
-                        <FontAwesomeIcon icon={faTruckFast} />
+                        <FontAwesomeIcon className={cx('icon-mobile')} icon={faTruckFast} />
                         <p className={cx('title-other')}>Tra cứu đơn hàng</p>
                     </Link>
                     <Link to="/cart" className={cx('cart')}>
-                        <FontAwesomeIcon icon={faCartShopping} />
+                        <FontAwesomeIcon className={cx('icon-mobile')} icon={faCartShopping} />
                         <span className={cx('number-cart')}>
                             {cartProducts?.length !== 0 ? cartProducts?.length : ''}
                         </span>

@@ -5,13 +5,20 @@
     padding: 1rem;
     border-radius: 1rem;
     margin: var(--margin-2rem) 0;
+    flex-wrap: wrap;
 
     .images {
         min-width: 35rem;
+        width: 30%;
     }
 
     .content {
         margin-left: 5rem;
+        width: calc(100% - 45rem);
+    }
+
+    .description {
+        padding: 2rem;
     }
 
     .title-price {
@@ -136,6 +143,18 @@
     .wrapper {
         .images {
             min-width: 15rem;
+            width: 15%;
+        }
+        .content {
+            margin-left: 2rem;
+            width: calc(100% - 17rem);
+        }
+        .description {
+            width: 100%;
+
+            img {
+                width: 100%;
+            }
         }
     }
 }

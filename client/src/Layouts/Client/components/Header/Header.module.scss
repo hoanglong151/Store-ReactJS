@@ -196,3 +196,33 @@
         }
     }
 }
+
+@include respond(smartphone) {
+    .wrapper {
+        .header {
+            .img-home {
+                z-index: 10;
+
+                .image {
+                    height: 3.5rem;
+                }
+            }
+            .button-category {
+                display: none;
+            }
+
+            .title-other {
+                display: none;
+            }
+
+            .other {
+                gap: 0;
+
+                .truck,
+                .cart {
+                    padding: 0.5rem;
+                }
+            }
+        }
+    }
+}

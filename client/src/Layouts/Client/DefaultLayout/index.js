@@ -4,6 +4,7 @@ import styles from './DefaultLayout.module.scss';
 import Header from '../components/Header/Header';
 import Sidebar from '../components/Sidebar/Sidebar';
 import Footer from '../components/Footer/Footer';
+import BottomNavigation from '../components/BottomNavigationSmartPhone';
 
 const cx = classnames.bind(styles);
 
@@ -35,6 +36,9 @@ function DefaultLayout({ children }) {
             </div>
             <div className={cx('footer')}>
                 <Footer />
+            </div>
+            <div className={cx('bottom-navigation')}>
+                <BottomNavigation />
             </div>
         </div>
     );

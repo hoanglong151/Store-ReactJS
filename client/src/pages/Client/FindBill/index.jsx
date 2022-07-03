@@ -40,22 +40,27 @@ function FindBill() {
                 <h2 className={cx('title')}>kiểm tra thông tin đơn hàng & tình trạng vận chuyển</h2>
                 <form onSubmit={formik.handleSubmit}>
                     <div className={cx('wrapper-info')}>
-                        <Label>Số điện thoại: </Label>
-                        <Input
-                            name="phone"
-                            id="phone"
-                            onChange={formik.handleChange}
-                            placeholder="(Bắt buộc)"
-                            className={cx('input')}
-                        />
-                        <Label>Mã đơn hàng: </Label>
-                        <Input
-                            name="billID"
-                            id="billID"
-                            onChange={formik.handleChange}
-                            placeholder="(Bắt buộc)"
-                            className={cx('input')}
-                        />
+                        <div className={cx('field-info')}>
+                            <Label>Số điện thoại: </Label>
+                            <Input
+                                name="phone"
+                                id="phone"
+                                onChange={formik.handleChange}
+                                placeholder="(Bắt buộc)"
+                                className={cx('input')}
+                            />
+                        </div>
+                        <div className={cx('field-info')}>
+                            <Label>Mã đơn hàng: </Label>
+                            <Input
+                                name="billID"
+                                id="billID"
+                                onChange={formik.handleChange}
+                                placeholder="(Bắt buộc)"
+                                className={cx('input')}
+                            />
+                        </div>
+
                         <button className={cx('btn')} type="submit">
                             Kiểm tra
                         </button>

@@ -1,3 +1,4 @@
+@import '../../../styles/Mixin.scss';
 .wrapper {
     margin: 5rem 0;
 }
@@ -75,6 +76,11 @@
     align-items: center;
 }
 
+.field-info {
+    display: flex;
+    align-items: center;
+}
+
 .wrapper-info-price {
     padding: 1.5rem;
     background-color: var(--white);
@@ -123,4 +129,20 @@
     font-size: 1.4rem;
     text-decoration: line-through;
     margin-left: 1rem;
+}
+
+@include respond(tab) {
+    .wrapper {
+        .wrapper-info {
+            flex-wrap: wrap;
+        }
+        .field-info {
+            width: 100%;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        .input {
+            width: 70%;
+        }
+    }
 }

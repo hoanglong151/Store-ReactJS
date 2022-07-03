@@ -13,31 +13,41 @@ import { fetchCategories } from '~/app/reducerCategory';
 import { fetchFirms } from '~/app/reducerFirm';
 import { fetchTypeProducts } from '~/app/reducerTypeProduct';
 import Loading from './components/Loading';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleChevronUp } from '@fortawesome/free-solid-svg-icons';
+import classnames from 'classnames/bind';
+
+const cx = classnames.bind();
 function App() {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
+    const [goToTop, setGoToTop] = useState(false);
 
     useEffect(() => {
-        const getCart = async () => {
-            await dispatch(getCarts());
-        };
-        getCart();
+        window.addEventListener('scroll', () => {
+            window.scrollY > 400 ? setGoToTop(true) : setGoToTop(false);
+        });
     }, []);
 
     useEffect(() => {
         const callApi = async () => {
             setLoading(true);
             try {
+                const resultCart = dispatch(getCarts());
                 const resultCategory = dispatch(fetchCategories());
                 const resultFirm = dispatch(fetchFirms());
                 const resultTypeProduct = dispatch(fetchTypeProducts());
-                Promise.all([resultCategory, resultFirm, resultTypeProduct]).then(() => setLoading(false));
+                Promise.all([resultCart, resultCategory, resultFirm, resultTypeProduct]).then(() => setLoading(false));
             } catch (err) {
                 console.log('Call API Err');
             }
         };
         callApi();
     }, []);
+
+    const handleGoToTop = () => {
+        window.scroll(0, 0);
+    };
 
     return (
         <div className="App">
@@ -85,6 +95,10 @@ function App() {
                     <Route path="/Admin/Login" element={<Login />} />
                 </Routes>
             </BrowserRouter>
+
+            <div className={cx({ 'go-to-top': goToTop })} onClick={handleGoToTop}>
+                <FontAwesomeIcon icon={faCircleChevronUp} />
+            </div>
         </div>
     );
 }

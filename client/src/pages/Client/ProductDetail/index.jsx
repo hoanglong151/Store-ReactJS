@@ -179,8 +179,11 @@ function ProductDetail() {
                     <h3 className={cx('add-cart')}>Mua Ngay</h3>
                     <p className={cx('method-payment')}>(Giao tận nơi hoặc lấy tại cửa hàng)</p>
                 </button>
-                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.Description) }} />
             </div>
+            <div
+                className={cx('description')}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.Description) }}
+            />
         </div>
     );
 }

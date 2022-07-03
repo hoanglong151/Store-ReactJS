@@ -56,6 +56,15 @@
 
 @include respond(tab) {
     .search {
-        width: 30rem;
+        width: 25rem;
+    }
+}
+
+@include respond(smartphone) {
+    .search {
+        width: 15rem;
+    }
+    .input-search {
+        width: 10rem;
     }
 }

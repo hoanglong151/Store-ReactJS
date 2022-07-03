@@ -1,3 +1,4 @@
+@import '../../../styles/Mixin.scss';
 .wrapper-cart {
     position: relative;
     display: flex;
@@ -68,4 +69,10 @@
     font-size: 1.4rem;
     text-decoration: line-through;
     margin-left: 1rem;
+}
+
+@include respond(tab) {
+    .image {
+        width: 15rem;
+    }
 }

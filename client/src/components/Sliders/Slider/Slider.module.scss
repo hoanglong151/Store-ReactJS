@@ -36,9 +36,13 @@
     }
 
     .slick-thumb {
+        overflow-y: hidden;
         overflow-x: scroll;
+        justify-content: unset;
         li {
-            width: 5rem;
+            img {
+                width: 6rem;
+            }
         }
     }
 }

@@ -93,3 +93,11 @@
         }
     }
 }
+
+@include respond(smartphone) {
+    .wrapper {
+        .footer-info {
+            margin-bottom: 4rem;
+        }
+    }
+}
