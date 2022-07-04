@@ -103,8 +103,8 @@ function ProductDetail() {
                 <Sliders data={product.Image || []} />
             </div>
             <div className={cx('content')}>
-                <h1>Giới Thiệu Sản Phẩm</h1>
-                <h2>
+                <h1 className={cx('content__header--title')}>Giới Thiệu Sản Phẩm</h1>
+                <h2 className={cx('content__product--name')}>
                     {product.Name}
                     <span className={cx('show-description')}>{`(${typeSelect.Type} ${
                         typeSelect.Color && '- ' + typeSelect.Color

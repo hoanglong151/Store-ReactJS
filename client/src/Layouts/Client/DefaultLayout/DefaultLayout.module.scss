@@ -13,6 +13,9 @@
     .footer {
         background-color: var(--primary-client-background-color);
     }
+    .bottom-navigation {
+        display: none;
+    }
 }
 
 @include respond(tab) {
@@ -20,6 +23,14 @@
         .body {
             width: 95vw;
             margin: 0 auto;
+        }
+    }
+}
+
+@include respond(smartphone) {
+    .wrapper {
+        .bottom-navigation {
+            display: block;
         }
     }
 }

@@ -133,6 +133,10 @@
 
 @include respond(tab) {
     .wrapper {
+        .wrapper-form-bill,
+        .wrapper-find-bill {
+            width: 90%;
+        }
         .wrapper-info {
             flex-wrap: wrap;
         }
@@ -143,6 +147,58 @@
         }
         .input {
             width: 70%;
+        }
+        .wrapper-cart {
+            margin: 2rem 0 2rem 2rem;
+        }
+        .wrapper-info-price {
+            margin: 2rem 2rem 2rem 0;
+        }
+        .image {
+            width: 10rem;
+            object-fit: contain;
+        }
+    }
+}
+
+@include respond(smartphone) {
+    .wrapper {
+        .wrapper-form-bill,
+        .wrapper-find-bill {
+            width: 95%;
+        }
+        .field-info {
+            flex-wrap: wrap;
+        }
+        .input {
+            width: 100%;
+            margin: 0.5rem 0 0 0;
+        }
+        .title {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+        }
+        .image {
+            width: 6rem;
+            object-fit: contain;
+            object-position: top;
+            margin-right: 1rem;
+        }
+        .wrapper-product {
+            flex-wrap: wrap;
+        }
+        .wrapper-cart,
+        .wrapper-info-price {
+            margin: 0 2rem 2rem;
+        }
+        .info-price {
+            flex-basis: 100%;
+        }
+        .price-active {
+            font-size: 1.6rem;
+        }
+        .price-old {
+            font-size: 1.2rem;
         }
     }
 }

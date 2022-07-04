@@ -26,7 +26,11 @@ function TotalPriceCart(props) {
         <div className={cx('wrap-payment-info')}>
             <div className={cx('wrap-sale-code')}>
                 <h3 className={cx('title-sale-code')}>Mã khuyến mãi:</h3>
-                <Input value={saleCode} className={cx('mb0')} onChange={(e) => setSaleCode(e.target.value)} />
+                <Input
+                    value={saleCode}
+                    className={cx('input-sale-code', 'mb0')}
+                    onChange={(e) => setSaleCode(e.target.value)}
+                />
                 <button className={cx('btn-sale')} onClick={handleApplySaleCode} type="button">
                     Áp dụng
                 </button>

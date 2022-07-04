@@ -235,8 +235,11 @@ function DeleteProduct() {
                         </div>
                     )}
                 </div>
-                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(productDelete.Description) }} />
             </div>
+            <div
+                className={cx('description')}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(productDelete.Description) }}
+            />
         </div>
     );
 }

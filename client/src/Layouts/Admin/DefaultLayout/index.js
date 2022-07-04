@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '~/Layouts/Admin/components/Header/Header';
 import Sidebar from '~/Layouts/Admin/components/Sidebar/Siderbar';
 import classnames from 'classnames/bind';
@@ -11,9 +11,10 @@ function DefaultLayout({ children }) {
     const handleToggleMenu = () => {
         setToggleMenu(!toggleMenu);
     };
+
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('sidebar', { 'menu-mobile': toggleMenu })}>
+            <div className={cx('sidebar', { 'menu-mobile': toggleMenu, 'active-sidebar': !toggleMenu })}>
                 <Sidebar onClick={handleToggleMenu} toggleMenu={toggleMenu} />
             </div>
             <div className={cx('container')}>

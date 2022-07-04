@@ -133,7 +133,13 @@ const getBills = async (req, res) => {
     bills = await billsModel.find();
   }
 
-  const detailBills = await detailBillsModel.find();
+  const detailBills = await detailBillsModel
+    .find()
+    .populate("Areas")
+    .populate("Provinces")
+    .populate("Districts")
+    .populate("AddressStores")
+    .lean();
 
   const getAllDetailByBills = bills.map((bill) => {
     const getDetailBill = detailBills.filter((item) => {

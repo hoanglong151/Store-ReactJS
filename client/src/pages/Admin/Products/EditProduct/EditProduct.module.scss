@@ -1,3 +1,4 @@
+@import '../../../../styles/Mixin.scss';
 .wrapper {
     background-color: var(--white);
     margin: auto;
@@ -17,5 +18,11 @@
         margin-top: 2rem;
         border-radius: 0.5rem;
         color: var(--white);
+    }
+}
+
+@include respond(tab) {
+    .wrapper {
+        width: 100%;
     }
 }

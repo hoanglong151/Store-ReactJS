@@ -1,3 +1,4 @@
+@import '../../../styles/Mixin.scss';
 .wrapper {
     display: flex;
     height: 100rem;
@@ -26,6 +27,36 @@
             background-color: var(--primary-content);
             flex: 1;
             padding: 2rem;
+        }
+    }
+}
+
+@include respond(tab) {
+    .wrapper {
+        .container {
+            margin-left: 5rem;
+            width: calc(100% - 5rem);
+        }
+        .menu-mobile {
+            width: 5rem;
+        }
+        .sidebar {
+            position: absolute;
+            background-color: var(--white);
+            height: 100%;
+            z-index: 10;
+        }
+        .active-sidebar {
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                top: 0;
+                z-index: 5;
+                background-color: rgba(0, 0, 0, 0.1);
+                width: 100vw;
+                height: 100vh;
+            }
         }
     }
 }

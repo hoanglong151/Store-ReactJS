@@ -1,3 +1,4 @@
+@import '../../../../styles/Mixin.scss';
 .wrapper {
     display: flex;
     background-color: var(--white);
@@ -66,7 +67,7 @@
     text-align: center;
     border: 1px solid #ccc;
     padding: 0.5rem;
-    margin: 0 1rem;
+    margin: 0.5rem;
     border-radius: var(--border-radius);
     overflow: hidden;
 }
@@ -126,4 +127,28 @@
 
 .title-select-color {
     margin: 1rem;
+}
+
+@include respond(tab) {
+    .wrapper {
+        flex-wrap: wrap;
+        .images {
+            min-width: 15rem;
+            width: 15%;
+        }
+        .content {
+            margin-left: 2rem;
+            width: calc(100% - 17rem);
+        }
+        .wrapper-item {
+            flex-wrap: wrap;
+        }
+        .description {
+            width: 100%;
+            padding: 2rem;
+            img {
+                width: 100%;
+            }
+        }
+    }
 }

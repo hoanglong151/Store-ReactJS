@@ -263,35 +263,6 @@ const deleteProduct = async (req, res) => {
         });
       }
     );
-
-    // if (getProduct.Products !== null) {
-    //   firmsModel.findByIdAndUpdate(
-    //     getProduct.Firm_ID,
-    //     { $pull: { Products: getProduct._id } },
-    //     (err, data) => {
-    //       if (err) {
-    //         console.log("Toang");
-    //         return err;
-    //       }
-    //     }
-    //   );
-
-    //   await Promise.all(
-    //     getProduct.Category_ID.map((cate) => {
-    //       categoriesModel.findByIdAndUpdate(
-    //         cate,
-    //         {
-    //           $pull: { Products: getProduct._id },
-    //         },
-    //         (err, data) => {
-    //           if (err) return err;
-    //         }
-    //       );
-    //     })
-    //   );
-    // }
-
-    // const result = await productsModel.deleteOne(getProduct);
     res.status(200).json(result);
   } catch (err) {
     return err;
@@ -303,7 +274,6 @@ const searchProduct = async (req, res) => {
     .find()
     .populate("Category_ID")
     .populate("Firm_ID")
-    .populate("TypesProduct")
     .exec();
   const data = result.filter((value) => {
     const removeUnicodeName = replaceUnicode(value.Name.toLowerCase());

@@ -1,0 +1,47 @@
+.wrapper {
+    .sidebar {
+        display: flex;
+    }
+    .link {
+        font-weight: 600;
+        width: 10rem;
+        padding: 1rem 0.5rem;
+        font-size: 1.4rem;
+        letter-spacing: 0.1rem;
+    }
+    .image {
+        width: 3rem;
+    }
+    .name {
+        display: block;
+    }
+    .sub-menu {
+        list-style: none;
+        padding: 1rem;
+        width: 100%;
+    }
+    .sub-menu-name {
+        display: block;
+        padding: 1rem 0.5rem;
+    }
+    .active-item {
+        position: relative;
+
+        &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            border-right: 1rem solid var(--white);
+            border-top: 1rem solid transparent;
+            border-bottom: 1rem solid transparent;
+        }
+    }
+    .show-all {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

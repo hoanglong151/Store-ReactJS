@@ -76,3 +76,15 @@
         width: 15rem;
     }
 }
+
+@include respond(smartphone) {
+    .wrapper-cart {
+        padding: 1.5rem 3rem 1.5rem 1rem;
+    }
+    .image {
+        width: 7rem;
+        object-fit: contain;
+        margin-right: 0.5rem;
+        object-position: top;
+    }
+}

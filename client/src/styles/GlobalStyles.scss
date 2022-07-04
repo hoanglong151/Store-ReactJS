@@ -79,11 +79,17 @@ a {
     }
 }
 
+@include respond(tab) {
+    .go-to-top {
+        color: var(--main-color);
+    }
+}
+
 @include respond(smartphone) {
     .go-to-top {
         color: var(--main-color);
-        bottom: 2rem;
-        right: 1rem;
+        bottom: 6rem;
+        right: 2rem;
         font-size: 3rem;
     }
 }

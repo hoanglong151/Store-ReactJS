@@ -1,3 +1,4 @@
+@import '../../styles/Mixin.scss';
 .wrap-payment-info {
     display: flex;
     flex-direction: column;
@@ -87,4 +88,21 @@
 
 .mb0 {
     margin-bottom: 0;
+}
+
+@include respond(smartphone) {
+    .wrap-sale-code {
+        flex-wrap: wrap;
+    }
+
+    .title-sale-code {
+        margin-bottom: 1rem;
+    }
+
+    .input-sale-code {
+        width: 72%;
+    }
+    .payment {
+        margin-bottom: 1rem;
+    }
 }

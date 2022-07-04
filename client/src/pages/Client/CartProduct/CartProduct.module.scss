@@ -9,3 +9,9 @@
         width: 80vw;
     }
 }
+
+@include respond(smartphone) {
+    .wrapper {
+        width: 95vw;
+    }
+}

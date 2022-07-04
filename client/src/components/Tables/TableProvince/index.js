@@ -12,7 +12,6 @@ const cx = classnames.bind();
 
 function TableProvince(props) {
     const { provinces, onHandleOpenDialog, onHandleDeleteProvince } = props;
-    console.log(provinces);
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">

@@ -38,3 +38,9 @@
         width: 80vw;
     }
 }
+
+@include respond(smartphone) {
+    .header {
+        width: 95vw;
+    }
+}

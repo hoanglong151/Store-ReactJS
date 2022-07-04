@@ -158,3 +158,73 @@
         }
     }
 }
+
+@include respond(smartphone) {
+    .wrapper {
+        .images {
+            width: 100%;
+        }
+        .content {
+            margin-left: 0;
+            width: 100%;
+
+            &__header--title {
+                display: none;
+            }
+
+            &__product--name {
+                margin-top: 2rem;
+                font-size: 2rem;
+            }
+        }
+        .description {
+            width: 100%;
+
+            img {
+                width: 100%;
+            }
+        }
+
+        .title-price {
+            font-size: 1.5rem;
+        }
+
+        .price,
+        .sale {
+            font-size: 1.5rem;
+        }
+
+        .sale-price {
+            font-size: 1.2rem;
+            color: #aaa;
+        }
+
+        .type-description,
+        .type-price {
+            margin: 0.5rem;
+            font-size: 1.3rem;
+        }
+        .type-price {
+            font-size: 1.2rem;
+        }
+
+        .wrapper-item {
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 0 1rem;
+        }
+
+        .item {
+            margin: 0;
+            padding: 1rem;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        .description {
+            padding: 0.5rem 2rem 1rem 2rem;
+        }
+    }
+}

@@ -1,3 +1,4 @@
+@import '../../../../styles/Mixin.scss';
 .info-customer,
 .info-bill,
 .info-price {
@@ -84,4 +85,14 @@
     font-size: 1.4rem;
     text-decoration: line-through;
     margin-left: 1rem;
+}
+
+@include respond(tab) {
+    .image {
+        width: 8rem;
+        object-fit: contain;
+    }
+    .info-price {
+        flex-basis: 60%;
+    }
 }

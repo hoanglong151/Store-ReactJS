@@ -13,10 +13,11 @@ const cx = classnames.bind(styles);
 
 function BottomNavigationSmartPhone() {
     const [value, setValue] = useState(0);
+    const [openCategory, setOpenCategory] = useState(false);
     const navigate = useNavigate();
     return (
         <div className={cx('wrapper')}>
-            {value === 1 && (
+            {openCategory && (
                 <div className={cx('category-smartphone')}>
                     <SidebarSmartPhone />
                 </div>
@@ -30,6 +31,8 @@ function BottomNavigationSmartPhone() {
                             case 0:
                                 navigate('/');
                                 break;
+                            case 1:
+                                setOpenCategory(!openCategory);
                         }
                         setValue(newValue);
                     }}

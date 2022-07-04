@@ -99,5 +99,34 @@
         .footer-info {
             margin-bottom: 4rem;
         }
+        .content {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .title {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        .info {
+            margin: 0.5rem 0 1.5rem 0rem;
+        }
+        .item {
+            align-items: flex-start;
+        }
+        .support-client,
+        .general-info,
+        .general-policy,
+        .support {
+            width: calc(50% - 2rem);
+            margin: 2rem 1rem;
+
+            .link {
+                padding: 0.5rem 0;
+            }
+
+            .contact-info {
+                margin: 0.5rem 0;
+            }
+        }
     }
 }

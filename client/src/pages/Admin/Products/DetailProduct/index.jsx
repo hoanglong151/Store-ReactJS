@@ -109,7 +109,6 @@ function DetailProduct() {
                 }
                 return pre;
             }, []);
-            console.log('Result: ', result);
             setFilterType(result);
             const data = result.find((product) => product.Color == typeSelect.Color);
             setTypeByColor(data);
@@ -203,8 +202,11 @@ function DetailProduct() {
                         </div>
                     )}
                 </div>
-                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(productDetail.Description) }} />
             </div>
+            <div
+                className={cx('description')}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(productDetail.Description) }}
+            />
         </div>
     );
 }

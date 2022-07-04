@@ -20,6 +20,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames/bind';
 import Selects from '~/components/Form/Selects';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { faInfo } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classnames.bind();
 
@@ -62,13 +65,15 @@ function Row(props) {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Mã Hóa Đơn</TableCell>
-                                        <TableCell>Ngày tạo</TableCell>
-                                        <TableCell>Tình trạng HĐ</TableCell>
-                                        <TableCell align="right">Giao hàng</TableCell>
-                                        <TableCell align="right">Tổng tiền</TableCell>
-                                        <TableCell align="right">Khuyến mãi</TableCell>
-                                        <TableCell align="right">Tổng sau KM</TableCell>
-                                        <TableCell align="center">Chi tiết</TableCell>
+                                        <TableCell style={{ minWidth: '10rem' }}>Ngày tạo</TableCell>
+                                        <TableCell style={{ minWidth: '14rem' }}>Tình trạng HĐ</TableCell>
+                                        <TableCell style={{ minWidth: '15rem' }}>Giao hàng</TableCell>
+                                        <TableCell style={{ minWidth: '12rem' }}>Tổng tiền</TableCell>
+                                        <TableCell style={{ minWidth: '12rem' }}>Khuyến mãi</TableCell>
+                                        <TableCell style={{ minWidth: '12rem' }}>Tổng sau KM</TableCell>
+                                        <TableCell style={{ minWidth: '13rem' }} align="center">
+                                            Chi tiết
+                                        </TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -99,16 +104,17 @@ function Row(props) {
                                             <TableCell align="center">
                                                 <Link
                                                     to={`/Admin/DetailBill/${row._id}/${bill.BillID}`}
+                                                    style={{ padding: '1rem 1.5rem' }}
                                                     state={{ customer: row, bill: bill }}
                                                     className={cx('btn', 'btn-detail')}
                                                 >
-                                                    Chi Tiết
+                                                    <FontAwesomeIcon icon={faInfo} />
                                                 </Link>
                                                 <button
                                                     className={cx('btn', 'btn-edit')}
                                                     onClick={() => handleEditBill(bill, row)}
                                                 >
-                                                    Cập Nhật
+                                                    <FontAwesomeIcon icon={faPenToSquare} />
                                                 </button>
                                             </TableCell>
                                         </TableRow>
