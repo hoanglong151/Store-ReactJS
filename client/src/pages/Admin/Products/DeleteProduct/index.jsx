@@ -163,8 +163,8 @@ function DeleteProduct() {
                 </div>
             </div>
             <div className={cx('content')}>
-                <h1>Giới Thiệu Sản Phẩm</h1>
-                <h2>
+                <h1 className={cx('content__title')}>Giới Thiệu Sản Phẩm</h1>
+                <h2 className={cx('content__name-product')}>
                     {productDelete.Name}
                     <span className={cx('show-description')}>{`(${typeSelect.Name} ${
                         filterType[0]?.Color && '- ' + typeByColor?.Color

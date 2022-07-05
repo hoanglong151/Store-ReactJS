@@ -77,12 +77,20 @@ export default function AccordionBasic(props) {
                         <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Màu Sắc</TableCell>
-                                    <TableCell>Loại</TableCell>
-                                    <TableCell align="right">Giá</TableCell>
-                                    <TableCell align="right">Giá Khuyến Mãi</TableCell>
-                                    <TableCell align="right">Số Lượng</TableCell>
-                                    <TableCell align="right">Del</TableCell>
+                                    <TableCell style={{ minWidth: '10rem' }}>Màu Sắc</TableCell>
+                                    <TableCell style={{ minWidth: '8rem' }}>Loại</TableCell>
+                                    <TableCell style={{ minWidth: '12rem' }} align="right">
+                                        Giá
+                                    </TableCell>
+                                    <TableCell style={{ minWidth: '14rem' }} align="right">
+                                        Giá Khuyến Mãi
+                                    </TableCell>
+                                    <TableCell style={{ minWidth: '10rem' }} align="right">
+                                        Số Lượng
+                                    </TableCell>
+                                    <TableCell style={{ minWidth: '8rem' }} align="right">
+                                        Del
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -94,8 +102,12 @@ export default function AccordionBasic(props) {
                                         <TableCell component="th" scope="row">
                                             {type.Name}
                                         </TableCell>
-                                        <TableCell align="right">{type.Price} VNĐ</TableCell>
-                                        <TableCell align="right">{type.Sale} VNĐ</TableCell>
+                                        <TableCell align="right">
+                                            {new Intl.NumberFormat('de-DE').format(type.Price)} đ
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {new Intl.NumberFormat('de-DE').format(type.Sale)} đ
+                                        </TableCell>
                                         <TableCell align="right">{type.Amount}</TableCell>
                                         <TableCell align="right">
                                             <button

@@ -15,7 +15,7 @@ function TableSaleCode(props) {
     const { data, onHandleOpenDialog, onHandleDelete, title } = props;
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ minWidth: 400 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell>Mã khuyến mãi</TableCell>

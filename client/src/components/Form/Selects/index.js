@@ -19,7 +19,7 @@ function Selects(props) {
             id={id}
             styles={customStyles}
             onChange={onChangeSelect}
-            className={cx('select', { [className]: className, error: errors })}
+            className={cx({ [className]: className, error: errors })}
             closeMenuOnSelect={!multiple}
             value={select}
             isMulti={multiple}

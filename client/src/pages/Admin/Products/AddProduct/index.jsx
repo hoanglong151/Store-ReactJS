@@ -165,7 +165,7 @@ function AddProduct() {
         <div className={cx('wrapper')}>
             <h1 className={cx('header')}>Tạo Sản Phẩm</h1>
             <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
-                <Label>Tên Sản Phẩm</Label>
+                <Label className={cx('form-label')}>Tên Sản Phẩm</Label>
                 <Input
                     placeholder="Tên Sản Phẩm"
                     id="name"
@@ -174,20 +174,20 @@ function AddProduct() {
                     value={formik.values.name}
                 />
                 {formik.errors.name && formik.touched.name ? <ErrorMessage>{formik.errors.name}</ErrorMessage> : null}
-                <Label>Danh Mục</Label>
+                <Label className={cx('form-label')}>Danh Mục</Label>
                 <Selects onChangeSelect={handleSelectCategory} data={optionsCate} multiple />
-                <Label>Hãng</Label>
+                <Label className={cx('form-label')}>Hãng</Label>
                 <Selects onChangeSelect={handleSelectFirm} data={optionsFirm} multiple={false} />
-                <Label>Loại</Label>
+                <Label className={cx('form-label')}>Loại</Label>
                 <Accordion
                     onHandleDeleteType={handleDeleteType}
                     onHandleAddType={handleAddType}
                     formik={formik}
                     typesProduct={typesProduct}
                 />
-                <Label>Mô Tả</Label>
+                <Label className={cx('form-label')}>Mô Tả</Label>
                 <TextArea onChange={handleInput} />
-                <Label>Hình Ảnh</Label>
+                <Label className={cx('form-label')}>Hình Ảnh</Label>
                 <SelectImage id="images" name="images" images={images} onChange={uploadMultipleFiles} />
                 <div>
                     {formik.errors.images && formik.touched.images ? (

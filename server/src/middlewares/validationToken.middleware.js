@@ -4,7 +4,7 @@ const validateToken = (req, res, next) => {
   const token = req.headers.authorization.split(" ");
   jwt.verify(token[1], "hoanglong", (err, info) => {
     if (err) {
-      res.status(401).json({ token: "Changed Token" });
+      return res.status(401).json({ token: "Changed Token" });
     } else {
       next();
     }
@@ -13,12 +13,16 @@ const validateToken = (req, res, next) => {
 
 const validateTokenNoNext = (req, res, next) => {
   const token = req.headers.authorization.split(" ");
-  jwt.verify(token[1], "hoanglong", (err, info) => {
-    if (err) {
-      res.status(401).json({ token: "Changed Token" });
-    }
-    res.status(200).json({ correct: "Correct" });
-  });
+  if (token[1] !== "null") {
+    jwt.verify(token[1], "hoanglong", (err, info) => {
+      if (err) {
+        res.status(401).json({ token: "Changed Token" });
+      }
+      res.status(200).json({ correct: "Correct" });
+    });
+  } else {
+    res.status(401).json({ token: "Changed Token" });
+  }
 };
 
 module.exports = { validateToken, validateTokenNoNext };

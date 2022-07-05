@@ -1,12 +1,14 @@
 @import '../../../styles/Mixin.scss';
 .wrapper {
     display: flex;
-    height: 100rem;
+    position: relative;
+    height: 100vh;
 
     .sidebar {
         width: 25rem;
         transition: all 0.15s linear;
         border-right: 1px solid rgba(0, 0, 0, 0.2);
+        height: 100%;
     }
 
     .menu-mobile {
@@ -43,7 +45,6 @@
         .sidebar {
             position: absolute;
             background-color: var(--white);
-            height: 100%;
             z-index: 10;
         }
         .active-sidebar {
@@ -55,7 +56,18 @@
                 z-index: 5;
                 background-color: rgba(0, 0, 0, 0.1);
                 width: 100vw;
-                height: 100vh;
+                height: 100%;
+            }
+        }
+    }
+}
+
+@include respond(smartphone) {
+    .wrapper {
+        .container {
+            height: 100vh;
+            .content {
+                padding: 1rem;
             }
         }
     }

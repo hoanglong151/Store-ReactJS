@@ -15,7 +15,7 @@ function TableCategory(props) {
     const { titles, categories, onHandleClick, onHandleDelete } = props;
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         {titles.map((title, index) => (
@@ -31,7 +31,9 @@ function TableCategory(props) {
                             <TableCell align="left" className={cx('img-product')}>
                                 <img className={cx('img')} src={data.Image} />
                             </TableCell>
-                            <TableCell align="left">{data.Name}</TableCell>
+                            <TableCell style={{ minWidth: '12rem' }} align="left">
+                                {data.Name}
+                            </TableCell>
                             <TableCell align="left">
                                 <button className={cx('btn', 'btn-edit')} onClick={() => onHandleClick(data)}>
                                     Edit

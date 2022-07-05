@@ -16,7 +16,7 @@ export default function TablesProduct(props) {
     const { titles, products } = props;
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ minWidth: 800 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         {titles.map((title, index) => (
@@ -45,21 +45,21 @@ export default function TablesProduct(props) {
                             </TableCell>
                             <TableCell align="left">
                                 <Link
-                                    to={`/Admin/DetailProduct/${data._id}`}
+                                    to={`/Admin/Products/DetailProduct`}
                                     state={{ product: data }}
                                     className={cx('btn', 'btn-detail')}
                                 >
                                     Detail
                                 </Link>
                                 <Link
-                                    to={`/Admin/EditProduct/${data._id}`}
+                                    to={`/Admin/Products/EditProduct`}
                                     state={{ product: data }}
                                     className={cx('btn', 'btn-edit')}
                                 >
                                     Edit
                                 </Link>
                                 <Link
-                                    to={`/Admin/DeleteProduct/${data._id}`}
+                                    to={`/Admin/Products/DeleteProduct`}
                                     state={{ product: data }}
                                     className={cx('btn', 'btn-delete')}
                                 >

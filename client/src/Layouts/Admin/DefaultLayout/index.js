@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Header from '~/Layouts/Admin/components/Header/Header';
 import Sidebar from '~/Layouts/Admin/components/Sidebar/Siderbar';
 import classnames from 'classnames/bind';
@@ -12,9 +12,20 @@ function DefaultLayout({ children }) {
         setToggleMenu(!toggleMenu);
     };
 
+    useMemo(() => {
+        if (window.innerWidth < 1024) {
+            setToggleMenu(true);
+        }
+    }, []);
+
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('sidebar', { 'menu-mobile': toggleMenu, 'active-sidebar': !toggleMenu })}>
+            <div
+                className={cx('sidebar', {
+                    'menu-mobile': toggleMenu,
+                    'active-sidebar': !toggleMenu,
+                })}
+            >
                 <Sidebar onClick={handleToggleMenu} toggleMenu={toggleMenu} />
             </div>
             <div className={cx('container')}>

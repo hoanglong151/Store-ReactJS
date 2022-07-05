@@ -103,7 +103,7 @@ function Row(props) {
                                             </TableCell>
                                             <TableCell align="center">
                                                 <Link
-                                                    to={`/Admin/DetailBill/${row._id}/${bill.BillID}`}
+                                                    to={`/Admin/Bills/DetailBill`}
                                                     style={{ padding: '1rem 1.5rem' }}
                                                     state={{ customer: row, bill: bill }}
                                                     className={cx('btn', 'btn-detail')}

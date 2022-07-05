@@ -1,6 +1,7 @@
 @import '../../../../styles/Mixin.scss';
 .wrapper {
     display: flex;
+    flex-wrap: wrap;
     background-color: var(--white);
     padding: 1rem;
     border-radius: 1rem;
@@ -129,6 +130,14 @@
     margin: 1rem;
 }
 
+.description {
+    width: 100%;
+    padding: 2rem;
+    img {
+        width: 100%;
+    }
+}
+
 @include respond(tab) {
     .wrapper {
         flex-wrap: wrap;
@@ -149,6 +158,35 @@
             img {
                 width: 100%;
             }
+        }
+    }
+}
+
+@include respond(smartphone) {
+    .wrapper {
+        .content,
+        .images {
+            width: 100%;
+        }
+        .content {
+            margin-left: 1rem;
+        }
+        .content__title {
+            display: none;
+        }
+        .content__name-product {
+            margin-top: 1rem;
+        }
+        .title-price {
+            font-size: 1.6rem;
+        }
+        .price,
+        .sale {
+            font-size: 1.6rem;
+        }
+
+        .sale-price {
+            font-size: 1.2rem;
         }
     }
 }

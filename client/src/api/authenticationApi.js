@@ -7,6 +7,9 @@ const authenticationApi = {
     validateToken: () => {
         return axiosClient.get('/auth/validateToken');
     },
+    verifyOTP: (data) => {
+        return axiosClient.post('/auth/verifyOTP', data);
+    },
 };
 
 export default authenticationApi;

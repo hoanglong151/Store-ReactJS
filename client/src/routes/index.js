@@ -44,10 +44,10 @@ const publicRoutes = [
 const privateRoutes = [
     { path: 'Admin/', component: AdminHome },
     { path: 'Admin/Products', component: AdminProducts },
-    { path: 'Admin/AddProduct', component: AdminAddProduct },
-    { path: 'Admin/EditProduct/:id', component: AdminEditProduct },
-    { path: 'Admin/DetailProduct/:id', component: AdminDetailProduct },
-    { path: 'Admin/DeleteProduct/:id', component: AdminDeleteProduct },
+    { path: 'Admin/Products/AddProduct', component: AdminAddProduct },
+    { path: 'Admin/Products/EditProduct', component: AdminEditProduct },
+    { path: 'Admin/Products/DetailProduct', component: AdminDetailProduct },
+    { path: 'Admin/Products/DeleteProduct', component: AdminDeleteProduct },
     { path: 'Admin/Categories', component: AdminCategories },
     { path: 'Admin/Bills', component: AdminBills },
     { path: 'Admin/Firms', component: AdminFirms },
@@ -57,7 +57,7 @@ const privateRoutes = [
     { path: 'Admin/SaleCodes', component: AdminSaleCodes },
     { path: 'Admin/AddressStores', component: AdminAddressStores },
     { path: 'Admin/BillStatus', component: AdminBillStatus },
-    { path: 'Admin/DetailBill/:customerID/:billID', component: AdminBillDetail },
+    { path: 'Admin/Bills/DetailBill', component: AdminBillDetail },
 ];
 
 export { publicRoutes, privateRoutes };

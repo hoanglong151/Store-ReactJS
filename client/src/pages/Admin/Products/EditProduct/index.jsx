@@ -17,7 +17,6 @@ import styles from './EditProduct.module.scss';
 const cx = classnames.bind(styles);
 
 function EditProduct() {
-    let { id } = useParams();
     const { state } = useLocation();
     const { product } = state;
     const [productEdit, setProductEdit] = useState({});
@@ -188,7 +187,7 @@ function EditProduct() {
         <div className={cx('wrapper')}>
             <h1 className={cx('header')}>Cập Nhật Sản Phẩm</h1>
             <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
-                <Label>Tên Sản Phẩm</Label>
+                <Label className={cx('form-label')}>Tên Sản Phẩm</Label>
                 <Input
                     id="name"
                     name="name"
@@ -198,25 +197,25 @@ function EditProduct() {
                     errors={formik.touched.name && formik.errors.name}
                 />
                 {formik.errors.name && formik.touched.name ? <ErrorMessage>{formik.errors.name}</ErrorMessage> : null}
-                <Label>Danh Mục</Label>
+                <Label className={cx('form-label')}>Danh Mục</Label>
                 <Selects
                     onChangeSelect={handleSelectCategory}
                     data={options}
                     select={productEdit.Category_ID}
                     multiple
                 />
-                <Label>Hãng</Label>
+                <Label className={cx('form-label')}>Hãng</Label>
                 <Selects onChangeSelect={handleSelectFirm} select={productEdit.Firm_ID} data={optionsFirm} />
-                <Label>Loại</Label>
+                <Label className={cx('form-label')}>Loại</Label>
                 <Accordion
                     onHandleDeleteType={handleDeleteType}
                     onHandleAddType={handleAddType}
                     formik={formik}
                     typesProduct={typesProduct}
                 />
-                <Label>Mô Tả</Label>
+                <Label className={cx('form-label')}>Mô Tả</Label>
                 <TextArea data={formik.values.description} onChange={handleInput} />
-                <Label>Hình Ảnh</Label>
+                <Label className={cx('form-label')}>Hình Ảnh</Label>
                 <SelectImage id="images" name="images" images={images} onChange={uploadMultipleFiles} />
                 <button type="submit" className={cx('create-btn')}>
                     Cập Nhật Sản Phẩm

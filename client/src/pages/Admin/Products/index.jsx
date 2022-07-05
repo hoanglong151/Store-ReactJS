@@ -49,7 +49,7 @@ function Products() {
 
     return (
         <div className={cx('wrapper')}>
-            <Link to="/Admin/AddProduct" className={cx('create-btn')}>
+            <Link to="/Admin/Products/AddProduct" className={cx('create-btn')}>
                 Tạo Sản Phẩm
             </Link>
             <SearchByCate type="product" onSearch={handleSearchProduct} />

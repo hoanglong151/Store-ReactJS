@@ -28,14 +28,13 @@ function Login() {
                 if (result.Invalid) {
                     alert(result.Invalid);
                 } else {
-                    sessionStorage.setItem('accessToken', result.token);
                     const user = {
                         ID: result.user._id,
                         Name: result.user.Name,
                         Email: result.user.Email,
                     };
                     sessionStorage.setItem('auth', JSON.stringify(user));
-                    navigate('/Admin');
+                    navigate('/Admin/Verify', { state: { user: user } });
                 }
             };
             submit();

@@ -16,6 +16,7 @@ import Loading from './components/Loading';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleChevronUp } from '@fortawesome/free-solid-svg-icons';
 import classnames from 'classnames/bind';
+import VerifyAuth from './pages/Admin/Authentication/Verify';
 
 const cx = classnames.bind();
 function App() {
@@ -93,10 +94,11 @@ function App() {
                         );
                     })}
                     <Route path="/Admin/Login" element={<Login />} />
+                    <Route path="/Admin/Verify" element={<VerifyAuth />} />
                 </Routes>
             </BrowserRouter>
 
-            <div className={cx({ 'go-to-top': goToTop })} onClick={handleGoToTop}>
+            <div className={cx('top', { 'go-to-top': goToTop })} onClick={handleGoToTop}>
                 <FontAwesomeIcon icon={faCircleChevronUp} />
             </div>
         </div>

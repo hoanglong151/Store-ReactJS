@@ -12,10 +12,9 @@ const cx = classnames.bind();
 
 function TableDistrict(props) {
     const { districts, onHandleOpenDialog, onHandleDeleteDistrict } = props;
-    console.log(districts);
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ minWidth: 500 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell>Vùng miền</TableCell>

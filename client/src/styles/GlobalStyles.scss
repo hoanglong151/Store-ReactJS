@@ -65,7 +65,12 @@ a {
     background-color: var(--primary-admin);
 }
 
+.top {
+    display: none;
+}
+
 .go-to-top {
+    display: block;
     position: fixed;
     bottom: 2rem;
     right: 2rem;
