@@ -293,10 +293,44 @@ const searchProduct = async (req, res) => {
   res.send({ data: data, totalPage: totalPage });
 };
 
+const uploadImage = async (req, res) => {
+  console.log(req.file);
+  const metadata = {
+    contentType: req.file.mimetype,
+  };
+  const storageRef = ref(storage, `/description/${uuid.v1()}`);
+  await uploadBytes(storageRef, req.file.buffer, metadata).then((snapshot) => {
+    console.log("Uploaded a blob or file! ", snapshot);
+  });
+  await getDownloadURL(storageRef)
+    .then((url) => {
+      res.json(url);
+    })
+    .catch((error) => console.log("Error: ", error));
+
+  // await Promise.all(
+  //   req.files.map(async (image, index) => {
+  //     const metadata = {
+  //       contentType: image.mimetype,
+  //     };
+  //     const storageRef = ref(storage, `/description/${uuid.v1()}`);
+  //     await uploadBytes(storageRef, image.buffer, metadata).then((snapshot) => {
+  //       console.log("Uploaded a blob or file! ", snapshot);
+  //     });
+  //     await getDownloadURL(storageRef)
+  //       .then((url) => {
+  //         return product.Image.push(url);
+  //       })
+  //       .catch((error) => console.log("Error: ", error));
+  //   })
+  // );
+};
+
 module.exports = {
   getProducts,
   addProduct,
   editProduct,
   deleteProduct,
   searchProduct,
+  uploadImage,
 };

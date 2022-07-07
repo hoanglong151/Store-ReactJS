@@ -1,11 +1,40 @@
 import React from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { productsApi } from '~/api';
 
 function TextArea(props) {
     const { onChange, data } = props;
+
+    function uploadAdapter(loader) {
+        return {
+            upload: () => {
+                return new Promise((resolve, reject) => {
+                    const body = new FormData();
+                    loader.file.then(async (file) => {
+                        body.append('uploadImg', file);
+                        const getUrl = await productsApi.uploadImg(body);
+                        if (getUrl) {
+                            resolve({
+                                default: getUrl,
+                            });
+                        } else {
+                            reject('Err');
+                        }
+                    });
+                });
+            },
+        };
+    }
+
+    function uploadPlugin(editor) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            return uploadAdapter(loader);
+        };
+    }
     return (
         <CKEditor
+            config={{ extraPlugins: [uploadPlugin] }}
             editor={ClassicEditor}
             data={data}
             onReady={(editor) => {
@@ -13,8 +42,6 @@ function TextArea(props) {
                 console.log('Editor is ready to use!', editor);
             }}
             onChange={(event, editor) => {
-                // const data = editor.getData();
-                // console.log({ event, editor, data });
                 onChange(event, editor);
             }}
             onBlur={(event, editor) => {

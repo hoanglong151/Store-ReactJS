@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './Header.module.scss';
 import classnames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react/headless';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const cx = classnames.bind(styles);
 
@@ -25,12 +25,12 @@ function Header() {
 
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('logo')}>
+            <NavLink to="/Admin" end className={cx('logo')}>
                 <img
                     className={cx('logo-img')}
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/IOS_logo.svg/768px-IOS_logo.svg.png"
                 />
-            </div>
+            </NavLink>
             <div className={cx('action')}>
                 <Tippy
                     interactive={true}

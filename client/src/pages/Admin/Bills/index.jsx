@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import TableBill from '~/components/Tables/TableBill';
@@ -11,11 +11,18 @@ import classnames from 'classnames/bind';
 import styles from './Bills.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchDetailBills } from '~/app/reducerDetailBill';
+import * as XLSX from 'xlsx/xlsx.mjs';
 import { useLocation } from 'react-router-dom';
+import Input from '~/components/Form/Input/Input';
+import { Button } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classnames.bind(styles);
 
 function Bills() {
+    const [startDate, setStartDate] = useState();
+    const [endDate, setEndDate] = useState();
     const [billsByStatus, setBillsByStatus] = useState([]);
     const [billStatus, setBillStatus] = useState([]);
     const [openDialog, setOpenDialog] = React.useState(false);
@@ -130,10 +137,112 @@ function Bills() {
         }
     };
 
+    const handleExportExcelBill = () => {
+        let arrBill = [];
+        let ws;
+        let wb = XLSX.utils.book_new();
+        if (billsByStatus.length === 0) {
+            const newData = bills.billsSearch
+                .map((bill) => {
+                    if (bill.DetailBills.length !== 0) {
+                        return bill.DetailBills.map((detailBill) => {
+                            return {
+                                'Mã Khách Hàng': bill._id,
+                                'Tên Khách Hàng': bill.Name,
+                                'Số Điện Thoại': bill.Phone,
+                                'Mã Hóa Đơn': detailBill._id,
+                                'Tổng Tiền': new Intl.NumberFormat('DE-de').format(detailBill.Cart.totalPrice),
+                                'Khuyến Mãi': detailBill.Cart.saleCode?.Sale || 0,
+                                'Thành Tiền': new Intl.NumberFormat('DE-de').format(detailBill.Cart.totalPriceSale),
+                            };
+                        });
+                    }
+                })
+                .filter((item) => item !== undefined);
+            newData.forEach((item) => {
+                arrBill.push(...item);
+            });
+            if (arrBill.length !== 0) {
+                ws = XLSX.utils.json_to_sheet(arrBill);
+                XLSX.utils.book_append_sheet(wb, ws, 'MySheet1');
+                XLSX.writeFile(wb, 'Bill.xlsx');
+            }
+        } else {
+            const newData = billsByStatus
+                .map((bill) => {
+                    if (bill.DetailBills.length !== 0) {
+                        return bill.DetailBills.map((detailBill) => {
+                            return {
+                                'Mã Khách Hàng': bill._id,
+                                'Tên Khách Hàng': bill.Name,
+                                'Số Điện Thoại': bill.Phone,
+                                'Mã Hóa Đơn': detailBill._id,
+                                'Tổng Tiền': new Intl.NumberFormat('DE-de').format(detailBill.Cart.totalPrice),
+                                'Khuyến Mãi': detailBill.Cart.saleCode?.Sale || 0,
+                                'Thành Tiền': new Intl.NumberFormat('DE-de').format(detailBill.Cart.totalPriceSale),
+                            };
+                        });
+                    }
+                })
+                .filter((item) => item !== undefined);
+            newData.forEach((item) => {
+                arrBill.push(...item);
+            });
+            if (arrBill.length !== 0) {
+                ws = XLSX.utils.json_to_sheet(arrBill);
+                XLSX.utils.book_append_sheet(wb, ws, 'Bill');
+                XLSX.writeFile(wb, 'Bill.xlsx');
+            }
+        }
+    };
+
+    const handleStartDate = (e) => {
+        setStartDate(e.target.value);
+    };
+
+    const handleEndDate = (e) => {
+        setEndDate(e.target.value);
+    };
+
+    const handleFilterBillByDate = () => {
+        const filterBills = bills.billsAll.filter((bill) => {
+            if (!startDate && !endDate) {
+                alert('Ko nhập ngày đòi tìm ????');
+            }
+            if (
+                new Date(bill.CreateAt) >= new Date(startDate) &&
+                new Date(bill.CreateAt) <= new Date(endDate).setHours(24)
+            ) {
+                return bill;
+            } else if (new Date(bill.CreateAt) >= new Date(startDate) && !endDate) {
+                return bill;
+            } else if (!startDate && new Date(bill.CreateAt) <= new Date(endDate).setHours(24)) {
+                return bill;
+            }
+        });
+        setBills({ ...bills, billsSearch: filterBills });
+        setTotalPage({ ...totalPage, pageSearch: Math.ceil(filterBills.length / 10) });
+    };
+
     return (
         <div>
             <div>
                 <SearchByCate type="bill" onSearch={handleSearchBills} />
+                <div>
+                    <h4>Tìm kiếm theo ngày</h4>
+                    <div className={cx('search-bill-by-date')}>
+                        <span className={cx('search-date')}>Từ ngày</span>
+                        <Input type="date" onChange={handleStartDate} />
+                        <span className={cx('search-date')}>Đến ngày</span>
+                        <Input type="date" onChange={handleEndDate} />
+                        <button className={cx('btn-search')} onClick={handleFilterBillByDate}>
+                            <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        </button>
+                    </div>
+                </div>
+                <button className={cx('btn-export-excel')} onClick={handleExportExcelBill}>
+                    Export Excel
+                </button>
                 <PaginationOutlined count={totalPage.pageSearch} onClick={handlePagination} />
                 <button className={cx('btn')} onClick={handleAllBills}>
                     Tất cả
@@ -144,6 +253,7 @@ function Bills() {
                     </button>
                 ))}
             </div>
+
             <TableBill
                 rows={billsByStatus.length !== 0 ? billsByStatus : bills.billsSearch}
                 handleEditBill={handleEditBill}

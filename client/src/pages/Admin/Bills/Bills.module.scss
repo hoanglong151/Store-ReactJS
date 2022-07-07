@@ -11,7 +11,46 @@
     }
 }
 
+.btn-export-excel {
+    background-color: greenyellow;
+    color: #000;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.15s linear;
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(153, 252, 5);
+    }
+}
+
 .number-bill {
     color: var(--main-color);
     font-weight: 600;
+}
+
+.search-bill-by-date {
+    display: flex;
+    align-items: center;
+    margin: 1rem -2rem;
+}
+
+.search-date {
+    min-width: 7rem;
+    margin: 0 2rem;
+}
+
+.btn-search {
+    padding: 1rem;
+    font-size: 2rem;
+    margin: 0 2rem;
+    background-color: greenyellow;
+    border-radius: 0.5rem;
+    transition: all 0.15s linear;
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(153, 252, 5);
+    }
 }

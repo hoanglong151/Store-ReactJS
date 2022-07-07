@@ -10,6 +10,7 @@ const {
   editProduct,
   deleteProduct,
   searchProduct,
+  uploadImage,
 } = require("../controllers/products.controller");
 
 router.get("/", getProducts);
@@ -19,6 +20,13 @@ router.post(
   validateToken,
   upload.array("images", 6),
   addProduct
+);
+
+router.post(
+  "/uploadImg",
+  validateToken,
+  upload.single("uploadImg"),
+  uploadImage
 );
 
 router.patch(

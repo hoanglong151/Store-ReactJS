@@ -18,6 +18,9 @@ const productsApi = {
             headers: { Authorization: null },
         });
     },
+    uploadImg: (data) => {
+        return axiosClient.post('/products/uploadImg', data);
+    },
 };
 
 export default productsApi;

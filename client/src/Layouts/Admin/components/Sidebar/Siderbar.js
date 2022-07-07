@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faBars,
     faChartArea,
+    faChartLine,
     faChartPie,
     faChevronDown,
     faChevronUp,
@@ -47,6 +48,10 @@ function Siderbar(props) {
                 <FontAwesomeIcon icon={faBars} />
             </div>
             <div className={cx('menu', { ['mobile']: toggleMenu })}>
+                <NavLink end to="/Admin" className={({ isActive }) => cx('link-menu', { ['active']: isActive })}>
+                    <FontAwesomeIcon icon={faChartLine} />
+                    <span className={cx('title-menu')}>Dashboard</span>
+                </NavLink>
                 <NavLink to="/Admin/Products" className={({ isActive }) => cx('link-menu', { ['active']: isActive })}>
                     <FontAwesomeIcon icon={faMobileButton} />
                     <span className={cx('title-menu')}>Sản Phẩm</span>
