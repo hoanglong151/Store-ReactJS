@@ -86,13 +86,13 @@ a {
 
 @include respond(tab) {
     .go-to-top {
-        color: var(--main-color);
+        color: rgb(249, 116, 116);
     }
 }
 
 @include respond(smartphone) {
     .go-to-top {
-        color: var(--main-color);
+        color: rgb(249, 116, 116);
         bottom: 6rem;
         right: 2rem;
         font-size: 3rem;

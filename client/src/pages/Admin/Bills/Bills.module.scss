@@ -1,3 +1,4 @@
+@import '../../../styles/Mixin.scss';
 .btn {
     padding: 1rem;
     border-radius: var(--border-radius);
@@ -52,5 +53,17 @@
     &:hover {
         cursor: pointer;
         background-color: rgb(153, 252, 5);
+    }
+}
+
+@include respond(smartphone) {
+    .search-bill-by-date {
+        flex-wrap: wrap;
+        width: 100%;
+        margin: 1rem 0;
+    }
+    .search-date,
+    .btn-search {
+        margin: 1rem 0;
     }
 }

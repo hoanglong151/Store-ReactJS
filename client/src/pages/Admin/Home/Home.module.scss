@@ -1,3 +1,4 @@
+@import '../../../styles/Mixin.scss';
 .wrapper {
     .wrapper-statistics {
         display: flex;
@@ -30,5 +31,14 @@
     }
     .title-dashboard {
         margin: 2rem 0 1rem;
+    }
+}
+
+@include respond(smartphone) {
+    .wrapper {
+        .wrapper-statistics,
+        .wrapper-bill {
+            flex-wrap: wrap;
+        }
     }
 }

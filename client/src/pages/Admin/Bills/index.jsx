@@ -14,7 +14,7 @@ import { fetchDetailBills } from '~/app/reducerDetailBill';
 import * as XLSX from 'xlsx/xlsx.mjs';
 import { useLocation } from 'react-router-dom';
 import Input from '~/components/Form/Input/Input';
-import { Button } from '@mui/material';
+import { Button, withStyles } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
@@ -163,7 +163,49 @@ function Bills() {
                 arrBill.push(...item);
             });
             if (arrBill.length !== 0) {
-                ws = XLSX.utils.json_to_sheet(arrBill);
+                ws = XLSX.utils.json_to_sheet(arrBill, {
+                    origin: 'A5',
+                    header: [
+                        'Mã Khách Hàng',
+                        'Tên Khách Hàng',
+                        'Số Điện Thoại',
+                        'Mã Hóa Đơn',
+                        'Tổng Tiền',
+                        'Khuyến Mãi',
+                        'Thành Tiền',
+                    ],
+                });
+                console.log(arrBill);
+                const widthCodeCustomer = arrBill.reduce((w, r) => Math.max(w, r['Mã Khách Hàng'].length), 15);
+                const widthNameCustomer = arrBill.reduce((w, r) => Math.max(w, r['Tên Khách Hàng'].length), 15);
+                const widthPhoneCustomer = arrBill.reduce((w, r) => Math.max(w, r['Số Điện Thoại'].length), 15);
+                const widthCodeBill = arrBill.reduce((w, r) => Math.max(w, r['Mã Hóa Đơn'].length), 15);
+                const widthTotalPrice = arrBill.reduce((w, r) => Math.max(w, r['Tổng Tiền'].length), 12);
+                const widthSaleTotalPrice = arrBill.reduce((w, r) => Math.max(w, r['Thành Tiền'].length), 12);
+                ws['!cols'] = [
+                    { wch: widthCodeCustomer },
+                    { wch: widthNameCustomer },
+                    { wch: widthPhoneCustomer },
+                    { wch: widthCodeBill },
+                    { wch: widthTotalPrice },
+                    { wch: 11 },
+                    { wch: widthSaleTotalPrice },
+                ];
+                XLSX.utils.sheet_add_aoa(ws, [['Thống Kê Hóa Đơn']], { origin: 'C1' });
+
+                if (startDate && endDate) {
+                    XLSX.utils.sheet_add_aoa(ws, [[`Từ Ngày: ${startDate}`, '-', `Đến Ngày: ${endDate}`]], {
+                        origin: 'B3',
+                    });
+                } else if (startDate) {
+                    XLSX.utils.sheet_add_aoa(ws, [[`Từ Ngày: ${startDate}`]], {
+                        origin: 'C3',
+                    });
+                } else {
+                    XLSX.utils.sheet_add_aoa(ws, [[`Đến Ngày: ${endDate || new Date().toLocaleDateString('en-US')}`]], {
+                        origin: 'C3',
+                    });
+                }
                 XLSX.utils.book_append_sheet(wb, ws, 'MySheet1');
                 XLSX.writeFile(wb, 'Bill.xlsx');
             }
@@ -189,8 +231,50 @@ function Bills() {
                 arrBill.push(...item);
             });
             if (arrBill.length !== 0) {
-                ws = XLSX.utils.json_to_sheet(arrBill);
-                XLSX.utils.book_append_sheet(wb, ws, 'Bill');
+                ws = XLSX.utils.json_to_sheet(arrBill, {
+                    origin: 'A5',
+                    header: [
+                        'Mã Khách Hàng',
+                        'Tên Khách Hàng',
+                        'Số Điện Thoại',
+                        'Mã Hóa Đơn',
+                        'Tổng Tiền',
+                        'Khuyến Mãi',
+                        'Thành Tiền',
+                    ],
+                });
+
+                const widthCodeCustomer = arrBill.reduce((w, r) => Math.max(w, r['Mã Khách Hàng'].length), 15);
+                const widthNameCustomer = arrBill.reduce((w, r) => Math.max(w, r['Tên Khách Hàng'].length), 15);
+                const widthPhoneCustomer = arrBill.reduce((w, r) => Math.max(w, r['Số Điện Thoại'].length), 15);
+                const widthCodeBill = arrBill.reduce((w, r) => Math.max(w, r['Mã Hóa Đơn'].length), 15);
+                const widthTotalPrice = arrBill.reduce((w, r) => Math.max(w, r['Tổng Tiền'].length), 12);
+                const widthSaleTotalPrice = arrBill.reduce((w, r) => Math.max(w, r['Thành Tiền'].length), 12);
+                ws['!cols'] = [
+                    { wch: widthCodeCustomer },
+                    { wch: widthNameCustomer },
+                    { wch: widthPhoneCustomer },
+                    { wch: widthCodeBill },
+                    { wch: widthTotalPrice },
+                    { wch: 11 },
+                    { wch: widthSaleTotalPrice },
+                ];
+                XLSX.utils.sheet_add_aoa(ws, [['Thống Kê Hóa Đơn']], { origin: 'C1' });
+
+                if (startDate && endDate) {
+                    XLSX.utils.sheet_add_aoa(ws, [[`Từ Ngày: ${startDate}`, '-', `Đến Ngày: ${endDate}`]], {
+                        origin: 'B3',
+                    });
+                } else if (startDate) {
+                    XLSX.utils.sheet_add_aoa(ws, [[`Từ Ngày: ${startDate}`]], {
+                        origin: 'C3',
+                    });
+                } else {
+                    XLSX.utils.sheet_add_aoa(ws, [[`Đến Ngày: ${endDate || new Date().toLocaleDateString('en-US')}`]], {
+                        origin: 'C3',
+                    });
+                }
+                XLSX.utils.book_append_sheet(wb, ws, 'MySheet1');
                 XLSX.writeFile(wb, 'Bill.xlsx');
             }
         }

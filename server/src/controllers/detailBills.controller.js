@@ -16,6 +16,11 @@ const billByStatus = async (req, res) => {
   res.status(200).json({ billByStatus: billByStatus });
 };
 
+const getAll = async (req, res) => {
+  const detailBills = await detailBillsModel.find();
+  res.json(detailBills);
+};
+
 const updateBillStatus = async (req, res) => {
   const getDetailBill = await detailBillsModel.findById(req.body.billID).lean();
   const updateDetailBill = {
@@ -35,4 +40,4 @@ const updateBillStatus = async (req, res) => {
   );
 };
 
-module.exports = { billByStatus, updateBillStatus };
+module.exports = { billByStatus, updateBillStatus, getAll };
