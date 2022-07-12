@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const districtsModel = require("../model/Schema/districts.schema");
+const detailBillsModel = require("../model/Schema/detailBills.schema");
 const addressStoresModel = require("../model/Schema/addressStores.schema");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
@@ -72,10 +72,18 @@ const editAddressStore = (req, res) => {
   );
 };
 
-const deleteAddressStore = (req, res) => {
-  addressStoresModel.findByIdAndDelete(req.params.id, (err, data) => {
-    res.json(data);
+const deleteAddressStore = async (req, res) => {
+  const checkExistedAddressStoresByBill = await detailBillsModel.findOne({
+    AddressStores: new mongoose.Types.ObjectId(req.params.id),
   });
+
+  if (checkExistedAddressStoresByBill) {
+    res.json({ Exist: "Cửa Hàng Đang Được Sử Dụng. Không Thể Xóa" });
+  } else {
+    addressStoresModel.findByIdAndDelete(req.params.id, (err, data) => {
+      res.json(data);
+    });
+  }
 };
 
 const searchAddressStore = async (req, res) => {

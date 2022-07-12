@@ -89,15 +89,17 @@ function BillStatus() {
             if (result.isConfirmed) {
                 try {
                     const result = await billStatusApi.deleteBillStatus(status._id);
-                    if (result.exist) {
+                    if (result.Exist) {
                         DeleteSwal.fire({
-                            title: 'Tình Trạng Đang Được Sử Dụng',
+                            icon: 'error',
+                            title: result.Exist,
                             customClass: {
                                 popup: `${cx('popup')}`,
                             },
                         });
                     } else {
                         DeleteSwal.fire({
+                            icon: 'success',
                             title: 'Tình Trạng Đã Được Xóa',
                             customClass: {
                                 popup: `${cx('popup')}`,

@@ -79,15 +79,17 @@ function Areas() {
             if (result.isConfirmed) {
                 try {
                     const result = await areasApi.deleteArea(area._id);
-                    if (result.exist) {
+                    if (result.Exist) {
                         DeleteSwal.fire({
-                            title: 'Vùng Miền Đang Được Sử Dụng',
+                            icon: 'error',
+                            title: result.Exist,
                             customClass: {
                                 popup: `${cx('popup')}`,
                             },
                         });
                     } else {
                         DeleteSwal.fire({
+                            icon: 'success',
                             title: 'Vùng Miền Đã Được Xóa',
                             customClass: {
                                 popup: `${cx('popup')}`,

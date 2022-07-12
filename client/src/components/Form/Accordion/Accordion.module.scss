@@ -14,6 +14,39 @@
     gap: 1rem;
     margin-bottom: 1rem;
 }
+.label-image {
+    padding: 1rem;
+    background-color: gold;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.15s linear;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #fff;
+
+    &:hover {
+        background-color: goldenrod;
+    }
+}
+
+.input-image {
+    display: none;
+}
+
+.review-image {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    min-height: 10rem;
+}
+
+.image {
+    width: 10rem;
+    height: 10rem;
+    object-fit: contain;
+}
 
 @include respond(smartphone) {
     .form-input {

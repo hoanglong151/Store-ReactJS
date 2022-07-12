@@ -10,6 +10,7 @@ const TypeProducts = new Schema(
     Sale: Number,
     Amount: Number,
     Sold: Number,
+    Images: [String],
     Product: { type: Schema.Types.ObjectId, ref: "products", required: true },
   },
   {

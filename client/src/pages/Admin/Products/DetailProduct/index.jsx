@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import Sliders from '~/components/Sliders/Slider';
 import classnames from 'classnames/bind';
@@ -9,7 +8,6 @@ import styles from './DetailProduct.module.scss';
 const cx = classnames.bind(styles);
 
 function DetailProduct() {
-    let { id } = useParams();
     const { state } = useLocation();
     const { product } = state;
     const [productDetail, setProductDetail] = useState({});
@@ -70,6 +68,7 @@ function DetailProduct() {
                                             Price: next.Price,
                                             Sale: next.Sale,
                                             Amount: next.Amount,
+                                            Images: next.Images,
                                             Sold: next.Sold,
                                         },
                                     ],
@@ -87,6 +86,7 @@ function DetailProduct() {
                                     Price: next.Price,
                                     Sale: next.Sale,
                                     Amount: next.Amount,
+                                    Images: next.Images,
                                     Sold: next.Sold,
                                 },
                             ],
@@ -102,6 +102,7 @@ function DetailProduct() {
                                 Price: next.Price,
                                 Sale: next.Sale,
                                 Amount: next.Amount,
+                                Images: next.Images,
                                 Sold: next.Sold,
                             },
                         ],
@@ -118,13 +119,9 @@ function DetailProduct() {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('images')}>
-                <Sliders data={productDetail.Image || []} />
+                <Sliders data={typeSelect.Images || []} />
                 <div className={cx('action')}>
-                    <Link
-                        to={`/Admin/EditProduct/${productDetail._id}`}
-                        state={{ product: product }}
-                        className={cx('btn')}
-                    >
+                    <Link to={`/Admin/Products/EditProduct`} state={{ product: product }} className={cx('btn')}>
                         Edit
                     </Link>
                 </div>

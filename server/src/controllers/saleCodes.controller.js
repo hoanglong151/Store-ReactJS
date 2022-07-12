@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const saleCodesModel = require("../model/Schema/saleCodes.schema");
+const detailBillsModel = require("../model/Schema/detailBills.schema");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getSaleCodes = async (req, res) => {
@@ -55,10 +56,17 @@ const editSaleCode = (req, res) => {
   });
 };
 
-const deleteSaleCode = (req, res) => {
-  saleCodesModel.findByIdAndDelete(req.params.id, (err, data) => {
-    res.json(data);
-  });
+const deleteSaleCode = async (req, res) => {
+  const checkExistedSaleCode = await detailBillsModel
+    .findOne({ "Cart.saleCode._id": req.params.id })
+    .exec();
+  if (checkExistedSaleCode) {
+    res.json({ Exist: "Mã Khuyến Mãi Này Đang Được Sử Dụng. Không Thể Xóa" });
+  } else {
+    saleCodesModel.findByIdAndDelete(req.params.id, (err, data) => {
+      res.json(data);
+    });
+  }
 };
 
 const applySaleCode = (req, res) => {

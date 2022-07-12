@@ -43,6 +43,7 @@ function Provinces() {
     const getProvinces = async () => {
         try {
             const result = await provincesApi.getAll(currentPage);
+            console.log(result);
             setTotalPage({ ...totalPage, pageAll: result.totalPage, pageSearch: result.totalPage });
             setProvinces({ ...provinces, provincesAll: result.provinces, provincesSearch: result.provinces });
         } catch (err) {
@@ -103,15 +104,17 @@ function Provinces() {
             if (result.isConfirmed) {
                 try {
                     const result = await provincesApi.deleteProvince(province._id);
-                    if (result.exist) {
+                    if (result.Exist) {
                         DeleteSwal.fire({
-                            title: 'Tỉnh/Thành Đang Được Sử Dụng',
+                            icon: 'error',
+                            title: result.Exist,
                             customClass: {
                                 popup: `${cx('popup')}`,
                             },
                         });
                     } else {
                         DeleteSwal.fire({
+                            icon: 'success',
                             title: 'Tỉnh/Thành Đã Được Xóa',
                             customClass: {
                                 popup: `${cx('popup')}`,

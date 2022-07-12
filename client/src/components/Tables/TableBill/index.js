@@ -125,17 +125,6 @@ function Row(props) {
                     </Collapse>
                 </TableCell>
             </TableRow>
-
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>Cập nhật tình trạng đơn hàng</DialogTitle>
-                <DialogContent style={{ height: '25rem' }}>
-                    <Selects data={billStatus} select={billStatusSelect} onChangeSelect={handleSelectStatus} />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog}>Hủy</Button>
-                    <Button onClick={handleUpdateStatusBill}>Cập nhật</Button>
-                </DialogActions>
-            </Dialog>
         </React.Fragment>
     );
 }
@@ -153,57 +142,51 @@ function TableBill(props) {
     } = props;
 
     return (
-        <TableContainer component={Paper}>
-            <Table aria-label="collapsible table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell />
-                        <TableCell>Khách Hàng</TableCell>
-                        <TableCell align="right">Điện Thoại</TableCell>
-                        <TableCell align="right">Email</TableCell>
-                        <TableCell align="right">Hóa Đơn</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => {
-                        return (
-                            row.DetailBills.length !== 0 && (
-                                <Row
-                                    key={row._id}
-                                    row={row}
-                                    handleCloseDialog={handleCloseDialog}
-                                    handleEditBill={handleEditBill}
-                                    openDialog={openDialog}
-                                    billStatus={billStatus}
-                                    billStatusSelect={billStatusSelect}
-                                    handleSelectStatus={handleSelectStatus}
-                                    handleUpdateStatusBill={handleUpdateStatusBill}
-                                />
-                            )
-                        );
-                    })}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <>
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>Cập nhật tình trạng đơn hàng</DialogTitle>
+                <DialogContent style={{ height: '25rem' }}>
+                    <Selects data={billStatus} select={billStatusSelect} onChangeSelect={handleSelectStatus} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>Hủy</Button>
+                    <Button onClick={handleUpdateStatusBill}>Cập nhật</Button>
+                </DialogActions>
+            </Dialog>
+            <TableContainer component={Paper}>
+                <Table aria-label="collapsible table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell />
+                            <TableCell>Khách Hàng</TableCell>
+                            <TableCell align="right">Điện Thoại</TableCell>
+                            <TableCell align="right">Email</TableCell>
+                            <TableCell align="right">Hóa Đơn</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map((row) => {
+                            return (
+                                row.DetailBills.length !== 0 && (
+                                    <Row
+                                        key={row._id}
+                                        row={row}
+                                        handleCloseDialog={handleCloseDialog}
+                                        handleEditBill={handleEditBill}
+                                        openDialog={openDialog}
+                                        billStatus={billStatus}
+                                        billStatusSelect={billStatusSelect}
+                                        handleSelectStatus={handleSelectStatus}
+                                        handleUpdateStatusBill={handleUpdateStatusBill}
+                                    />
+                                )
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </>
     );
 }
-
-// Row.propTypes = {
-//     row: PropTypes.shape({
-//         calories: PropTypes.number.isRequired,
-//         carbs: PropTypes.number.isRequired,
-//         fat: PropTypes.number.isRequired,
-//         history: PropTypes.arrayOf(
-//             PropTypes.shape({
-//                 amount: PropTypes.number.isRequired,
-//                 customerId: PropTypes.string.isRequired,
-//                 date: PropTypes.string.isRequired,
-//             }),
-//         ).isRequired,
-//         name: PropTypes.string.isRequired,
-//         price: PropTypes.number.isRequired,
-//         protein: PropTypes.number.isRequired,
-//     }).isRequired,
-// };
 
 export default TableBill;

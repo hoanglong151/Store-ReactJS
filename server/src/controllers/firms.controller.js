@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const firmsModel = require("../model/Schema/firms.schema");
+const productsModel = require("../model/Schema/products.schema");
 const jwt = require("jsonwebtoken");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
@@ -60,14 +61,16 @@ const editFirm = (req, res) => {
 };
 
 const deleteFirm = async (req, res) => {
-  const getFirm = await firmsModel.findById(req.params.id).exec();
-  // if (getFirm.Products.length === 0) {
-  firmsModel.findByIdAndDelete(getFirm._id, (err, data) => {
-    res.json(data);
+  const getProduct = await productsModel.find({
+    Firm_ID: new mongoose.Types.ObjectId(`${req.params.id}`),
   });
-  // } else {
-  //   res.send({ exist: "Existed" });
-  // }
+  if (getProduct.length === 0) {
+    firmsModel.findByIdAndDelete(req.params.id, (err, data) => {
+      res.json(data);
+    });
+  } else {
+    res.json({ Exist: "Hãng Đang Được Sử Dụng. Không Thể Xóa" });
+  }
 };
 
 const searchFirm = async (req, res) => {

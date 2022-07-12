@@ -34,7 +34,7 @@ function DetailBill() {
                         </p>
                         <p>
                             <span className={cx('title-info')}>Ngày tạo: </span>
-                            {new Date(bill.CreateDate).toLocaleDateString('en-GB', {
+                            {new Date(bill.createdAt).toLocaleDateString('en-GB', {
                                 year: 'numeric',
                                 month: 'numeric',
                                 day: 'numeric',

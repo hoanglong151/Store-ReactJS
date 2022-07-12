@@ -19,7 +19,18 @@ import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classnames.bind(styles);
 export default function AccordionBasic(props) {
-    const { onHandleAddType, formik, typesProduct, onHandleDeleteType } = props;
+    const {
+        onHandleAddType,
+        formik,
+        typesProduct,
+        onHandleDeleteType,
+        onHandleSelectType,
+        onHandleUpdateType,
+        onHandleSelectImage,
+        reviewImages,
+        statusUpdateType,
+    } = props;
+
     return (
         <div>
             <Accordion>
@@ -29,8 +40,12 @@ export default function AccordionBasic(props) {
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <button className={cx('btn')} onClick={onHandleAddType} type="button">
-                        Thêm Loại
+                    <button
+                        className={cx('btn')}
+                        onClick={statusUpdateType ? onHandleUpdateType : onHandleAddType}
+                        type="button"
+                    >
+                        {statusUpdateType ? 'Cập Nhật' : 'Thêm Loại'}
                     </button>
                     <div className={cx('form-input')}>
                         <Input
@@ -71,6 +86,22 @@ export default function AccordionBasic(props) {
                             onChange={formik.handleChange}
                             value={formik.values.types.amount}
                         />
+                        <label className={cx('label-image')} htmlFor="types.images">
+                            Hình Ảnh
+                        </label>
+                        <input
+                            onChange={onHandleSelectImage}
+                            className={cx('input-image')}
+                            multiple
+                            id="types.images"
+                            name="types.images"
+                            type="file"
+                        />
+                    </div>
+                    <div className={cx('review-image')}>
+                        {reviewImages.map((image, index) => {
+                            return <img className={cx('image')} src={image} key={index} />;
+                        })}
                     </div>
 
                     <TableContainer component={Paper}>
@@ -88,6 +119,9 @@ export default function AccordionBasic(props) {
                                     <TableCell style={{ minWidth: '10rem' }} align="right">
                                         Số Lượng
                                     </TableCell>
+                                    <TableCell style={{ minWidth: '10rem' }} align="right">
+                                        Hình Ảnh
+                                    </TableCell>
                                     <TableCell style={{ minWidth: '8rem' }} align="right">
                                         Del
                                     </TableCell>
@@ -96,19 +130,24 @@ export default function AccordionBasic(props) {
                             <TableBody>
                                 {typesProduct.map((type, index) => (
                                     <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                        <TableCell component="th" scope="row">
+                                        <TableCell onClick={() => onHandleSelectType(type)} component="th" scope="row">
                                             {type.Color}
                                         </TableCell>
-                                        <TableCell component="th" scope="row">
+                                        <TableCell onClick={() => onHandleSelectType(type)} component="th" scope="row">
                                             {type.Name}
                                         </TableCell>
-                                        <TableCell align="right">
+                                        <TableCell onClick={() => onHandleSelectType(type)} align="right">
                                             {new Intl.NumberFormat('de-DE').format(type.Price)} đ
                                         </TableCell>
-                                        <TableCell align="right">
+                                        <TableCell onClick={() => onHandleSelectType(type)} align="right">
                                             {new Intl.NumberFormat('de-DE').format(type.Sale)} đ
                                         </TableCell>
-                                        <TableCell align="right">{type.Amount}</TableCell>
+                                        <TableCell onClick={() => onHandleSelectType(type)} align="right">
+                                            {type.Amount}
+                                        </TableCell>
+                                        <TableCell onClick={() => onHandleSelectType(type)} align="right">
+                                            {type.Images.length}
+                                        </TableCell>
                                         <TableCell align="right">
                                             <button
                                                 className={cx('btn')}

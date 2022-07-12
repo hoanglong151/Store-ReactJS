@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const billStatusModel = require("../model/Schema/billStatus.schema");
+const detailBillsModel = require("../model/Schema/detailBills.schema");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getBillStatus = async (req, res) => {
@@ -57,10 +58,19 @@ const editBillStatus = (req, res) => {
   );
 };
 
-const deleteBillStatus = (req, res) => {
-  billStatusModel.findByIdAndDelete(req.params.id, (err, data) => {
-    res.json(data);
+const deleteBillStatus = async (req, res) => {
+  const checkExistedBillStatus = await detailBillsModel.findOne({
+    "BillStatus._id": req.params.id,
   });
+  if (checkExistedBillStatus) {
+    res.json({
+      Exist: "Tình Trạng Đơn Hàng Này Đang Được Sử Dụng. Không Thể Xóa",
+    });
+  } else {
+    billStatusModel.findByIdAndDelete(req.params.id, (err, data) => {
+      res.json(data);
+    });
+  }
 };
 
 const searchBillStatus = async (req, res) => {

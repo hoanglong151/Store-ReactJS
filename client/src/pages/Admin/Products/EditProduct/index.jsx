@@ -9,7 +9,6 @@ import Input from '~/components/Form/Input/Input';
 import ErrorMessage from '~/components/Form/ErrorMessage/ErrorMessage';
 import Selects from '~/components/Form/Selects';
 import TextArea from '~/components/Form/TextArea';
-import SelectImage from '~/components/Form/SelectImage/SelectImage';
 import Accordion from '~/components/Form/Accordion/Accordion';
 import classnames from 'classnames/bind';
 import styles from './EditProduct.module.scss';
@@ -21,14 +20,14 @@ function EditProduct() {
     const { product } = state;
     const [productEdit, setProductEdit] = useState({});
     const [productImageOld, setProductImageOld] = useState([]);
-    const fileObj = [];
-    const fileArray = [];
-    const fileImages = [];
-    const [images, setImages] = useState([]);
+    let reviewImages1 = [];
+    const [reviewImages, setReviewImages] = useState([]);
     const [select, setSelect] = useState([]);
     const [typesProduct, setTypesProduct] = useState([]);
     const [categories, setCategories] = useState([]);
     const [firms, setFirms] = useState([]);
+    const [statusUpdateType, setStatusUpdateType] = useState(false);
+    const [updateType, setUpdateType] = useState({});
 
     const navigate = useNavigate();
 
@@ -60,8 +59,6 @@ function EditProduct() {
         };
         setProductEdit(editProduct);
         setTypesProduct(product.TypesProduct);
-        setProductImageOld(product.Image);
-        setImages(product.Image);
         setSelect(mapCategories);
     }, []);
 
@@ -102,6 +99,7 @@ function EditProduct() {
                 sale: 0,
                 amount: 0,
                 sold: 0,
+                images: [],
             },
         },
         // validationSchema: validationSchema,
@@ -111,12 +109,12 @@ function EditProduct() {
                 for (let key in values) {
                     fd.append(key, values[key]);
                 }
-                if (typeof values.images[0] === 'object') {
-                    values.images.map((image, index) => {
-                        fd.append('images', image);
+                fd.append('imagesOld', productImageOld);
+                typesProduct.map((type, index) => {
+                    type.Images.map((image) => {
+                        fd.append(`typeImage${index}`, image);
                     });
-                    fd.append('imagesOld', productImageOld);
-                }
+                });
                 fd.append('typesProduct', JSON.stringify(typesProduct));
                 try {
                     await productsApi.editProduct(fd);
@@ -136,10 +134,12 @@ function EditProduct() {
                 Name: formik.values.types.name,
                 Price: formik.values.types.price,
                 Sale: formik.values.types.sale,
+                Images: formik.values.types.images,
                 Amount: formik.values.types.amount,
                 Sold: 0,
             };
             setTypesProduct([...typesProduct, type]);
+            setReviewImages([]);
             formik.values.types.description = '';
             formik.values.types.color = '';
             formik.values.types.price = formik.values.types.price;
@@ -148,10 +148,50 @@ function EditProduct() {
         }
     };
 
+    const handleUpdateType = () => {
+        const getIndexType = typesProduct.findIndex((type) => {
+            return (
+                type.Color === updateType.Color &&
+                type.Name === updateType.Name &&
+                type.Price === updateType.Price &&
+                type.Sale === updateType.Sale &&
+                type.Amount === updateType.Amount
+            );
+        });
+        typesProduct[getIndexType].Color = formik.values.types.color;
+        typesProduct[getIndexType].Name = formik.values.types.name;
+        typesProduct[getIndexType].Price = formik.values.types.price;
+        typesProduct[getIndexType].Sale = formik.values.types.sale;
+        typesProduct[getIndexType].Amount = formik.values.types.amount;
+        if (
+            typeof typesProduct[getIndexType].Images[0] === 'string' &&
+            typeof formik.values.types.images[0] === 'object'
+        ) {
+            setProductImageOld([...productImageOld, ...typesProduct[getIndexType].Images]);
+            typesProduct[getIndexType].Images = formik.values.types.images;
+        }
+        setTypesProduct([...typesProduct]);
+
+        setStatusUpdateType(false);
+        setReviewImages([]);
+        formik.values.types.name = '';
+        formik.values.types.color = '';
+        formik.values.types.price = formik.values.types.price;
+        formik.values.types.sale = formik.values.types.sale;
+        formik.values.types.amount = 0;
+    };
+
     const handleDeleteType = (i) => {
         const newTypes = typesProduct.filter((type, index) => {
             return index !== i;
         });
+
+        const deleteTypes = typesProduct.find((type, index) => {
+            return index === i;
+        });
+        if (typeof deleteTypes.Images[0] === 'string') {
+            setProductImageOld([...productImageOld, ...deleteTypes.Images]);
+        }
         setTypesProduct(newTypes);
     };
 
@@ -169,14 +209,32 @@ function EditProduct() {
         formik.setFieldValue('firm_Id', option.value);
     };
 
-    const uploadMultipleFiles = (e) => {
-        fileObj.push(e.target.files);
-        for (let i = 0; i < fileObj[0].length; i++) {
-            fileArray.push(URL.createObjectURL(fileObj[0][i]));
-            fileImages.push(fileObj[0][i]);
+    const handleSelectType = (type) => {
+        setStatusUpdateType(true);
+        setUpdateType(type);
+        formik.setFieldValue('types.color', type.Color);
+        formik.setFieldValue('types.name', type.Name);
+        formik.setFieldValue('types.price', type.Price);
+        formik.setFieldValue('types.sale', type.Sale);
+        formik.setFieldValue('types.amount', type.Amount);
+        if (typeof type.Images[0] === 'object') {
+            for (let i = 0; i < type.Images.length; i++) {
+                reviewImages1.push(URL.createObjectURL(type.Images[i]));
+            }
+            setReviewImages(reviewImages1);
+        } else {
+            setReviewImages(type.Images);
         }
-        formik.setFieldValue('images', fileImages);
-        setImages(fileArray);
+    };
+
+    const uploadMultipleFilesOfType = (e) => {
+        const images1 = [];
+        for (let i = 0; i < e.target.files.length; i++) {
+            reviewImages1.push(URL.createObjectURL(e.target.files[i]));
+            images1.push(e.target.files[i]);
+        }
+        formik.values.types.images = images1;
+        setReviewImages(reviewImages1);
     };
 
     const handleInput = (event, editor) => {
@@ -210,13 +268,16 @@ function EditProduct() {
                 <Accordion
                     onHandleDeleteType={handleDeleteType}
                     onHandleAddType={handleAddType}
+                    onHandleUpdateType={handleUpdateType}
+                    onHandleSelectImage={uploadMultipleFilesOfType}
+                    onHandleSelectType={handleSelectType}
                     formik={formik}
                     typesProduct={typesProduct}
+                    reviewImages={reviewImages}
+                    statusUpdateType={statusUpdateType}
                 />
                 <Label className={cx('form-label')}>Mô Tả</Label>
                 <TextArea data={formik.values.description} onChange={handleInput} />
-                <Label className={cx('form-label')}>Hình Ảnh</Label>
-                <SelectImage id="images" name="images" images={images} onChange={uploadMultipleFiles} />
                 <button type="submit" className={cx('create-btn')}>
                     Cập Nhật Sản Phẩm
                 </button>

@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const Products = new Schema(
   {
     _id: Schema.Types.ObjectId,
-    Image: [String],
     Name: String,
     Description: String,
     Category_ID: [

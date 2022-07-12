@@ -88,15 +88,17 @@ function Firms() {
             if (result.isConfirmed) {
                 try {
                     const result = await firmsApi.deleteFirm(firm._id);
-                    if (result.exist) {
+                    if (result.Exist) {
                         DeleteSwal.fire({
-                            title: 'Hãng Đang Được Sử Dụng',
+                            icon: 'error',
+                            title: result.Exist,
                             customClass: {
                                 popup: `${cx('popup')}`,
                             },
                         });
                     } else {
                         DeleteSwal.fire({
+                            icon: 'success',
                             title: 'Hãng Đã Được Xóa',
                             customClass: {
                                 popup: `${cx('popup')}`,

@@ -11,7 +11,6 @@ import styles from './DeleteProduct.module.scss';
 const cx = classnames.bind(styles);
 
 function DeleteProduct() {
-    let { id } = useParams();
     const { state } = useLocation();
     const { product } = state;
     const [productDelete, setProductDelete] = useState({});
@@ -20,6 +19,7 @@ function DeleteProduct() {
     const [filterType, setFilterType] = useState([]);
     const navigate = useNavigate();
     const DeleteSwal = withReactContent(Swal);
+
     useEffect(() => {
         const mapCategories = product.Category_ID.map((category) => ({
             value: category._id,
@@ -74,6 +74,7 @@ function DeleteProduct() {
                                             Price: next.Price,
                                             Sale: next.Sale,
                                             Amount: next.Amount,
+                                            Images: next.Images,
                                             Sold: next.Sold,
                                         },
                                     ],
@@ -91,6 +92,7 @@ function DeleteProduct() {
                                     Price: next.Price,
                                     Sale: next.Sale,
                                     Amount: next.Amount,
+                                    Images: next.Images,
                                     Sold: next.Sold,
                                 },
                             ],
@@ -106,6 +108,7 @@ function DeleteProduct() {
                                 Price: next.Price,
                                 Sale: next.Sale,
                                 Amount: next.Amount,
+                                Images: next.Images,
                                 Sold: next.Sold,
                             },
                         ],
@@ -134,16 +137,29 @@ function DeleteProduct() {
         }).then((result) => {
             if (result.isConfirmed) {
                 const deleteProduct = async () => {
-                    const responseResult = await productsApi.deleteProduct(id);
-                    if (responseResult) {
+                    const responseResult = await productsApi.deleteProduct(product._id);
+                    if (responseResult.Exist) {
                         DeleteSwal.fire({
+                            icon: 'error',
+                            title: responseResult.Exist,
+                            customClass: {
+                                popup: `${cx('popup')}`,
+                            },
+                        }).then((action) => {
+                            if (action.isConfirmed) {
+                                navigate('/Admin/Products');
+                            }
+                        });
+                    } else {
+                        DeleteSwal.fire({
+                            icon: 'success',
                             title: 'Sản Phẩm Đã Được Xóa',
                             customClass: {
                                 popup: `${cx('popup')}`,
                             },
                         }).then((action) => {
                             if (action.isConfirmed) {
-                                // navigate('/Admin/Products');
+                                navigate('/Admin/Products');
                             }
                         });
                     }
@@ -155,7 +171,7 @@ function DeleteProduct() {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('images')}>
-                <Sliders data={productDelete.Image || []} />
+                <Sliders data={typeSelect.Images || []} />
                 <div className={cx('action')}>
                     <button className={cx('btn')} onClick={handleDeleteProduct}>
                         Delete

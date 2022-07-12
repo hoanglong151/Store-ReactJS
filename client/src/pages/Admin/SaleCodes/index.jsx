@@ -76,15 +76,17 @@ function SaleCodes() {
             if (result.isConfirmed) {
                 try {
                     const result = await saleCodesApi.deleteSaleCode(code._id);
-                    if (result.exist) {
+                    if (result.Exist) {
                         DeleteSwal.fire({
-                            title: 'Mã Khuyến Mãi Đang Được Sử Dụng',
+                            icon: 'error',
+                            title: result.Exist,
                             customClass: {
                                 popup: `${cx('popup')}`,
                             },
                         });
                     } else {
                         DeleteSwal.fire({
+                            icon: 'success',
                             title: 'Mã Khuyến Mãi Đã Được Xóa',
                             customClass: {
                                 popup: `${cx('popup')}`,

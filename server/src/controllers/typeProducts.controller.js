@@ -31,7 +31,7 @@ const getTypeProducts = async (req, res) => {
         Sold: type.Sold,
         ID_Product: type.Product._id,
         Name: type.Product.Name,
-        Image: type.Product.Image,
+        Images: type.Images,
         Description: type.Product.Description,
         Category_ID: type.Product.Category_ID,
         Firm_ID: type.Product.Firm_ID,

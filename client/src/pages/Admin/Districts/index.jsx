@@ -130,15 +130,17 @@ function District() {
             if (result.isConfirmed) {
                 try {
                     const result = await districtsApi.deleteDistrict(district._id);
-                    if (result.exist) {
+                    if (result.Exist) {
                         DeleteSwal.fire({
-                            title: 'Quận/Huyện Đang Được Sử Dụng',
+                            icon: 'error',
+                            title: result.Exist,
                             customClass: {
                                 popup: `${cx('popup')}`,
                             },
                         });
                     } else {
                         DeleteSwal.fire({
+                            icon: 'success',
                             title: 'Quận/Huyện Đã Được Xóa',
                             customClass: {
                                 popup: `${cx('popup')}`,

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const categoriesModel = require("../model/Schema/categories.schema");
+const productsModel = require("../model/Schema/products.schema");
 const { storage } = require("../configs/connectFirebase.config");
 const {
   ref,
@@ -65,15 +66,23 @@ const addCategory = async (req, res) => {
   });
 };
 
-const deleteCategory = (req, res) => {
-  categoriesModel.findById(req.params.id, (err, cate) => {
-    // if (cate.Products.length === 0) {
+const deleteCategory = async (req, res) => {
+  const result = await productsModel.find().exec();
+  const filterCategoryExistInProduct = result
+    .map((product) => {
+      const cateExistInProduct = product.Category_ID.find((cate) => {
+        return cate.toString() === req.params.id;
+      });
+      return cateExistInProduct;
+    })
+    .filter((item) => item !== undefined);
+  if (filterCategoryExistInProduct.length === 0) {
     categoriesModel.findByIdAndDelete(req.params.id, (err, cate) => {
-      console.log(cate);
+      res.json(cate);
     });
-    // }
-    res.json(cate);
-  });
+  } else {
+    res.json({ Exist: "Danh Mục Đang Được Sử Dụng. Không Thể Xóa" });
+  }
 };
 
 const editCategory = async (req, res) => {

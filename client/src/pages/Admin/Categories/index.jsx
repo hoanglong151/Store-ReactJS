@@ -67,13 +67,24 @@ function Categories() {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        DeleteSwal.fire({
-                            title: 'Danh Mục Đã Được Xóa',
-                            customClass: {
-                                popup: `${cx('popup')}`,
-                            },
-                        });
-                        await categoriesApi.deleteCategory(id);
+                        const result = await categoriesApi.deleteCategory(id);
+                        if (result.Exist) {
+                            DeleteSwal.fire({
+                                icon: 'error',
+                                title: result.Exist,
+                                customClass: {
+                                    popup: `${cx('popup')}`,
+                                },
+                            });
+                        } else {
+                            DeleteSwal.fire({
+                                icon: 'success',
+                                title: 'Danh Mục Đã Được Xóa',
+                                customClass: {
+                                    popup: `${cx('popup')}`,
+                                },
+                            });
+                        }
                         getCategories();
                     } catch (err) {
                         throw Error(err);

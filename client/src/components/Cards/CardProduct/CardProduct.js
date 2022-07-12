@@ -10,13 +10,13 @@ function CardProduct(props) {
     return (
         <div className={cx('wrapper', { ['box-shadow']: boxShadow })}>
             <Link to={`/product/detail`} state={{ product: product }}>
-                <img className={cx('image')} src={product.Image[Math.trunc(Math.random() * product.Image.length)]} />
+                <img className={cx('image')} src={product.Images[0]} />
             </Link>
             <div className={cx('info')}>
                 <Link to={`/product/detail`} state={{ product: product }}>
                     <h4 className={cx('name')}>
                         {product.Name}
-                        <span>{` (${product.Color} / ${product.Name})`}</span>
+                        <span>{` (${product.Color} / ${product.Type})`}</span>
                     </h4>
                 </Link>
                 {product.Sale === 0 ? (

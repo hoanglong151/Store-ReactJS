@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const areasModel = require("../model/Schema/areas.schema");
+const detailBillsModel = require("../model/Schema/detailBills.schema");
 const provincesModel = require("../model/Schema/provinces.schema");
+const districtsModel = require("../model/Schema/districts.schema");
+const addressStoresModel = require("../model/Schema/addressStores.schema");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getAreas = async (req, res) => {
@@ -53,14 +56,30 @@ const editArea = (req, res) => {
 };
 
 const deleteArea = async (req, res) => {
-  const getArea = await areasModel.findById(req.params.id).exec();
-  // if (getArea.Provinces.length === 0) {
-  areasModel.findByIdAndDelete(getArea._id, (err, data) => {
-    res.send(data);
+  const checkExistedAreaByBill = await detailBillsModel.findOne({
+    Areas: new mongoose.Types.ObjectId(req.params.id),
   });
-  // } else {
-  //   res.send({ exist: "Existed" });
-  // }
+  const checkExistedAreaByProvince = await provincesModel.findOne({
+    Areas: new mongoose.Types.ObjectId(req.params.id),
+  });
+  const checkExistedAreaByDistrict = await districtsModel.findOne({
+    Areas: new mongoose.Types.ObjectId(req.params.id),
+  });
+  const checkExistedAreaByAddressStore = await addressStoresModel.findOne({
+    Areas: new mongoose.Types.ObjectId(req.params.id),
+  });
+  if (
+    checkExistedAreaByBill ||
+    checkExistedAreaByProvince ||
+    checkExistedAreaByDistrict ||
+    checkExistedAreaByAddressStore
+  ) {
+    res.json({ Exist: "Vùng Miền Đang Được Sử Dụng. Không Thể Xóa" });
+  } else {
+    areasModel.findByIdAndDelete(req.params.id, (err, data) => {
+      res.send(data);
+    });
+  }
 };
 
 const searchArea = async (req, res) => {

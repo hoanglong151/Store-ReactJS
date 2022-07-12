@@ -27,7 +27,14 @@ function ProductDetail() {
                     {
                         Color: next.Color,
                         Types: [
-                            { _id: next._id, Type: next.Name, Amount: next.Amount, Price: next.Price, Sale: next.Sale },
+                            {
+                                _id: next._id,
+                                Images: next.Images,
+                                Type: next.Name,
+                                Amount: next.Amount,
+                                Price: next.Price,
+                                Sale: next.Sale,
+                            },
                         ],
                     },
                 ];
@@ -40,6 +47,7 @@ function ProductDetail() {
                             ...pre[findIndexPre].Types,
                             {
                                 _id: next._id,
+                                Images: next.Images,
                                 Type: next.Name,
                                 Amount: next.Amount,
                                 Price: next.Price,
@@ -51,7 +59,14 @@ function ProductDetail() {
                     pre.push({
                         Color: next.Color,
                         Types: [
-                            { _id: next._id, Type: next.Name, Amount: next.Amount, Price: next.Price, Sale: next.Sale },
+                            {
+                                _id: next._id,
+                                Images: next.Images,
+                                Type: next.Name,
+                                Amount: next.Amount,
+                                Price: next.Price,
+                                Sale: next.Sale,
+                            },
                         ],
                     });
                 }
@@ -67,6 +82,7 @@ function ProductDetail() {
             _id: product._id,
             Color: product.Color,
             Type: product.Type,
+            Images: product.Images,
             Amount: product.Amount,
             Price: product.Price,
             Sale: product.Sale,
@@ -86,7 +102,7 @@ function ProductDetail() {
         const itemProduct = {
             _id: product.ID_Product,
             Name: product.Name,
-            Image: product.Image,
+            Image: type.Images,
             Price: type.Price,
             Sale: type.Sale,
             Description: type.Type,
@@ -100,7 +116,7 @@ function ProductDetail() {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('images')}>
-                <Sliders data={product.Image || []} />
+                <Sliders data={typeSelect.Images || []} />
             </div>
             <div className={cx('content')}>
                 <h1 className={cx('content__header--title')}>Giới Thiệu Sản Phẩm</h1>

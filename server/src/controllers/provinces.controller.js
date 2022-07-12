@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 const provincesModel = require("../model/Schema/provinces.schema");
+const detailBillsModel = require("../model/Schema/detailBills.schema");
+const districtsModel = require("../model/Schema/districts.schema");
+const addressStoresModel = require("../model/Schema/addressStores.schema");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getProvinces = async (req, res) => {
@@ -58,10 +61,26 @@ const editProvince = (req, res) => {
 };
 
 const deleteProvince = async (req, res) => {
-  const getProvince = await provincesModel.findById(req.params.id).exec();
-  provincesModel.findByIdAndDelete(getProvince._id, (err, data) => {
-    res.json(data);
+  const checkExistedProvinceByBill = await detailBillsModel.findOne({
+    Provinces: new mongoose.Types.ObjectId(req.params.id),
   });
+  const checkExistedProvinceByDistrict = await districtsModel.findOne({
+    Provinces: new mongoose.Types.ObjectId(req.params.id),
+  });
+  const checkExistedProvinceByAddressStore = await addressStoresModel.findOne({
+    Provinces: new mongoose.Types.ObjectId(req.params.id),
+  });
+  if (
+    checkExistedProvinceByBill ||
+    checkExistedProvinceByDistrict ||
+    checkExistedProvinceByAddressStore
+  ) {
+    res.json({ Exist: "Tỉnh/Thành Đang Được Sử Dụng. Không Thể Xóa" });
+  } else {
+    provincesModel.findByIdAndDelete(req.params.id, (err, data) => {
+      res.json(data);
+    });
+  }
 };
 
 const searchProvince = async (req, res) => {

@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const productsModel = require("../model/Schema/products.schema");
-const categoriesModel = require("../model/Schema/categories.schema");
-const firmsModel = require("../model/Schema/firms.schema");
 const typeProductsModel = require("../model/Schema/typeProducts.schema");
+const detailBillsModel = require("../model/Schema/detailBills.schema");
 const { storage } = require("../configs/connectFirebase.config");
 const {
   ref,
@@ -69,66 +68,59 @@ const getProducts = async (req, res) => {
 const addProduct = async (req, res) => {
   const id = new mongoose.Types.ObjectId().toString();
   const typesProduct = JSON.parse(req.body.typesProduct);
+  const newTypesProduct = typesProduct.map((type, index) => {
+    const data = req.files.filter((file) => {
+      return file.fieldname === `typeImage${index}`;
+    });
+    type.Images = data;
+    return type;
+  });
 
   const product = {
     _id: id,
-    Image: [],
     Name: req.body.name,
     Description: req.body.description,
     Category_ID: req.body.category_Id.split(","),
     Firm_ID: req.body.firm_Id,
   };
-
-  await Promise.all(
-    req.files.map(async (image, index) => {
-      const metadata = {
-        contentType: image.mimetype,
-      };
-      const storageRef = ref(storage, `/images/${id}-${uuid.v1()}`);
-      await uploadBytes(storageRef, image.buffer, metadata).then((snapshot) => {
-        console.log("Uploaded a blob or file! ", snapshot);
-      });
-      await getDownloadURL(storageRef)
-        .then((url) => {
-          return product.Image.push(url);
-        })
-        .catch((error) => console.log("Error: ", error));
-    })
-  );
-
   try {
     await Promise.all(
-      product.Category_ID.map(async (category, index) => {
-        categoriesModel.findByIdAndUpdate(
-          category,
-          { $push: { Products: product._id } },
-          (err, cate) => {
-            if (err) return err;
-          }
+      newTypesProduct.map(async (type) => {
+        const idType = new mongoose.Types.ObjectId().toString();
+        const images = [];
+        await Promise.all(
+          type.Images.map(async (image) => {
+            const metadata = {
+              contentType: image.mimetype,
+            };
+            const storageRef = ref(storage, `/images/${id}-${uuid.v1()}`);
+            await uploadBytes(storageRef, image.buffer, metadata).then(
+              (snapshot) => {
+                console.log("Uploaded a blob or file! ", snapshot);
+              }
+            );
+            await getDownloadURL(storageRef)
+              .then((url) => {
+                return images.push(url);
+              })
+              .catch((error) => console.log("Error: ", error));
+          })
         );
+        const newType = {
+          _id: idType,
+          Color: type.Color,
+          Name: type.Name,
+          Price: type.Price,
+          Sale: type.Sale,
+          Amount: type.Amount,
+          Images: images,
+          Sold: type.Sold,
+          Product: id,
+        };
+        return await typeProductsModel.create(newType);
       })
     );
-
-    firmsModel.findByIdAndUpdate(
-      product.Firm_ID,
-      { $push: { Products: product._id } },
-      (err, firm) => {
-        if (err) return err;
-      }
-    );
-
-    typesProduct.map(async (type) => {
-      const idType = new mongoose.Types.ObjectId().toString();
-      const newType = {
-        _id: idType,
-        ...type,
-        Product: id,
-      };
-      return await typeProductsModel.create(newType);
-    });
-
     const newProduct = await productsModel.create(product);
-
     res.json(newProduct);
   } catch (err) {
     console.log("Err: ", err);
@@ -138,48 +130,20 @@ const addProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
   const typesProduct = JSON.parse(req.body.typesProduct);
+  const newTypesProduct = typesProduct.map((type, index) => {
+    const data = req.files.filter((file) => {
+      return file.fieldname === `typeImage${index}`;
+    });
+    type.Images = data;
+    return type;
+  });
   const editProduct = {
     _id: req.body.id,
-    Image: req.files.length === 0 ? req.body.images.split(",") : [],
     Name: req.body.name,
     Description: req.body.description,
     Category_ID: req.body.category_Id.split(","),
     Firm_ID: req.body.firm_Id,
   };
-
-  if (req.files.length !== 0) {
-    const arrrayImages = req.body.imagesOld.split(",");
-    arrrayImages.map((image, index) => {
-      const fileRef = ref(storage, image);
-      const desertRef = ref(storage, fileRef.fullPath);
-      deleteObject(desertRef)
-        .then(() => {
-          console.log("Deteled Old Image");
-        })
-        .catch((error) => {
-          console.log("Oh No");
-        });
-    });
-
-    await Promise.all(
-      req.files.map(async (image, index) => {
-        const metadata = {
-          contentType: image.mimetype,
-        };
-        const storageRef = ref(storage, `/images/${req.body.id}-${uuid.v1()}`);
-        await uploadBytes(storageRef, image.buffer, metadata).then(
-          (snapshot) => {
-            console.log("Uploaded a blob or file! ", snapshot);
-          }
-        );
-        await getDownloadURL(storageRef)
-          .then((url) => {
-            return editProduct.Image.push(url);
-          })
-          .catch((error) => console.log("Error: ", error));
-      })
-    );
-  }
 
   try {
     const getTypesOfProduct = await typeProductsModel.find({
@@ -207,10 +171,50 @@ const editProduct = async (req, res) => {
       })
     );
 
+    if (req.body.imagesOld) {
+      const arrrayImages = req.body.imagesOld.split(",");
+      arrrayImages.map((image, index) => {
+        const fileRef = ref(storage, image);
+        const desertRef = ref(storage, fileRef.fullPath);
+        deleteObject(desertRef)
+          .then(() => {
+            console.log("Deteled Old Image");
+          })
+          .catch((error) => {
+            console.log("Oh No");
+          });
+      });
+    }
+
     await Promise.all(
-      typesProduct.map(async (type, index) => {
+      newTypesProduct.map(async (type, index) => {
         if (!type._id && !type.Product) {
           const idType = new mongoose.Types.ObjectId().toString();
+          const images = [];
+          if (req.files.length !== 0) {
+            await Promise.all(
+              req.files.map(async (image, index) => {
+                const metadata = {
+                  contentType: image.mimetype,
+                };
+                const storageRef = ref(
+                  storage,
+                  `/images/${req.body.id}-${uuid.v1()}`
+                );
+                await uploadBytes(storageRef, image.buffer, metadata).then(
+                  (snapshot) => {
+                    console.log("Uploaded a blob or file! ", snapshot);
+                  }
+                );
+                await getDownloadURL(storageRef)
+                  .then((url) => {
+                    return images.push(url);
+                  })
+                  .catch((error) => console.log("Error: ", error));
+              })
+            );
+          }
+
           const typePro = {
             _id: idType,
             Name: type.Name,
@@ -219,9 +223,60 @@ const editProduct = async (req, res) => {
             Sale: type.Sale,
             Amount: type.Amount,
             Sold: type.Sold,
+            Images: images,
             Product: req.body.id,
           };
           typeProductsModel.create(typePro);
+        } else if (
+          type._id &&
+          type.Product &&
+          typeof type.Images[0] === "object"
+        ) {
+          const images = [];
+          if (req.files.length !== 0) {
+            await Promise.all(
+              req.files.map(async (image, index) => {
+                const metadata = {
+                  contentType: image.mimetype,
+                };
+                const storageRef = ref(
+                  storage,
+                  `/images/${req.body.id}-${uuid.v1()}`
+                );
+                await uploadBytes(storageRef, image.buffer, metadata).then(
+                  (snapshot) => {
+                    console.log("Uploaded a blob or file! ", snapshot);
+                  }
+                );
+                await getDownloadURL(storageRef)
+                  .then((url) => {
+                    return images.push(url);
+                  })
+                  .catch((error) => console.log("Error: ", error));
+              })
+            );
+          }
+
+          const updateTypePro = {
+            Name: type.Name,
+            Color: type.Color,
+            Price: type.Price,
+            Sale: type.Sale,
+            Amount: type.Amount,
+            Sold: type.Sold,
+            Images: images,
+            Product: req.body.id,
+          };
+          typeProductsModel.findByIdAndUpdate(
+            type._id,
+            updateTypePro,
+            (err, data) => {
+              if (err) {
+                console.log("ERR: ", err);
+                return err;
+              }
+            }
+          );
         }
       })
     );
@@ -236,21 +291,24 @@ const editProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  try {
-    const typeByProduct = await typeProductsModel.find({
-      Product: req.params.id,
-    });
-    typeByProduct.map((type) => {
-      typeProductsModel.findByIdAndDelete(type._id, (err, data) => {
-        if (err) return err;
+  const detailBills = await detailBillsModel.find().exec();
+  const productExistInBill = detailBills
+    .map((detailBill) => {
+      const result = detailBill.Cart.cartProducts.find((product) => {
+        return product._id.toString() === req.params.id;
       });
-    });
-
-    const result = await productsModel.findByIdAndDelete(
-      req.params.id,
-      (err, data) => {
-        if (err) return err;
-        data.Image.map((image, index) => {
+      if (result) {
+        return result;
+      }
+    })
+    .filter((item) => item !== undefined);
+  if (productExistInBill.length === 0) {
+    try {
+      const typeByProduct = await typeProductsModel.find({
+        Product: req.params.id,
+      });
+      typeByProduct.map((type) => {
+        type.Images.map((image, index) => {
           const fileRef = ref(storage, image);
           const desertRef = ref(storage, fileRef.fullPath);
           deleteObject(desertRef)
@@ -261,11 +319,20 @@ const deleteProduct = async (req, res) => {
               console.log("Oh No");
             });
         });
-      }
-    );
-    res.status(200).json(result);
-  } catch (err) {
-    return err;
+        typeProductsModel.findByIdAndDelete(type._id, (err, data) => {
+          if (err) return err;
+        });
+      });
+
+      await productsModel.findByIdAndDelete(req.params.id, (err, data) => {
+        if (err) return err;
+        res.status(200).json(data);
+      });
+    } catch (err) {
+      return err;
+    }
+  } else {
+    res.json({ Exist: "Sản Phẩm Được Tạo Trong Hóa Đơn Không Thể Xóa" });
   }
 };
 
@@ -289,12 +356,38 @@ const searchProduct = async (req, res) => {
       return removeUnicodeName.toLowerCase().includes(removeUnicodeSearch);
     }
   });
-  const totalPage = Math.ceil(data.length / parseInt(req.query.size));
-  res.send({ data: data, totalPage: totalPage });
+
+  const newProducts = Promise.all(
+    data.map(async (product) => {
+      const typeOfProduct = await typeProductsModel.find({
+        Product: product._id,
+      });
+      return {
+        ...product._doc,
+        TypesProduct: typeOfProduct,
+      };
+    })
+  );
+
+  newProducts
+    .then((products) => {
+      productsModel.countDocuments((err, total) => {
+        if (err) {
+          console.log("Err: ", err);
+          return err;
+        }
+        if (total) {
+          const totalPage = Math.ceil(data.length / parseInt(req.query.size));
+          res.json({ data: products, totalPage: totalPage });
+        }
+      });
+    })
+    .catch((err) => {
+      res.status(404);
+    });
 };
 
 const uploadImage = async (req, res) => {
-  console.log(req.file);
   const metadata = {
     contentType: req.file.mimetype,
   };
@@ -307,23 +400,6 @@ const uploadImage = async (req, res) => {
       res.json(url);
     })
     .catch((error) => console.log("Error: ", error));
-
-  // await Promise.all(
-  //   req.files.map(async (image, index) => {
-  //     const metadata = {
-  //       contentType: image.mimetype,
-  //     };
-  //     const storageRef = ref(storage, `/description/${uuid.v1()}`);
-  //     await uploadBytes(storageRef, image.buffer, metadata).then((snapshot) => {
-  //       console.log("Uploaded a blob or file! ", snapshot);
-  //     });
-  //     await getDownloadURL(storageRef)
-  //       .then((url) => {
-  //         return product.Image.push(url);
-  //       })
-  //       .catch((error) => console.log("Error: ", error));
-  //   })
-  // );
 };
 
 module.exports = {

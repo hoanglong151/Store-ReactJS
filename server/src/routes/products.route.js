@@ -15,12 +15,7 @@ const {
 
 router.get("/", getProducts);
 
-router.post(
-  "/addProduct",
-  validateToken,
-  upload.array("images", 6),
-  addProduct
-);
+router.post("/addProduct", validateToken, upload.any(), addProduct);
 
 router.post(
   "/uploadImg",
@@ -29,12 +24,7 @@ router.post(
   uploadImage
 );
 
-router.patch(
-  "/editProduct",
-  validateToken,
-  upload.array("images", 6),
-  editProduct
-);
+router.patch("/editProduct", validateToken, upload.any(), editProduct);
 
 router.delete("/deleteProduct/:id", validateToken, deleteProduct);
 

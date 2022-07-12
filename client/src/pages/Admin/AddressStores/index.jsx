@@ -169,15 +169,17 @@ function AddressStores() {
             if (result.isConfirmed) {
                 try {
                     const result = await addressStoresApi.deleteAddressStore(store._id);
-                    if (result.exist) {
+                    if (result.Exist) {
                         DeleteSwal.fire({
-                            title: 'Cửa Hàng Đang Được Sử Dụng',
+                            icon: 'error',
+                            title: result.Exist,
                             customClass: {
                                 popup: `${cx('popup')}`,
                             },
                         });
                     } else {
                         DeleteSwal.fire({
+                            icon: 'success',
                             title: 'Cửa Hàng Đã Được Xóa',
                             customClass: {
                                 popup: `${cx('popup')}`,
