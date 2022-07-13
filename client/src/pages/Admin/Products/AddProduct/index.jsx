@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { ToastContainer, toast } from 'react-toastify';
 import productsApi from '~/api/productsApi';
 import { useNavigate } from 'react-router-dom';
 import Label from '~/components/Form/Label/Label';
@@ -24,6 +25,7 @@ function AddProduct() {
     const [categories, setCategories] = useState([]);
     const [statusUpdateType, setStatusUpdateType] = useState(false);
     const [updateType, setUpdateType] = useState({});
+    const [validateTypeProduct, setValidateTypeProduct] = useState(true);
     const navigate = useNavigate();
 
     const getCategories = async () => {
@@ -65,15 +67,12 @@ function AddProduct() {
 
     const validationSchema = Yup.object().shape({
         name: Yup.string('Nhập Tên Sản Phẩm').required('Vui Lòng Nhập Tên Sản Phẩm'),
-        // price: Yup.number().min(0, 'Tối thiếu 0đ').required('Vui Lòng Nhập Giá Sản Phẩm').integer(),
-        // amount: Yup.number().min(1, 'Tối thiếu 1 sản phẩm').required('Vui Lòng Nhập số lượng Sản Phẩm').integer(),
+        category_Id: Yup.array().min(1, 'Vui Lòng Chọn Danh Mục'),
+        firm_Id: Yup.string().required('Vui Lòng Chọn Hãng'),
         description: Yup.string().required('Vui Lòng Nhập Mô Tả Sản Phẩm'),
-        // images: Yup.array().min(1, 'Không chọn hình đòi tạo sản phẩm ?'),
     });
-
     const formik = useFormik({
         initialValues: {
-            images: [],
             description: '',
             category_Id: [],
             firm_Id: '',
@@ -91,21 +90,35 @@ function AddProduct() {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             const submit = async () => {
-                const fd = new FormData();
-                for (let key in values) {
-                    fd.append(key, values[key]);
-                }
-                typesProduct.map((type, index) => {
-                    type.Images.map((image) => {
-                        fd.append(`typeImage${index}`, image);
+                if (typesProduct.length !== 0) {
+                    const fd = new FormData();
+                    for (let key in values) {
+                        fd.append(key, values[key]);
+                    }
+                    typesProduct.map((type, index) => {
+                        type.Images.map((image) => {
+                            fd.append(`typeImage${index}`, image);
+                        });
                     });
-                });
-                fd.append('typesProduct', JSON.stringify(typesProduct));
-                try {
-                    await productsApi.addProduct(fd);
-                    navigate('/Admin/Products');
-                } catch (err) {
-                    throw Error(err.message);
+                    fd.append('typesProduct', JSON.stringify(typesProduct));
+                    try {
+                        const result = await productsApi.addProduct(fd);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist} 🦄`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            navigate('/Admin/Products');
+                        }
+                    } catch (err) {
+                        throw Error(err.message);
+                    }
                 }
             };
             submit();
@@ -130,6 +143,7 @@ function AddProduct() {
             formik.values.types.price = formik.values.types.price;
             formik.values.types.sale = formik.values.types.sale;
             formik.values.types.amount = 0;
+            setValidateTypeProduct(false);
         }
     };
 
@@ -213,6 +227,7 @@ function AddProduct() {
 
     return (
         <div className={cx('wrapper')}>
+            <ToastContainer />
             <h1 className={cx('header')}>Tạo Sản Phẩm</h1>
             <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
                 <Label className={cx('form-label')}>Tên Sản Phẩm</Label>
@@ -225,8 +240,14 @@ function AddProduct() {
                 />
                 {formik.errors.name && formik.touched.name ? <ErrorMessage>{formik.errors.name}</ErrorMessage> : null}
                 <Label className={cx('form-label')}>Danh Mục</Label>
+                {formik.errors.category_Id && formik.touched.category_Id ? (
+                    <ErrorMessage>{formik.errors.category_Id}</ErrorMessage>
+                ) : null}
                 <Selects onChangeSelect={handleSelectCategory} data={optionsCate} multiple />
                 <Label className={cx('form-label')}>Hãng</Label>
+                {formik.errors.firm_Id && formik.touched.firm_Id ? (
+                    <ErrorMessage>{formik.errors.firm_Id}</ErrorMessage>
+                ) : null}
                 <Selects onChangeSelect={handleSelectFirm} data={optionsFirm} multiple={false} />
                 <Label className={cx('form-label')}>Loại</Label>
                 <Accordion
@@ -240,8 +261,13 @@ function AddProduct() {
                     reviewImages={reviewImages}
                     statusUpdateType={statusUpdateType}
                 />
+                {console.log(validateTypeProduct)}
+                {validateTypeProduct ? <ErrorMessage>Vui Lòng Tạo Ít Nhất 1 Loại Sản Phẩm</ErrorMessage> : null}
                 <Label className={cx('form-label')}>Mô Tả</Label>
                 <TextArea onChange={handleInput} />
+                {formik.errors.description && formik.touched.description ? (
+                    <ErrorMessage>{formik.errors.description}</ErrorMessage>
+                ) : null}
                 <button type="submit" className={cx('create-btn')}>
                     Tạo Sản Phẩm
                 </button>

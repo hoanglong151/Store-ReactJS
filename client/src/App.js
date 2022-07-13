@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { getCarts } from '~/app/reducerCart';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from '~/routes';

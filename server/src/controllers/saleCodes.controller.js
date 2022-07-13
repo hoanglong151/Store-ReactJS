@@ -28,32 +28,53 @@ const getSaleCodes = async (req, res) => {
   });
 };
 
-const addSaleCode = (req, res) => {
-  const id = new mongoose.Types.ObjectId().toString();
-  const area = {
-    _id: id,
+const addSaleCode = async (req, res) => {
+  const checkExistSaleCode = await saleCodesModel.findOne({
     Name: req.body.name,
-    Sale: req.body.sale,
-  };
-  saleCodesModel.create(area, (err, data) => {
-    if (err) {
-      console.log("LỖI: ", err);
-      return err;
-    }
-    res.json(data);
   });
+  if (checkExistSaleCode) {
+    res.json({ Exist: "Mã Khuyến Mãi Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const id = new mongoose.Types.ObjectId().toString();
+    const area = {
+      _id: id,
+      Name: req.body.name,
+      Sale: req.body.sale,
+    };
+    saleCodesModel.create(area, (err, data) => {
+      if (err) {
+        console.log("LỖI: ", err);
+        return err;
+      }
+      res.json(data);
+    });
+  }
 };
 
-const editSaleCode = (req, res) => {
-  const editSaleCode = {
+const editSaleCode = async (req, res) => {
+  const checkExistSaleCode = await saleCodesModel.findOne({
     Name: req.body.name,
-    Sale: req.body.sale,
-  };
-
-  saleCodesModel.findByIdAndUpdate(req.params.id, editSaleCode, (err, data) => {
-    if (err) return err;
-    res.json(data);
   });
+  if (
+    checkExistSaleCode &&
+    checkExistSaleCode._id.toString() !== req.params.id
+  ) {
+    res.json({ Exist: "Mã Khuyến Mãi Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const editSaleCode = {
+      Name: req.body.name,
+      Sale: req.body.sale,
+    };
+
+    saleCodesModel.findByIdAndUpdate(
+      req.params.id,
+      editSaleCode,
+      (err, data) => {
+        if (err) return err;
+        res.json(data);
+      }
+    );
+  }
 };
 
 const deleteSaleCode = async (req, res) => {

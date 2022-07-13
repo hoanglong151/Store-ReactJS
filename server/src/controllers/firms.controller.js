@@ -26,38 +26,48 @@ const getFirms = async (req, res) => {
   });
 };
 
-const addFirm = (req, res) => {
-  const token = req.headers.authorization.split(" ");
-  jwt.verify(token[1], "hoanglong", (err, info) => {
-    if (err) {
-      res.status(401);
-    }
-    const id = new mongoose.Types.ObjectId().toString();
-    const firm = {
-      _id: id,
-      Name: req.body.name,
-    };
-    firmsModel.create(firm, (err, data) => {
+const addFirm = async (req, res) => {
+  const checkExistFirm = await firmsModel.findOne({ Name: req.body.name });
+  if (checkExistFirm) {
+    res.json({ Exist: "Hãng Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const token = req.headers.authorization.split(" ");
+    jwt.verify(token[1], "hoanglong", (err, info) => {
       if (err) {
-        return res.status(404);
+        res.status(401);
       }
-      res.json(data);
+      const id = new mongoose.Types.ObjectId().toString();
+      const firm = {
+        _id: id,
+        Name: req.body.name,
+      };
+      firmsModel.create(firm, (err, data) => {
+        if (err) {
+          return res.status(404);
+        }
+        res.json(data);
+      });
     });
-  });
+  }
 };
 
-const editFirm = (req, res) => {
-  const editFirm = {
-    Name: req.body.name,
-  };
+const editFirm = async (req, res) => {
+  const checkExistFirm = await firmsModel.findOne({ Name: req.body.name });
+  if (checkExistFirm && checkExistFirm._id.toString() !== req.params.id) {
+    res.json({ Exist: "Hãng Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const editFirm = {
+      Name: req.body.name,
+    };
 
-  firmsModel.findByIdAndUpdate(req.params.id, editFirm, async (err, data) => {
-    try {
-      res.json(data);
-    } catch (err) {
-      res.status(404);
-    }
-  });
+    firmsModel.findByIdAndUpdate(req.params.id, editFirm, async (err, data) => {
+      try {
+        res.json(data);
+      } catch (err) {
+        res.status(404);
+      }
+    });
+  }
 };
 
 const deleteFirm = async (req, res) => {

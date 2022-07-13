@@ -28,34 +28,51 @@ const getBillStatus = async (req, res) => {
   });
 };
 
-const addBillStatus = (req, res) => {
-  const id = new mongoose.Types.ObjectId().toString();
-  const billStatus = {
-    _id: id,
+const addBillStatus = async (req, res) => {
+  const checkExistBillStatus = await billStatusModel.findOne({
     Name: req.body.name,
-  };
-  billStatusModel.create(billStatus, (err, data) => {
-    if (err) {
-      console.log("LỖI: ", err);
-      return err;
-    }
-    res.json(data);
   });
+  if (checkExistBillStatus) {
+    res.json({ Exist: "Tình Trạng Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const id = new mongoose.Types.ObjectId().toString();
+    const billStatus = {
+      _id: id,
+      Name: req.body.name,
+    };
+    billStatusModel.create(billStatus, (err, data) => {
+      if (err) {
+        console.log("LỖI: ", err);
+        return err;
+      }
+      res.json(data);
+    });
+  }
 };
 
-const editBillStatus = (req, res) => {
-  const editBillStatus = {
+const editBillStatus = async (req, res) => {
+  const checkExistBillStatus = await billStatusModel.findOne({
     Name: req.body.name,
-  };
+  });
+  if (
+    checkExistBillStatus &&
+    checkExistBillStatus._id.toString() !== req.params.id
+  ) {
+    res.json({ Exist: "Tình Trạng Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const editBillStatus = {
+      Name: req.body.name,
+    };
 
-  billStatusModel.findByIdAndUpdate(
-    req.params.id,
-    editBillStatus,
-    (err, data) => {
-      if (err) return err;
-      res.json(data);
-    }
-  );
+    billStatusModel.findByIdAndUpdate(
+      req.params.id,
+      editBillStatus,
+      (err, data) => {
+        if (err) return err;
+        res.json(data);
+      }
+    );
+  }
 };
 
 const deleteBillStatus = async (req, res) => {

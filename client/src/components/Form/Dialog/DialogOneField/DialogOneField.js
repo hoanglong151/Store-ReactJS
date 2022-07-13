@@ -7,11 +7,12 @@ import Button from '@mui/material/Button';
 import Input from '../../Input/Input';
 
 function DialogOneField(props) {
-    const { open, onHandleCloseDialog, formik, edit, textTitle, placeholder } = props;
+    const { open, onHandleCloseDialog, formik, edit, placeholder, textTitle } = props;
+    const checkDataEdit = Object.keys(edit).length;
     return (
         <Dialog open={open} onClose={onHandleCloseDialog}>
             <form onSubmit={formik.handleSubmit}>
-                <DialogTitle>{edit ? textTitle[0] : textTitle[1]}</DialogTitle>
+                <DialogTitle>{checkDataEdit ? textTitle[1] : textTitle[0]}</DialogTitle>
                 <DialogContent>
                     <Input
                         id="name"

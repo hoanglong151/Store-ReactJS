@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { ToastContainer, toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import firmsApi from '~/api/firmsApi';
@@ -133,14 +134,42 @@ function Firms() {
             const submit = async () => {
                 try {
                     if (Object.keys(editFirmPopup).length !== 0) {
-                        await firmsApi.editFirm(values, editFirmPopup._id);
+                        const result = await firmsApi.editFirm(values, editFirmPopup._id);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenPopupCreate(false);
+                            setOpenPopupEdit(false);
+                            getFirms();
+                        }
                     } else {
-                        await firmsApi.addFirm(values);
+                        const result = await firmsApi.addFirm(values);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenPopupCreate(false);
+                            setOpenPopupEdit(false);
+                            getFirms();
+                        }
                     }
-                    formik.setFieldValue('name', '');
-                    setOpenPopupCreate(false);
-                    setOpenPopupEdit(false);
-                    getFirms();
                 } catch (err) {
                     throw err;
                 }
@@ -151,6 +180,7 @@ function Firms() {
 
     return (
         <div>
+            <ToastContainer />
             <button onClick={handleOpenPopup} className={cx('create-btn')}>
                 Tạo Hãng
             </button>

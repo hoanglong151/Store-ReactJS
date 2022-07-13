@@ -66,227 +66,245 @@ const getProducts = async (req, res) => {
 };
 
 const addProduct = async (req, res) => {
-  const id = new mongoose.Types.ObjectId().toString();
-  const typesProduct = JSON.parse(req.body.typesProduct);
-  const newTypesProduct = typesProduct.map((type, index) => {
-    const data = req.files.filter((file) => {
-      return file.fieldname === `typeImage${index}`;
-    });
-    type.Images = data;
-    return type;
-  });
-
-  const product = {
-    _id: id,
+  const checkExistProduct = await productsModel.findOne({
     Name: req.body.name,
-    Description: req.body.description,
-    Category_ID: req.body.category_Id.split(","),
-    Firm_ID: req.body.firm_Id,
-  };
-  try {
-    await Promise.all(
-      newTypesProduct.map(async (type) => {
-        const idType = new mongoose.Types.ObjectId().toString();
-        const images = [];
-        await Promise.all(
-          type.Images.map(async (image) => {
-            const metadata = {
-              contentType: image.mimetype,
-            };
-            const storageRef = ref(storage, `/images/${id}-${uuid.v1()}`);
-            await uploadBytes(storageRef, image.buffer, metadata).then(
-              (snapshot) => {
-                console.log("Uploaded a blob or file! ", snapshot);
-              }
-            );
-            await getDownloadURL(storageRef)
-              .then((url) => {
-                return images.push(url);
-              })
-              .catch((error) => console.log("Error: ", error));
-          })
-        );
-        const newType = {
-          _id: idType,
-          Color: type.Color,
-          Name: type.Name,
-          Price: type.Price,
-          Sale: type.Sale,
-          Amount: type.Amount,
-          Images: images,
-          Sold: type.Sold,
-          Product: id,
-        };
-        return await typeProductsModel.create(newType);
-      })
-    );
-    const newProduct = await productsModel.create(product);
-    res.json(newProduct);
-  } catch (err) {
-    console.log("Err: ", err);
-    res.json(err);
+    Firm_ID: new mongoose.Types.ObjectId(req.body.firm_Id),
+  });
+  if (checkExistProduct) {
+    res.json({ Exist: "Sản Phẩm Này Đã Tồn Tại Trong Danh Sách Sản Phẩm" });
+  } else {
+    const id = new mongoose.Types.ObjectId().toString();
+    const typesProduct = JSON.parse(req.body.typesProduct);
+    const newTypesProduct = typesProduct.map((type, index) => {
+      const data = req.files.filter((file) => {
+        return file.fieldname === `typeImage${index}`;
+      });
+      type.Images = data;
+      return type;
+    });
+
+    const product = {
+      _id: id,
+      Name: req.body.name,
+      Description: req.body.description,
+      Category_ID: req.body.category_Id.split(","),
+      Firm_ID: req.body.firm_Id,
+    };
+    try {
+      await Promise.all(
+        newTypesProduct.map(async (type) => {
+          const idType = new mongoose.Types.ObjectId().toString();
+          const images = [];
+          await Promise.all(
+            type.Images.map(async (image) => {
+              const metadata = {
+                contentType: image.mimetype,
+              };
+              const storageRef = ref(storage, `/images/${id}-${uuid.v1()}`);
+              await uploadBytes(storageRef, image.buffer, metadata).then(
+                (snapshot) => {
+                  console.log("Uploaded a blob or file! ", snapshot);
+                }
+              );
+              await getDownloadURL(storageRef)
+                .then((url) => {
+                  return images.push(url);
+                })
+                .catch((error) => console.log("Error: ", error));
+            })
+          );
+          const newType = {
+            _id: idType,
+            Color: type.Color,
+            Name: type.Name,
+            Price: type.Price,
+            Sale: type.Sale,
+            Amount: type.Amount,
+            Images: images,
+            Sold: type.Sold,
+            Product: id,
+          };
+          return await typeProductsModel.create(newType);
+        })
+      );
+      const newProduct = await productsModel.create(product);
+      res.json(newProduct);
+    } catch (err) {
+      console.log("Err: ", err);
+      res.json(err);
+    }
   }
 };
 
 const editProduct = async (req, res) => {
-  const typesProduct = JSON.parse(req.body.typesProduct);
-  const newTypesProduct = typesProduct.map((type, index) => {
-    const data = req.files.filter((file) => {
-      return file.fieldname === `typeImage${index}`;
-    });
-    type.Images = data;
-    return type;
-  });
-  const editProduct = {
-    _id: req.body.id,
+  const checkExistProduct = await productsModel.findOne({
     Name: req.body.name,
-    Description: req.body.description,
-    Category_ID: req.body.category_Id.split(","),
-    Firm_ID: req.body.firm_Id,
-  };
-
-  try {
-    const getTypesOfProduct = await typeProductsModel.find({
-      Product: req.body.id,
+    Firm_ID: new mongoose.Types.ObjectId(req.body.firm_Id),
+  });
+  if (checkExistProduct && checkExistProduct._id.toString() !== req.body.id) {
+    res.json({
+      Exist: "Sản Phẩm Đã Tồn Tại Trong Hệ Thống. Vui Lòng Kiểm Tra Lại",
     });
-
-    const convertIDType = getTypesOfProduct.map((type) => {
-      return type._id.toString();
-    });
-
-    const convertTypeProduct = typesProduct.map((type) => {
-      if (type._id && type.Product) {
-        return type._id;
-      } else {
-        return "";
-      }
-    });
-    await Promise.all(
-      convertIDType.map((type) => {
-        if (!convertTypeProduct.includes(type)) {
-          typeProductsModel.findByIdAndRemove(type, (err, data) => {
-            if (err) return err;
-          });
-        }
-      })
-    );
-
-    if (req.body.imagesOld) {
-      const arrrayImages = req.body.imagesOld.split(",");
-      arrrayImages.map((image, index) => {
-        const fileRef = ref(storage, image);
-        const desertRef = ref(storage, fileRef.fullPath);
-        deleteObject(desertRef)
-          .then(() => {
-            console.log("Deteled Old Image");
-          })
-          .catch((error) => {
-            console.log("Oh No");
-          });
+  } else {
+    const typesProduct = JSON.parse(req.body.typesProduct);
+    const newTypesProduct = typesProduct.map((type, index) => {
+      const data = req.files.filter((file) => {
+        return file.fieldname === `typeImage${index}`;
       });
-    }
+      type.Images = data;
+      return type;
+    });
+    const editProduct = {
+      _id: req.body.id,
+      Name: req.body.name,
+      Description: req.body.description,
+      Category_ID: req.body.category_Id.split(","),
+      Firm_ID: req.body.firm_Id,
+    };
 
-    await Promise.all(
-      newTypesProduct.map(async (type, index) => {
-        if (!type._id && !type.Product) {
-          const idType = new mongoose.Types.ObjectId().toString();
-          const images = [];
-          if (req.files.length !== 0) {
-            await Promise.all(
-              req.files.map(async (image, index) => {
-                const metadata = {
-                  contentType: image.mimetype,
-                };
-                const storageRef = ref(
-                  storage,
-                  `/images/${req.body.id}-${uuid.v1()}`
-                );
-                await uploadBytes(storageRef, image.buffer, metadata).then(
-                  (snapshot) => {
-                    console.log("Uploaded a blob or file! ", snapshot);
-                  }
-                );
-                await getDownloadURL(storageRef)
-                  .then((url) => {
-                    return images.push(url);
-                  })
-                  .catch((error) => console.log("Error: ", error));
-              })
-            );
-          }
+    try {
+      const getTypesOfProduct = await typeProductsModel.find({
+        Product: req.body.id,
+      });
 
-          const typePro = {
-            _id: idType,
-            Name: type.Name,
-            Color: type.Color,
-            Price: type.Price,
-            Sale: type.Sale,
-            Amount: type.Amount,
-            Sold: type.Sold,
-            Images: images,
-            Product: req.body.id,
-          };
-          typeProductsModel.create(typePro);
-        } else if (
-          type._id &&
-          type.Product &&
-          typeof type.Images[0] === "object"
-        ) {
-          const images = [];
-          if (req.files.length !== 0) {
-            await Promise.all(
-              req.files.map(async (image, index) => {
-                const metadata = {
-                  contentType: image.mimetype,
-                };
-                const storageRef = ref(
-                  storage,
-                  `/images/${req.body.id}-${uuid.v1()}`
-                );
-                await uploadBytes(storageRef, image.buffer, metadata).then(
-                  (snapshot) => {
-                    console.log("Uploaded a blob or file! ", snapshot);
-                  }
-                );
-                await getDownloadURL(storageRef)
-                  .then((url) => {
-                    return images.push(url);
-                  })
-                  .catch((error) => console.log("Error: ", error));
-              })
-            );
-          }
+      const convertIDType = getTypesOfProduct.map((type) => {
+        return type._id.toString();
+      });
 
-          const updateTypePro = {
-            Name: type.Name,
-            Color: type.Color,
-            Price: type.Price,
-            Sale: type.Sale,
-            Amount: type.Amount,
-            Sold: type.Sold,
-            Images: images,
-            Product: req.body.id,
-          };
-          typeProductsModel.findByIdAndUpdate(
-            type._id,
-            updateTypePro,
-            (err, data) => {
-              if (err) {
-                console.log("ERR: ", err);
-                return err;
-              }
-            }
-          );
+      const convertTypeProduct = typesProduct.map((type) => {
+        if (type._id && type.Product) {
+          return type._id;
+        } else {
+          return "";
         }
-      })
-    );
-    const newProduct = await productsModel.findByIdAndUpdate(
-      editProduct._id,
-      editProduct
-    );
-    res.json(newProduct);
-  } catch (err) {
-    res.json(err);
+      });
+      await Promise.all(
+        convertIDType.map((type) => {
+          if (!convertTypeProduct.includes(type)) {
+            typeProductsModel.findByIdAndRemove(type, (err, data) => {
+              if (err) return err;
+            });
+          }
+        })
+      );
+
+      if (req.body.imagesOld) {
+        const arrrayImages = req.body.imagesOld.split(",");
+        arrrayImages.map((image, index) => {
+          const fileRef = ref(storage, image);
+          const desertRef = ref(storage, fileRef.fullPath);
+          deleteObject(desertRef)
+            .then(() => {
+              console.log("Deteled Old Image");
+            })
+            .catch((error) => {
+              console.log("Oh No");
+            });
+        });
+      }
+
+      await Promise.all(
+        newTypesProduct.map(async (type, index) => {
+          if (!type._id && !type.Product) {
+            const idType = new mongoose.Types.ObjectId().toString();
+            const images = [];
+            if (req.files.length !== 0) {
+              await Promise.all(
+                req.files.map(async (image, index) => {
+                  const metadata = {
+                    contentType: image.mimetype,
+                  };
+                  const storageRef = ref(
+                    storage,
+                    `/images/${req.body.id}-${uuid.v1()}`
+                  );
+                  await uploadBytes(storageRef, image.buffer, metadata).then(
+                    (snapshot) => {
+                      console.log("Uploaded a blob or file! ", snapshot);
+                    }
+                  );
+                  await getDownloadURL(storageRef)
+                    .then((url) => {
+                      return images.push(url);
+                    })
+                    .catch((error) => console.log("Error: ", error));
+                })
+              );
+            }
+
+            const typePro = {
+              _id: idType,
+              Name: type.Name,
+              Color: type.Color,
+              Price: type.Price,
+              Sale: type.Sale,
+              Amount: type.Amount,
+              Sold: type.Sold,
+              Images: images,
+              Product: req.body.id,
+            };
+            typeProductsModel.create(typePro);
+          } else if (
+            type._id &&
+            type.Product &&
+            typeof type.Images[0] === "object"
+          ) {
+            const images = [];
+            if (req.files.length !== 0) {
+              await Promise.all(
+                req.files.map(async (image, index) => {
+                  const metadata = {
+                    contentType: image.mimetype,
+                  };
+                  const storageRef = ref(
+                    storage,
+                    `/images/${req.body.id}-${uuid.v1()}`
+                  );
+                  await uploadBytes(storageRef, image.buffer, metadata).then(
+                    (snapshot) => {
+                      console.log("Uploaded a blob or file! ", snapshot);
+                    }
+                  );
+                  await getDownloadURL(storageRef)
+                    .then((url) => {
+                      return images.push(url);
+                    })
+                    .catch((error) => console.log("Error: ", error));
+                })
+              );
+            }
+
+            const updateTypePro = {
+              Name: type.Name,
+              Color: type.Color,
+              Price: type.Price,
+              Sale: type.Sale,
+              Amount: type.Amount,
+              Sold: type.Sold,
+              Images: images,
+              Product: req.body.id,
+            };
+            typeProductsModel.findByIdAndUpdate(
+              type._id,
+              updateTypePro,
+              (err, data) => {
+                if (err) {
+                  console.log("ERR: ", err);
+                  return err;
+                }
+              }
+            );
+          }
+        })
+      );
+      const newProduct = await productsModel.findByIdAndUpdate(
+        editProduct._id,
+        editProduct
+      );
+      res.json(newProduct);
+    } catch (err) {
+      res.json(err);
+    }
   }
 };
 

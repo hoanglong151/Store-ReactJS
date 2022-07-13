@@ -38,32 +38,41 @@ const getCategories = async (req, res) => {
 };
 
 const addCategory = async (req, res) => {
-  const id = new mongoose.Types.ObjectId().toString();
-  const category = {
-    _id: id,
+  const checkExistCategory = await categoriesModel.findOne({
     Name: req.body.name,
-    Image: "",
-  };
-  const metadata = {
-    contentType: req.file.mimetype,
-  };
-  const storageRef = ref(storage, `/categories/${id}-${uuid.v1()}`);
-  await uploadBytes(storageRef, req.file.buffer, metadata).then((snapshot) => {
-    console.log("Uploaded a blob or file! ", snapshot);
   });
-  await getDownloadURL(storageRef)
-    .then((url) => {
-      return (category.Image = url);
-    })
-    .catch((error) => console.log("Error: ", error));
+  if (checkExistCategory) {
+    res.json({ Exist: "Danh Mục Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const id = new mongoose.Types.ObjectId().toString();
+    const category = {
+      _id: id,
+      Name: req.body.name,
+      Image: "",
+    };
+    const metadata = {
+      contentType: req.file.mimetype,
+    };
+    const storageRef = ref(storage, `/categories/${id}-${uuid.v1()}`);
+    await uploadBytes(storageRef, req.file.buffer, metadata).then(
+      (snapshot) => {
+        console.log("Uploaded a blob or file! ", snapshot);
+      }
+    );
+    await getDownloadURL(storageRef)
+      .then((url) => {
+        return (category.Image = url);
+      })
+      .catch((error) => console.log("Error: ", error));
 
-  categoriesModel.create(category, (err, cate) => {
-    if (err) {
-      console.log("LỖI: ", err);
-      return err;
-    }
-    res.json(cate);
-  });
+    categoriesModel.create(category, (err, cate) => {
+      if (err) {
+        console.log("LỖI: ", err);
+        return err;
+      }
+      res.json(cate);
+    });
+  }
 };
 
 const deleteCategory = async (req, res) => {
@@ -86,48 +95,58 @@ const deleteCategory = async (req, res) => {
 };
 
 const editCategory = async (req, res) => {
-  const category = {
+  const checkExistCategory = await categoriesModel.findOne({
     Name: req.body.name,
-    Image: req.body.image,
-  };
-  if (req.file) {
-    const getCategory = await categoriesModel.findById(req.params.id).exec();
-
-    const fileRef = ref(storage, getCategory.Image);
-    const desertRef = ref(storage, fileRef.fullPath);
-    deleteObject(desertRef)
-      .then(() => {
-        console.log("Deteled Old Image");
-      })
-      .catch((error) => {
-        console.log("Oh No");
-      });
-
-    const metadata = {
-      contentType: req.file.mimetype,
-    };
-    const storageRef = ref(
-      storage,
-      `/categories/${req.params.id}-${uuid.v1()}`
-    );
-    await uploadBytes(storageRef, req.file.buffer, metadata).then(
-      (snapshot) => {
-        console.log("Uploaded a blob or file! ", snapshot);
-      }
-    );
-    await getDownloadURL(storageRef)
-      .then((url) => {
-        return (category.Image = url);
-      })
-      .catch((error) => console.log("Error: ", error));
-  }
-  categoriesModel.findByIdAndUpdate(req.params.id, category, (err, cate) => {
-    if (err) {
-      console.log("LỖI: ", err);
-      return err;
-    }
-    res.json(cate);
   });
+  if (
+    checkExistCategory &&
+    checkExistCategory._id.toString() !== req.params.id
+  ) {
+    res.json({ Exist: "Danh Mục Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const category = {
+      Name: req.body.name,
+      Image: req.body.image,
+    };
+    if (req.file) {
+      const getCategory = await categoriesModel.findById(req.params.id).exec();
+
+      const fileRef = ref(storage, getCategory.Image);
+      const desertRef = ref(storage, fileRef.fullPath);
+      deleteObject(desertRef)
+        .then(() => {
+          console.log("Deteled Old Image");
+        })
+        .catch((error) => {
+          console.log("Oh No");
+        });
+
+      const metadata = {
+        contentType: req.file.mimetype,
+      };
+      const storageRef = ref(
+        storage,
+        `/categories/${req.params.id}-${uuid.v1()}`
+      );
+      await uploadBytes(storageRef, req.file.buffer, metadata).then(
+        (snapshot) => {
+          console.log("Uploaded a blob or file! ", snapshot);
+        }
+      );
+      await getDownloadURL(storageRef)
+        .then((url) => {
+          return (category.Image = url);
+        })
+        .catch((error) => console.log("Error: ", error));
+    }
+    categoriesModel.findByIdAndUpdate(req.params.id, category, (err, cate) => {
+      if (err) {
+        console.log("LỖI: ", err);
+        return err;
+      }
+      res.json(cate);
+    });
+  }
 };
 
 const searchCategory = async (req, res) => {

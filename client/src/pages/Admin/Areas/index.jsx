@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import DialogOneField from '~/components/Form/Dialog/DialogOneField/DialogOneField';
 import { useFormik } from 'formik';
 import TableTwoColumn from '~/components/Tables/TableTwoColumn';
@@ -55,6 +56,7 @@ function Areas() {
             setOpenEdit(true);
         } else {
             setOpenCreate(true);
+            setEditArea({});
         }
     };
 
@@ -134,14 +136,42 @@ function Areas() {
             const submit = async () => {
                 try {
                     if (Object.keys(editArea).length !== 0) {
-                        await areasApi.editArea(values, editArea._id);
+                        const result = await areasApi.editArea(values, editArea._id);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            getAreas();
+                        }
                     } else {
-                        await areasApi.addArea(values);
+                        const result = await areasApi.addArea(values);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            getAreas();
+                        }
                     }
-                    formik.setFieldValue('name', '');
-                    setOpenCreate(false);
-                    setOpenEdit(false);
-                    getAreas();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -151,6 +181,7 @@ function Areas() {
     });
     return (
         <div>
+            <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo vùng miền
             </button>

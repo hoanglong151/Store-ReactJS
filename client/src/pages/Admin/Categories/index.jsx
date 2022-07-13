@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import categoriesApi from '~/api/categoriesApi';
 import * as Yup from 'yup';
+import { ToastContainer, toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import TableCategory from '~/components/Tables/TableCategory';
 import DialogCategory from '~/components/Form/Dialog/DialogCategory/DialogCategory';
@@ -160,15 +161,43 @@ function Categories() {
                         fd.append(key, values[key]);
                     }
                     if (!formik.initialValues.name) {
-                        await categoriesApi.addCategory(fd);
-                        formik.setFieldValue('name', '');
+                        const result = await categoriesApi.addCategory(fd);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setCateClick({});
+                            setCreateCate(false);
+                            setEditCate(false);
+                            getCategories();
+                        }
                     } else {
-                        await categoriesApi.editCategory(fd, values.id);
+                        const result = await categoriesApi.editCategory(fd, values.id);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            setCateClick({});
+                            setCreateCate(false);
+                            setEditCate(false);
+                            getCategories();
+                        }
                     }
-                    setCateClick({});
-                    setCreateCate(false);
-                    setEditCate(false);
-                    getCategories();
                 } catch (Error) {
                     alert('Error: ', Error);
                 }
@@ -179,6 +208,7 @@ function Categories() {
 
     return (
         <div className={cx('wrapper')}>
+            <ToastContainer />
             <button onClick={handleClickOpen} className={cx('create-btn')}>
                 Tạo Danh Mục
             </button>

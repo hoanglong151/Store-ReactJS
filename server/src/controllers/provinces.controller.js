@@ -32,32 +32,55 @@ const getProvinces = async (req, res) => {
   });
 };
 
-const addProvince = (req, res) => {
-  const id = new mongoose.Types.ObjectId().toString();
-  const province = {
-    _id: id,
+const addProvince = async (req, res) => {
+  const checkExistProvince = await provincesModel.findOne({
     Name: req.body.name,
-    Areas: req.body.area_Id,
-  };
-  provincesModel.create(province, (err, data) => {
-    if (err) {
-      console.log("LỖI: ", err);
-      return err;
-    }
-    res.json(data);
+    Areas: new mongoose.Types.ObjectId(req.body.area_Id),
   });
+  if (checkExistProvince) {
+    res.json({ Exist: "Tình Thành Đã Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const id = new mongoose.Types.ObjectId().toString();
+    const province = {
+      _id: id,
+      Name: req.body.name,
+      Areas: req.body.area_Id,
+    };
+    provincesModel.create(province, (err, data) => {
+      if (err) {
+        console.log("LỖI: ", err);
+        return err;
+      }
+      res.json(data);
+    });
+  }
 };
 
-const editProvince = (req, res) => {
-  const editProvince = {
+const editProvince = async (req, res) => {
+  const checkExistProvince = await provincesModel.findOne({
     Name: req.body.name,
-    Areas: req.body.area_Id,
-  };
-
-  provincesModel.findByIdAndUpdate(req.params.id, editProvince, (err, data) => {
-    if (err) return err;
-    res.json(data);
+    Areas: new mongoose.Types.ObjectId(req.body.area_Id),
   });
+  if (
+    checkExistProvince &&
+    checkExistProvince._id.toString() !== req.params.id
+  ) {
+    res.json({ Exist: "Tình Thành Đã Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const editProvince = {
+      Name: req.body.name,
+      Areas: req.body.area_Id,
+    };
+
+    provincesModel.findByIdAndUpdate(
+      req.params.id,
+      editProvince,
+      (err, data) => {
+        if (err) return err;
+        res.json(data);
+      }
+    );
+  }
 };
 
 const deleteProvince = async (req, res) => {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { ToastContainer, toast } from 'react-toastify';
 import saleCodesApi from '~/api/saleCodesApi';
 import DialogSaleCode from '~/components/Form/Dialog/DialogSaleCode/DialogSaleCode';
 import TableSaleCode from '~/components/Tables/TableSaleCode';
@@ -52,6 +53,7 @@ function SaleCodes() {
             setOpenEdit(true);
         } else {
             setOpenCreate(true);
+            setEditSaleCode({});
         }
     };
 
@@ -133,16 +135,46 @@ function SaleCodes() {
             const submit = async () => {
                 try {
                     if (editSaleCode._id) {
-                        await saleCodesApi.editSaleCode(values, editSaleCode._id);
+                        const result = await saleCodesApi.editSaleCode(values, editSaleCode._id);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            formik.setFieldValue('sale', 0);
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            setEditSaleCode({});
+                            getSaleCodes();
+                        }
                     } else {
-                        await saleCodesApi.addSaleCode(values);
+                        const result = await saleCodesApi.addSaleCode(values);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            formik.setFieldValue('sale', 0);
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            setEditSaleCode({});
+                            getSaleCodes();
+                        }
                     }
-                    formik.setFieldValue('name', '');
-                    formik.setFieldValue('sale', 0);
-                    setOpenCreate(false);
-                    setOpenEdit(false);
-                    setEditSaleCode({});
-                    getSaleCodes();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -152,6 +184,7 @@ function SaleCodes() {
     });
     return (
         <div>
+            <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo mã khuyến mãi
             </button>
@@ -162,7 +195,6 @@ function SaleCodes() {
                 open={openCreate || openEdit}
                 onHandleCloseDialog={handleCloseDialog}
                 edit={editSaleCode}
-                textTitle={['Tạo mã khuyến mãi', 'Cập nhật mã khuyến mãi']}
             />
             <TableSaleCode
                 data={saleCodes.saleCodesSearch}

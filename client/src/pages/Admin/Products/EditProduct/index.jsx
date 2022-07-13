@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
@@ -88,7 +89,6 @@ function EditProduct() {
         initialValues: {
             id: productEdit?._id ? productEdit._id : '',
             name: productEdit?.Name ? productEdit.Name : '',
-            images: productEdit?.Image ? productEdit.Image : [],
             description: productEdit?.Description ? productEdit.Description : '',
             category_Id: select,
             firm_Id: productEdit.Firm_ID?.value,
@@ -117,8 +117,20 @@ function EditProduct() {
                 });
                 fd.append('typesProduct', JSON.stringify(typesProduct));
                 try {
-                    await productsApi.editProduct(fd);
-                    navigate('/Admin/Products');
+                    const result = await productsApi.editProduct(fd);
+                    if (result.Exist) {
+                        toast.error(`🦄 ${result.Exist}`, {
+                            position: 'top-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                        });
+                    } else {
+                        navigate('/Admin/Products');
+                    }
                 } catch (err) {
                     throw Error(err.message);
                 }
@@ -243,6 +255,7 @@ function EditProduct() {
 
     return (
         <div className={cx('wrapper')}>
+            <ToastContainer />
             <h1 className={cx('header')}>Cập Nhật Sản Phẩm</h1>
             <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
                 <Label className={cx('form-label')}>Tên Sản Phẩm</Label>

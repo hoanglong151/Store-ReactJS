@@ -7,11 +7,12 @@ import Button from '@mui/material/Button';
 import Input from '../../Input/Input';
 
 function DialogSaleCode(props) {
-    const { open, onHandleCloseDialog, formik, edit, textTitle } = props;
+    const { open, onHandleCloseDialog, formik, edit } = props;
+    const checkDataEdit = Object.keys(edit).length;
     return (
         <Dialog open={open} onClose={onHandleCloseDialog}>
             <form onSubmit={formik.handleSubmit}>
-                <DialogTitle>{edit ? textTitle[0] : textTitle[1]}</DialogTitle>
+                <DialogTitle>{checkDataEdit ? 'Cập Nhật Mã Khuyến Mãi' : 'Tạo Mã Khuyến Mãi'}</DialogTitle>
                 <DialogContent>
                     <Input
                         id="name"

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import DialogDistrict from '~/components/Form/Dialog/DialogDistrict/DialogDistrict';
 import { useFormik } from 'formik';
 import districtsApi from '~/api/districtsApi';
@@ -106,6 +107,7 @@ function District() {
             setOpenEdit(true);
         } else {
             setOpenCreate(true);
+            setEditDistrict({});
         }
     };
 
@@ -180,6 +182,8 @@ function District() {
             return {
                 id: editDistrict._id,
                 name: editDistrict.Name,
+                area_Id: editDistrict.Areas.value,
+                province_Id: editDistrict.Provinces.value,
             };
         } else {
             return {
@@ -197,15 +201,44 @@ function District() {
             const submit = async () => {
                 try {
                     if (editDistrict._id) {
-                        await districtsApi.editDistrict(values, editDistrict._id);
+                        const result = await districtsApi.editDistrict(values, editDistrict._id);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            setEditDistrict({});
+                            getDistricts();
+                        }
                     } else {
-                        await districtsApi.addDistrict(values);
+                        const result = await districtsApi.addDistrict(values);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            setEditDistrict({});
+                            getDistricts();
+                        }
                     }
-                    formik.setFieldValue('name', '');
-                    setOpenCreate(false);
-                    setOpenEdit(false);
-                    setEditDistrict({});
-                    getDistricts();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -215,6 +248,7 @@ function District() {
     });
     return (
         <div>
+            <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo quận/huyện
             </button>
@@ -229,6 +263,7 @@ function District() {
                 handleSelectArea={handleSelectArea}
                 handleSelectProvince={handleSelectProvince}
                 editDistrict={editDistrict}
+                textTitle={['Tạo Quận/Huyên', 'Cập nhật Quận/Huyện']}
             />
             <TableDistrict
                 districts={districts.districtsSearch}

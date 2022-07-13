@@ -35,34 +35,59 @@ const getDistricts = async (req, res) => {
   });
 };
 
-const addDistrict = (req, res) => {
-  const id = new mongoose.Types.ObjectId().toString();
-  const district = {
-    _id: id,
+const addDistrict = async (req, res) => {
+  const checkExistDistrict = await districtsModel.findOne({
     Name: req.body.name,
-    Areas: req.body.area_Id,
-    Provinces: req.body.province_Id,
-  };
-  districtsModel.create(district, (err, data) => {
-    if (err) {
-      console.log("LỖI: ", err);
-      return err;
-    }
-    res.json(data);
+    Areas: new mongoose.Types.ObjectId(req.body.area_Id),
+    Provinces: new mongoose.Types.ObjectId(req.body.province_Id),
   });
+  if (checkExistDistrict) {
+    res.json({ Exist: "Quận/Huyện Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const id = new mongoose.Types.ObjectId().toString();
+    const district = {
+      _id: id,
+      Name: req.body.name,
+      Areas: req.body.area_Id,
+      Provinces: req.body.province_Id,
+    };
+    districtsModel.create(district, (err, data) => {
+      if (err) {
+        console.log("LỖI: ", err);
+        return err;
+      }
+      res.json(data);
+    });
+  }
 };
 
-const editDistrict = (req, res) => {
-  const editDistrict = {
+const editDistrict = async (req, res) => {
+  const checkExistDistrict = await districtsModel.findOne({
     Name: req.body.name,
-    Areas: req.body.area_Id,
-    Provinces: req.body.province_Id,
-  };
-
-  districtsModel.findByIdAndUpdate(req.params.id, editDistrict, (err, data) => {
-    if (err) return err;
-    res.json(data);
+    Areas: new mongoose.Types.ObjectId(req.body.area_Id),
+    Provinces: new mongoose.Types.ObjectId(req.body.province_Id),
   });
+  if (
+    checkExistDistrict &&
+    checkExistDistrict._id.toString() !== req.params.id
+  ) {
+    res.json({ Exist: "Quận/Huyện Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const editDistrict = {
+      Name: req.body.name,
+      Areas: req.body.area_Id,
+      Provinces: req.body.province_Id,
+    };
+
+    districtsModel.findByIdAndUpdate(
+      req.params.id,
+      editDistrict,
+      (err, data) => {
+        if (err) return err;
+        res.json(data);
+      }
+    );
+  }
 };
 
 const deleteDistrict = async (req, res) => {

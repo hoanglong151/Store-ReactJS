@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import DialogProvince from '~/components/Form/Dialog/DialogProvince/DialogProvince';
 import { useFormik } from 'formik';
 import provincesApi from '~/api/provincesApi';
@@ -80,6 +81,7 @@ function Provinces() {
             setOpenEdit(true);
         } else {
             setOpenCreate(true);
+            setEditProvince({});
         }
     };
 
@@ -149,6 +151,7 @@ function Provinces() {
             return {
                 id: editProvince._id,
                 name: editProvince.Name,
+                area_Id: editProvince.Areas.value,
             };
         } else {
             return {
@@ -165,15 +168,44 @@ function Provinces() {
             const submit = async () => {
                 try {
                     if (editProvince._id) {
-                        await provincesApi.editProvince(values, editProvince._id);
+                        const result = await provincesApi.editProvince(values, editProvince._id);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            setEditProvince({});
+                            getProvinces();
+                        }
                     } else {
-                        await provincesApi.addProvince(values);
+                        const result = await provincesApi.addProvince(values);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            setEditProvince({});
+                            getProvinces();
+                        }
                     }
-                    formik.setFieldValue('name', '');
-                    setOpenCreate(false);
-                    setOpenEdit(false);
-                    setEditProvince({});
-                    getProvinces();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -183,6 +215,7 @@ function Provinces() {
     });
     return (
         <div>
+            <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo tỉnh/thành
             </button>
@@ -195,6 +228,7 @@ function Provinces() {
                 areas={newAreas}
                 handleSelectArea={handleSelectArea}
                 editProvince={editProvince}
+                textTitle={['Tạo Tỉnh/Thành', 'Cập nhật Tỉnh/Thành']}
             />
             <TableProvince
                 provinces={provinces.provincesSearch}

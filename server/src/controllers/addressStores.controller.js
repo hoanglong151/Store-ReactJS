@@ -36,40 +36,63 @@ const getAddressStores = async (req, res) => {
   });
 };
 
-const addAddressStore = (req, res) => {
-  const id = new mongoose.Types.ObjectId().toString();
-  const addressStore = {
-    _id: id,
+const addAddressStore = async (req, res) => {
+  const checkExistAddressStore = await addressStoresModel.findOne({
     Name: req.body.name,
-    Areas: req.body.area_Id,
-    Provinces: req.body.province_Id,
-    Districts: req.body.district_Id,
-  };
-  addressStoresModel.create(addressStore, (err, data) => {
-    if (err) {
-      console.log("LỖI: ", err);
-      return err;
-    }
-    res.json(data);
+    Areas: new mongoose.Types.ObjectId(req.body.area_Id),
+    Provinces: new mongoose.Types.ObjectId(req.body.province_Id),
+    Districts: new mongoose.Types.ObjectId(req.body.district_Id),
   });
+  if (checkExistAddressStore) {
+    res.json({ Exist: "Địa Chỉ Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const id = new mongoose.Types.ObjectId().toString();
+    const addressStore = {
+      _id: id,
+      Name: req.body.name,
+      Areas: req.body.area_Id,
+      Provinces: req.body.province_Id,
+      Districts: req.body.district_Id,
+    };
+    addressStoresModel.create(addressStore, (err, data) => {
+      if (err) {
+        console.log("LỖI: ", err);
+        return err;
+      }
+      res.json(data);
+    });
+  }
 };
 
-const editAddressStore = (req, res) => {
-  const editAddressStore = {
+const editAddressStore = async (req, res) => {
+  const checkExistAddressStore = await addressStoresModel.findOne({
     Name: req.body.name,
-    Areas: req.body.area_Id,
-    Provinces: req.body.province_Id,
-    Districts: req.body.district_Id,
-  };
+    Areas: new mongoose.Types.ObjectId(req.body.area_Id),
+    Provinces: new mongoose.Types.ObjectId(req.body.province_Id),
+    Districts: new mongoose.Types.ObjectId(req.body.district_Id),
+  });
+  if (
+    checkExistAddressStore &&
+    checkExistAddressStore._id.toString() !== req.params.id
+  ) {
+    res.json({ Exist: "Địa Chỉ Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const editAddressStore = {
+      Name: req.body.name,
+      Areas: req.body.area_Id,
+      Provinces: req.body.province_Id,
+      Districts: req.body.district_Id,
+    };
 
-  addressStoresModel.findByIdAndUpdate(
-    req.params.id,
-    editAddressStore,
-    (err, data) => {
-      if (err) return err;
-      res.json(data);
-    }
-  );
+    addressStoresModel.findByIdAndUpdate(
+      req.params.id,
+      editAddressStore,
+      (err, data) => {
+        if (err) return err;
+        res.json(data);
+      }
+    );
+  }
 };
 
 const deleteAddressStore = async (req, res) => {

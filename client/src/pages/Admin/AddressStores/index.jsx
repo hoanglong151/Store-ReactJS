@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import DialogAddressStore from '~/components/Form/Dialog/DialogAddressStore/DialogAddressStore';
 import { useFormik } from 'formik';
 import addressStoresApi from '~/api/addressStoresApi';
@@ -218,19 +219,21 @@ function AddressStores() {
             setTotalPage({ ...totalPage, pageSearch: totalPage.pageAll });
         }
     };
-
     const objectAddressStore = () => {
         if (editAddressStore._id) {
             return {
                 id: editAddressStore._id,
                 name: editAddressStore.Name,
+                area_Id: editAddressStore.Areas.value,
+                province_Id: editAddressStore.Provinces.value,
+                district_Id: editAddressStore.Districts.value,
             };
         } else {
             return {
                 name: '',
                 area_Id: '',
                 province_Id: '',
-                addressStore_Id: '',
+                district_Id: '',
             };
         }
     };
@@ -242,15 +245,44 @@ function AddressStores() {
             const submit = async () => {
                 try {
                     if (editAddressStore._id) {
-                        await addressStoresApi.editAddressStore(values, editAddressStore._id);
+                        const result = await addressStoresApi.editAddressStore(values, editAddressStore._id);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            setEditAddressStore({});
+                            getAddressStores();
+                        }
                     } else {
-                        await addressStoresApi.addAddressStore(values);
+                        const result = await addressStoresApi.addAddressStore(values);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            setEditAddressStore({});
+                            getAddressStores();
+                        }
                     }
-                    formik.setFieldValue('name', '');
-                    setOpenCreate(false);
-                    setOpenEdit(false);
-                    setEditAddressStore({});
-                    getAddressStores();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -260,6 +292,7 @@ function AddressStores() {
     });
     return (
         <div>
+            <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo cửa hàng
             </button>

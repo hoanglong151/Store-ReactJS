@@ -17,12 +17,13 @@ function DialogDistrict(props) {
         editDistrict,
         provinces,
         handleSelectProvince,
+        textTitle,
     } = props;
-
+    const checkDataEdit = Object.keys(editDistrict).length;
     return (
         <Dialog open={open} onClose={onHandleCloseDialog}>
             <form onSubmit={formik.handleSubmit}>
-                <DialogTitle>Tạo Quận/Huyện</DialogTitle>
+                <DialogTitle>{checkDataEdit ? textTitle[1] : textTitle[0]}</DialogTitle>
                 <DialogContent>
                     <Selects data={areas} select={editDistrict.Areas} onChangeSelect={handleSelectArea} />
                     <Selects data={provinces} select={editDistrict.Provinces} onChangeSelect={handleSelectProvince} />

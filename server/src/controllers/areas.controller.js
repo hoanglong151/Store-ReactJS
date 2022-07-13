@@ -29,30 +29,40 @@ const getAreas = async (req, res) => {
   });
 };
 
-const addArea = (req, res) => {
-  const id = new mongoose.Types.ObjectId().toString();
-  const area = {
-    _id: id,
-    Name: req.body.name,
-  };
-  areasModel.create(area, (err, data) => {
-    if (err) {
-      console.log("LỖI: ", err);
-      return err;
-    }
-    res.send(data);
-  });
+const addArea = async (req, res) => {
+  const checkExistArea = await areasModel.findOne({ Name: req.body.name });
+  if (checkExistArea) {
+    res.json({ Exist: "Vùng Miền Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const id = new mongoose.Types.ObjectId().toString();
+    const area = {
+      _id: id,
+      Name: req.body.name,
+    };
+    areasModel.create(area, (err, data) => {
+      if (err) {
+        console.log("LỖI: ", err);
+        return err;
+      }
+      res.send(data);
+    });
+  }
 };
 
-const editArea = (req, res) => {
-  const editArea = {
-    Name: req.body.name,
-  };
+const editArea = async (req, res) => {
+  const checkExistArea = await areasModel.findOne({ Name: req.body.name });
+  if (checkExistArea && checkExistArea._id.toString() !== req.params.id) {
+    res.json({ Exist: "Vùng Miền Tồn Tại. Vui Lòng Kiểm Tra Lại" });
+  } else {
+    const editArea = {
+      Name: req.body.name,
+    };
 
-  areasModel.findByIdAndUpdate(req.params.id, editArea, (err, data) => {
-    if (err) return err;
-    res.send(data);
-  });
+    areasModel.findByIdAndUpdate(req.params.id, editArea, (err, data) => {
+      if (err) return err;
+      res.send(data);
+    });
+  }
 };
 
 const deleteArea = async (req, res) => {

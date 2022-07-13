@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import DialogOneField from '~/components/Form/Dialog/DialogOneField/DialogOneField';
 import { useFormik } from 'formik';
 import TableTwoColumn from '~/components/Tables/TableTwoColumn';
@@ -55,6 +56,7 @@ function BillStatus() {
             setOpenEdit(true);
         } else {
             setOpenCreate(true);
+            setEditBillStatus({});
         }
     };
 
@@ -134,15 +136,44 @@ function BillStatus() {
             const submit = async () => {
                 try {
                     if (Object.keys(editBillStatus).length !== 0) {
-                        await billStatusApi.editBillStatus(values, editBillStatus._id);
+                        const result = await billStatusApi.editBillStatus(values, editBillStatus._id);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            setEditBillStatus({});
+                            getBillStatus();
+                        }
                     } else {
-                        await billStatusApi.addBillStatus(values);
+                        const result = await billStatusApi.addBillStatus(values);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            formik.setFieldValue('name', '');
+                            setOpenCreate(false);
+                            setOpenEdit(false);
+                            setEditBillStatus({});
+                            getBillStatus();
+                        }
                     }
-                    formik.setFieldValue('name', '');
-                    setOpenCreate(false);
-                    setOpenEdit(false);
-                    setEditBillStatus({});
-                    getBillStatus();
                 } catch (err) {
                     alert('Error: ', Error);
                 }
@@ -152,6 +183,7 @@ function BillStatus() {
     });
     return (
         <div>
+            <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo tình trạng
             </button>
