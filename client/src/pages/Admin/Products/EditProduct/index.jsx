@@ -79,9 +79,9 @@ function EditProduct() {
 
     const validationSchema = Yup.object().shape({
         name: Yup.string('Nhập Tên Sản Phẩm').required('Vui Lòng Nhập Tên Sản Phẩm'),
-        // price: Yup.number().min(0, 'Tối thiếu 0đ').required('Vui Lòng Nhập Giá Sản Phẩm').integer(),
-        // amount: Yup.number().min(1, 'Tối thiếu 1 sản phẩm').required('Vui Lòng Nhập số lượng Sản Phẩm').integer(),
-        description: Yup.string().required(),
+        category_Id: Yup.array().min(1, 'Vui Lòng Chọn Danh Mục'),
+        firm_Id: Yup.string().required('Vui Lòng Chọn Hãng'),
+        description: Yup.string().required('Vui Lòng Nhập Mô Tả Sản Phẩm'),
     });
 
     const formik = useFormik({
@@ -102,37 +102,49 @@ function EditProduct() {
                 images: [],
             },
         },
-        // validationSchema: validationSchema,
+        validationSchema: validationSchema,
         onSubmit: (values) => {
             const submit = async () => {
-                const fd = new FormData();
-                for (let key in values) {
-                    fd.append(key, values[key]);
-                }
-                fd.append('imagesOld', productImageOld);
-                typesProduct.map((type, index) => {
-                    type.Images.map((image) => {
-                        fd.append(`typeImage${index}`, image);
-                    });
-                });
-                fd.append('typesProduct', JSON.stringify(typesProduct));
-                try {
-                    const result = await productsApi.editProduct(fd);
-                    if (result.Exist) {
-                        toast.error(`🦄 ${result.Exist}`, {
-                            position: 'top-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                        });
-                    } else {
-                        navigate('/Admin/Products');
+                if (typesProduct.length !== 0) {
+                    const fd = new FormData();
+                    for (let key in values) {
+                        fd.append(key, values[key]);
                     }
-                } catch (err) {
-                    throw Error(err.message);
+                    fd.append('imagesOld', productImageOld);
+                    typesProduct.map((type, index) => {
+                        type.Images.map((image) => {
+                            fd.append(`typeImage${index}`, image);
+                        });
+                    });
+                    fd.append('typesProduct', JSON.stringify(typesProduct));
+                    try {
+                        const result = await productsApi.editProduct(fd);
+                        if (result.Exist) {
+                            toast.error(`🦄 ${result.Exist}`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else {
+                            navigate('/Admin/Products');
+                        }
+                    } catch (err) {
+                        throw Error(err.message);
+                    }
+                } else {
+                    toast.error(`🦄 Vui Lòng Tạo Ít Nhật Một Loại Sản Phẩm 🦄`, {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
                 }
             };
             submit();
@@ -140,7 +152,12 @@ function EditProduct() {
     });
 
     const handleAddType = () => {
-        if (formik.values.types.name !== '' && formik.values.types.price !== '' && formik.values.types.amount !== 0) {
+        if (
+            formik.values.types.name !== '' &&
+            formik.values.types.price !== '' &&
+            formik.values.types.amount !== 0 &&
+            formik.values.types.images.length !== 0
+        ) {
             const type = {
                 Color: formik.values.types.color,
                 Name: formik.values.types.name,
@@ -157,6 +174,16 @@ function EditProduct() {
             formik.values.types.price = formik.values.types.price;
             formik.values.types.sale = formik.values.types.sale;
             formik.values.types.amount = 0;
+        } else {
+            toast.error(`🦄 Vui Lòng Không Để Trống Các Trường Thông Tin: Loại, Giá, Số Lượng, Hình Ảnh 🦄`, {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
     };
 
@@ -275,8 +302,14 @@ function EditProduct() {
                     select={productEdit.Category_ID}
                     multiple
                 />
+                {formik.errors.category_Id && formik.touched.category_Id ? (
+                    <ErrorMessage>{formik.errors.category_Id}</ErrorMessage>
+                ) : null}
                 <Label className={cx('form-label')}>Hãng</Label>
                 <Selects onChangeSelect={handleSelectFirm} select={productEdit.Firm_ID} data={optionsFirm} />
+                {formik.errors.firm_Id && formik.touched.firm_Id ? (
+                    <ErrorMessage>{formik.errors.firm_Id}</ErrorMessage>
+                ) : null}
                 <Label className={cx('form-label')}>Loại</Label>
                 <Accordion
                     onHandleDeleteType={handleDeleteType}
@@ -291,6 +324,9 @@ function EditProduct() {
                 />
                 <Label className={cx('form-label')}>Mô Tả</Label>
                 <TextArea data={formik.values.description} onChange={handleInput} />
+                {formik.errors.description && formik.touched.description ? (
+                    <ErrorMessage>{formik.errors.description}</ErrorMessage>
+                ) : null}
                 <button type="submit" className={cx('create-btn')}>
                     Cập Nhật Sản Phẩm
                 </button>

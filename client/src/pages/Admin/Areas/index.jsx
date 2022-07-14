@@ -4,6 +4,7 @@ import DialogOneField from '~/components/Form/Dialog/DialogOneField/DialogOneFie
 import { useFormik } from 'formik';
 import TableTwoColumn from '~/components/Tables/TableTwoColumn';
 import areasApi from '~/api/areasApi';
+import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import PaginationOutlined from '~/components/Pagination';
@@ -129,8 +130,13 @@ function Areas() {
         }
     };
 
+    const validationSchema = Yup.object({
+        name: Yup.string('Nhập Vùng Miền').required('Vui Lòng Nhập Vùng Miền'),
+    });
+
     const formik = useFormik({
         enableReinitialize: true,
+        validationSchema: validationSchema,
         initialValues: objectArea(),
         onSubmit: (values) => {
             const submit = async () => {

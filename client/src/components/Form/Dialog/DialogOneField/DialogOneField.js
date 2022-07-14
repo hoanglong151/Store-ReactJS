@@ -5,6 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Input from '../../Input/Input';
+import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 
 function DialogOneField(props) {
     const { open, onHandleCloseDialog, formik, edit, placeholder, textTitle } = props;
@@ -21,6 +22,9 @@ function DialogOneField(props) {
                         value={formik.values.name}
                         placeholder={placeholder}
                     />
+                    {formik.errors.name && formik.touched.name ? (
+                        <ErrorMessage>{formik.errors.name}</ErrorMessage>
+                    ) : null}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onHandleCloseDialog}>Hủy</Button>

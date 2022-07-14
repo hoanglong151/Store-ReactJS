@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import Swal from 'sweetalert2';
+import * as Yup from 'yup';
 import withReactContent from 'sweetalert2-react-content';
 import { ToastContainer, toast } from 'react-toastify';
 import saleCodesApi from '~/api/saleCodesApi';
@@ -128,9 +129,15 @@ function SaleCodes() {
         }
     };
 
+    const validationSchema = Yup.object({
+        name: Yup.string('Nhập Mã Khuyến Mãi').required('Vui Lòng Nhập Mã Khuyến Mãi'),
+        sale: Yup.number().min(1000, 'Khuyến Mãi Tối Thiếu 1000 Nghìn').required('Giá Trị Tối Thiểu 1000đ'),
+    });
+
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: objectSaleCode(),
+        validationSchema: validationSchema,
         onSubmit: (values) => {
             const submit = async () => {
                 try {

@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import TableTwoColumn from '~/components/Tables/TableTwoColumn';
 import billStatusApi from '~/api/billStatusApi';
 import Swal from 'sweetalert2';
+import * as Yup from 'yup';
 import withReactContent from 'sweetalert2-react-content';
 import PaginationOutlined from '~/components/Pagination';
 import SearchByCate from '~/components/SearchByCate';
@@ -129,8 +130,13 @@ function BillStatus() {
         }
     };
 
+    const validationSchema = Yup.object({
+        name: Yup.string('Nhập Tên Tình Trạng').required('Vui Lòng Nhập Tên Tình Trạng'),
+    });
+
     const formik = useFormik({
         enableReinitialize: true,
+        validationSchema: validationSchema,
         initialValues: objectBillStatus(),
         onSubmit: (values) => {
             const submit = async () => {

@@ -17,6 +17,7 @@ import classnames from 'classnames/bind';
 import styles from './Payment.module.scss';
 import { io } from 'socket.io-client';
 import * as yup from 'yup';
+import ErrorMessage from '~/components/Form/ErrorMessage/ErrorMessage';
 
 const cx = classnames.bind(styles);
 
@@ -196,11 +197,17 @@ function Bill() {
 
     const validationSchema = yup.object({
         name: yup.string().required('Vui lòng nhập đầy đủ họ tên'),
-        phone: yup.string().required('Vui lòng nhập số điện thoại'),
-        email: yup.string().required('Vui lòng nhập email'),
+        phone: yup
+            .string()
+            .required('Vui lòng nhập số điện thoại')
+            .matches(/^[0-9]+$/, 'Vui lòng kiểm tra lại số điện thoại'),
+        email: yup
+            .string()
+            .required('Vui lòng nhập email')
+            .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Vui lòng kiểm tra lại email'),
         addressStore: yup.string().when('shipPayment', {
             is: 'Nhận tại cửa hàng',
-            then: yup.string().required('Vui lòng chọn địa chỉ cửa hàng bạn muốn nhận'),
+            then: yup.string().required('Vui lòng chọn địa chỉ cửa hàng bạn muốn nhận hàng'),
         }),
         address: yup.string().when('shipPayment', {
             is: 'Giao hàng tận nơi',
@@ -273,15 +280,22 @@ function Bill() {
                             errors={formik.errors.name && formik.touched.name}
                             className={cx('mb1')}
                         />
+                        {formik.errors.name && formik.touched.name ? (
+                            <ErrorMessage>{formik.errors.name}</ErrorMessage>
+                        ) : null}
                         <Input
                             id="phone"
                             name="phone"
+                            maxLength="10"
                             onChange={handleSetPhone}
                             value={formik.values.phone}
                             placeholder="Số điện thoại (bắt buộc)"
                             errors={formik.errors.phone && formik.touched.phone}
                             className={cx('mb1')}
                         />
+                        {formik.errors.phone && formik.touched.phone ? (
+                            <ErrorMessage>{formik.errors.phone}</ErrorMessage>
+                        ) : null}
                         <Input
                             id="email"
                             name="email"
@@ -292,6 +306,9 @@ function Bill() {
                             errors={formik.errors.email && formik.touched.email}
                             className={cx('mb1')}
                         />
+                        {formik.errors.email && formik.touched.email ? (
+                            <ErrorMessage>{formik.errors.email}</ErrorMessage>
+                        ) : null}
                     </div>
                     <div>
                         <h3>Chọn cách thức giao hàng</h3>
@@ -339,27 +356,40 @@ function Bill() {
                                 className={cx('mb1')}
                                 placeholder="Quận / Huyện"
                             />
+                            {formik.errors.district && formik.touched.district ? (
+                                <ErrorMessage>{formik.errors.district}</ErrorMessage>
+                            ) : null}
                             {selectMethodShip === 'Nhận tại cửa hàng' ? (
-                                <Selects
-                                    name="addressStore"
-                                    id="addressStore"
-                                    data={selectAddressStores}
-                                    select={selectAddressStore}
-                                    onChangeSelect={handleSelectAddressStore}
-                                    className={cx('mb0')}
-                                    placeholder="Chọn địa chỉ cửa hàng"
-                                    errors={formik.errors.addressStore && formik.touched.addressStore}
-                                />
+                                <>
+                                    <Selects
+                                        name="addressStore"
+                                        id="addressStore"
+                                        data={selectAddressStores}
+                                        select={selectAddressStore}
+                                        onChangeSelect={handleSelectAddressStore}
+                                        className={cx('mb0')}
+                                        placeholder="Chọn địa chỉ cửa hàng"
+                                        errors={formik.errors.addressStore && formik.touched.addressStore}
+                                    />
+                                    {formik.errors.addressStore && formik.touched.addressStore ? (
+                                        <ErrorMessage>{formik.errors.addressStore}</ErrorMessage>
+                                    ) : null}
+                                </>
                             ) : (
-                                <Input
-                                    id="address"
-                                    name="address"
-                                    onChange={handleSetAddress}
-                                    value={formik.values.address}
-                                    placeholder="Số nhà, tên đường"
-                                    errors={formik.errors.address && formik.touched.address}
-                                    className={cx('mb0')}
-                                />
+                                <>
+                                    <Input
+                                        id="address"
+                                        name="address"
+                                        onChange={handleSetAddress}
+                                        value={formik.values.address}
+                                        placeholder="Số nhà, tên đường"
+                                        errors={formik.errors.address && formik.touched.address}
+                                        className={cx('mb0')}
+                                    />
+                                    {formik.errors.address && formik.touched.address ? (
+                                        <ErrorMessage>{formik.errors.address}</ErrorMessage>
+                                    ) : null}
+                                </>
                             )}
                         </div>
                         <Input

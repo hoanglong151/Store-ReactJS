@@ -6,6 +6,7 @@ import districtsApi from '~/api/districtsApi';
 import provincesApi from '~/api/provincesApi';
 import areasApi from '~/api/areasApi';
 import Swal from 'sweetalert2';
+import * as Yup from 'yup';
 import withReactContent from 'sweetalert2-react-content';
 import TableDistrict from '~/components/Tables/TableDistrict';
 import PaginationOutlined from '~/components/Pagination';
@@ -194,8 +195,15 @@ function District() {
         }
     };
 
+    const validationSchema = Yup.object({
+        name: Yup.string('Nhập Quận/Huyện').required('Vui Lòng Nhập Quận/Huyện'),
+        area_Id: Yup.string().required('Vui Lòng Chọn Vùng Miền'),
+        province_Id: Yup.string().required('Vui Lòng Chọn Tỉnh/Thành'),
+    });
+
     const formik = useFormik({
         enableReinitialize: true,
+        validationSchema: validationSchema,
         initialValues: objectDistrict(),
         onSubmit: (values) => {
             const submit = async () => {

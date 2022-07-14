@@ -127,9 +127,14 @@ function Firms() {
         }
     };
 
+    const validationSchema = Yup.object({
+        name: Yup.string('Nhập Tên Hãng').required('Vui Lòng Nhập Tên Hãng'),
+    });
+
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: initialValues(),
+        validationSchema: validationSchema,
         onSubmit: (values) => {
             const submit = async () => {
                 try {

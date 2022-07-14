@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import DialogProvince from '~/components/Form/Dialog/DialogProvince/DialogProvince';
 import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import provincesApi from '~/api/provincesApi';
 import areasApi from '~/api/areasApi';
 import TableProvince from '~/components/Tables/TableProvince';
@@ -161,8 +162,14 @@ function Provinces() {
         }
     };
 
+    const validationSchema = Yup.object({
+        name: Yup.string('Nhập Tỉnh/Thành').required('Vui Lòng Nhập Tỉnh/Thành'),
+        area_Id: Yup.string().required('Vui Lòng Chọn Vùng Miền'),
+    });
+
     const formik = useFormik({
         enableReinitialize: true,
+        validationSchema: validationSchema,
         initialValues: objectProvince(),
         onSubmit: (values) => {
             const submit = async () => {

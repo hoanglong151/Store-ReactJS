@@ -6,6 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Selects from '../../Selects';
 import Input from '../../Input/Input';
+import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 
 function DialogDistrict(props) {
     const {
@@ -26,7 +27,13 @@ function DialogDistrict(props) {
                 <DialogTitle>{checkDataEdit ? textTitle[1] : textTitle[0]}</DialogTitle>
                 <DialogContent>
                     <Selects data={areas} select={editDistrict.Areas} onChangeSelect={handleSelectArea} />
+                    {formik.errors.area_Id && formik.touched.area_Id ? (
+                        <ErrorMessage>{formik.errors.area_Id}</ErrorMessage>
+                    ) : null}
                     <Selects data={provinces} select={editDistrict.Provinces} onChangeSelect={handleSelectProvince} />
+                    {formik.errors.province_Id && formik.touched.province_Id ? (
+                        <ErrorMessage>{formik.errors.province_Id}</ErrorMessage>
+                    ) : null}
                     <Input
                         id="name"
                         name="name"
@@ -34,6 +41,9 @@ function DialogDistrict(props) {
                         value={formik.values.name}
                         placeholder="Tên Tỉnh/Thành"
                     />
+                    {formik.errors.name && formik.touched.name ? (
+                        <ErrorMessage>{formik.errors.name}</ErrorMessage>
+                    ) : null}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onHandleCloseDialog}>Hủy</Button>

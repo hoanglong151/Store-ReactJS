@@ -5,6 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Input from '../../Input/Input';
+import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 
 function DialogSaleCode(props) {
     const { open, onHandleCloseDialog, formik, edit } = props;
@@ -21,6 +22,9 @@ function DialogSaleCode(props) {
                         value={formik.values.name}
                         placeholder="Mã khuyến mãi"
                     />
+                    {formik.errors.name && formik.touched.name ? (
+                        <ErrorMessage>{formik.errors.name}</ErrorMessage>
+                    ) : null}
                     <Input
                         id="sale"
                         name="sale"
@@ -29,6 +33,9 @@ function DialogSaleCode(props) {
                         placeholder="Giảm giá"
                         type="number"
                     />
+                    {formik.errors.sale && formik.touched.sale ? (
+                        <ErrorMessage>{formik.errors.sale}</ErrorMessage>
+                    ) : null}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onHandleCloseDialog}>Hủy</Button>

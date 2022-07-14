@@ -121,15 +121,22 @@ const cartSlice = createSlice({
             return newState;
         },
         applySale: (state, action) => {
+            let newState = {};
             if (state.totalPrice > action.payload.Sale) {
-                const newState = {
+                newState = {
                     ...state,
                     totalPriceSale: state.totalPrice - action.payload.Sale,
                     saleCode: action.payload,
                 };
-                localStorage.setItem('cart', JSON.stringify(newState));
-                return newState;
+            } else {
+                newState = {
+                    ...state,
+                    totalPriceSale: 0,
+                    saleCode: action.payload,
+                };
             }
+            localStorage.setItem('cart', JSON.stringify(newState));
+            return newState;
         },
         emptyCart: () => {
             const newState = {

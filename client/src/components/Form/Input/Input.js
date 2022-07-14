@@ -5,7 +5,7 @@ import styles from './Input.module.scss';
 const cx = classnames.bind(styles);
 
 function Input(props) {
-    const { errors, id, name, onChange, value, placeholder, type, dateNow, className, checked } = props;
+    const { errors, id, name, onChange, value, placeholder, type, dateNow, className, checked, maxLength } = props;
     return (
         <input
             id={id}
@@ -17,6 +17,7 @@ function Input(props) {
                 error: errors,
                 [className]: className,
             })}
+            maxLength={maxLength}
             checked={checked}
             placeholder={placeholder}
         />

@@ -4,6 +4,7 @@ import DialogAddressStore from '~/components/Form/Dialog/DialogAddressStore/Dial
 import { useFormik } from 'formik';
 import addressStoresApi from '~/api/addressStoresApi';
 import Swal from 'sweetalert2';
+import * as Yup from 'yup';
 import withReactContent from 'sweetalert2-react-content';
 import TableAddressStore from '~/components/Tables/TableAddressStore/TableAddressStore';
 import areasApi from '~/api/areasApi';
@@ -238,8 +239,16 @@ function AddressStores() {
         }
     };
 
+    const validationSchema = Yup.object({
+        name: Yup.string('Nhập Địa Chỉ Cửa Hàng').required('Vui Lòng Nhập Địa Chỉ Cửa Hàng'),
+        area_Id: Yup.string().required('Vui Lòng Chọn Vùng Miền'),
+        province_Id: Yup.string().required('Vui Lòng Chọn Tỉnh/Thành'),
+        district_Id: Yup.string().required('Vui Lòng Chọn Quận/Huyện'),
+    });
+
     const formik = useFormik({
         enableReinitialize: true,
+        validationSchema: validationSchema,
         initialValues: objectAddressStore(),
         onSubmit: (values) => {
             const submit = async () => {

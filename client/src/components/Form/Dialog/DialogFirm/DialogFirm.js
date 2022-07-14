@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Input from '~/components/Form/Input/Input';
+import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 
 function DialogFirm(props) {
     const { handleClose, open, formik, editFirmPopup } = props;
@@ -22,6 +23,9 @@ function DialogFirm(props) {
                             value={formik.values.name}
                             placeholder="Tên Hãng"
                         />
+                        {formik.errors.name && formik.touched.name ? (
+                            <ErrorMessage>{formik.errors.name}</ErrorMessage>
+                        ) : null}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Hủy</Button>

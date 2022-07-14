@@ -8,6 +8,7 @@ import Input from '../../Input/Input';
 import SelectImage from '../../SelectImage/SelectImage';
 import classnames from 'classnames/bind';
 import styles from './DialogCategory.module.scss';
+import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 
 const cx = classnames.bind(styles);
 
@@ -27,8 +28,13 @@ export default function DialogCategory(props) {
                         errors={formik.touched.name && formik.errors.name}
                         className={cx('input')}
                     />
-
+                    {formik.errors.name && formik.touched.name ? (
+                        <ErrorMessage>{formik.errors.name}</ErrorMessage>
+                    ) : null}
                     <SelectImage name="image" id="image" images={image} onChange={onHandleImage} />
+                    {formik.errors.image && formik.touched.image ? (
+                        <ErrorMessage>{formik.errors.image.name}</ErrorMessage>
+                    ) : null}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onHandleClose}>Hủy</Button>

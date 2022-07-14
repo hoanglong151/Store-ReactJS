@@ -101,6 +101,7 @@ function Categories() {
         const getImage = URL.createObjectURL(e.target.files[0]);
         setImage(getImage);
         formik.setFieldValue('image', e.target.files[0]);
+        console.log(e.target.files[0]);
     };
 
     const handleClickOpen = (cate) => {
@@ -132,6 +133,9 @@ function Categories() {
 
     const validationSchema = Yup.object({
         name: Yup.string('Nhập Tên Danh Mục').required('Vui Lòng Nhập Tên Danh Mục'),
+        image: Yup.object({
+            name: Yup.string().required('Vui Lòng Chọn Hình Ảnh'),
+        }),
     });
 
     const objectCate = () => {

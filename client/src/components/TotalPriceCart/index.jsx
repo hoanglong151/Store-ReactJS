@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import Input from '../Form/Input/Input';
 import saleCodesApi from '~/api/saleCodesApi';
 import { applySale } from '~/app/reducerCart';
@@ -14,11 +16,36 @@ function TotalPriceCart(props) {
     const [saleCode, setSaleCode] = useState('');
     const { totalPrice, totalPriceSale } = useSelector((state) => state.cart);
     const dispatch = useDispatch();
+    const SaleCodeSwal = withReactContent(Swal);
+
+    useEffect(() => {
+        const getSaleCode = JSON.parse(localStorage.getItem('cart'));
+        setSaleCode(getSaleCode?.saleCode.Name);
+    }, []);
 
     const handleApplySaleCode = async () => {
         const result = await saleCodesApi.applySaleCode({ code: saleCode });
         if (result._id) {
-            dispatch(applySale(result));
+            if (totalPrice - result.Sale > 0) {
+                dispatch(applySale(result));
+            } else {
+                SaleCodeSwal.fire({
+                    title: 'Hóa Đơn rẻ hơn Phiếu Khuyến Mãi. Bạn có muốn áp dụng?',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đồng Ý',
+                    cancelButtonText: 'Hủy',
+                    customClass: {
+                        popup: `${cx('popup')}`,
+                    },
+                }).then(async (confirm) => {
+                    if (confirm.isConfirmed) {
+                        dispatch(applySale(result));
+                    }
+                });
+            }
         }
     };
 
@@ -40,14 +67,10 @@ function TotalPriceCart(props) {
                 <span className={cx('total-price')}>{new Intl.NumberFormat('de-DE').format(totalPrice)} đ</span>
             </div>
             <div className={cx('wrap-total-price-sale')}>
-                {totalPriceSale !== 0 && (
-                    <>
-                        <h3 className={cx('title-total-priceSale')}>Tổng tiền sau khi giảm:</h3>
-                        <span className={cx('total-price-sale')}>
-                            {new Intl.NumberFormat('de-DE').format(totalPriceSale)} đ
-                        </span>
-                    </>
-                )}
+                <h3 className={cx('title-total-priceSale')}>Tổng tiền sau khi giảm:</h3>
+                <span className={cx('total-price-sale')}>
+                    {new Intl.NumberFormat('de-DE').format(totalPriceSale)} đ
+                </span>
             </div>
             <div className={cx('wrap-payment')}>
                 <button className={cx('payment')} onClick={onPayment} type="submit">

@@ -25,7 +25,6 @@ function AddProduct() {
     const [categories, setCategories] = useState([]);
     const [statusUpdateType, setStatusUpdateType] = useState(false);
     const [updateType, setUpdateType] = useState({});
-    const [validateTypeProduct, setValidateTypeProduct] = useState(true);
     const navigate = useNavigate();
 
     const getCategories = async () => {
@@ -119,6 +118,16 @@ function AddProduct() {
                     } catch (err) {
                         throw Error(err.message);
                     }
+                } else {
+                    toast.error(`🦄 Vui Lòng Tạo Ít Nhật Một Loại Sản Phẩm 🦄`, {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
                 }
             };
             submit();
@@ -126,7 +135,12 @@ function AddProduct() {
     });
 
     const handleAddType = () => {
-        if (formik.values.types.name !== '' && formik.values.types.price !== 0 && formik.values.types.amount !== 0) {
+        if (
+            formik.values.types.name !== '' &&
+            formik.values.types.price !== 0 &&
+            formik.values.types.amount !== 0 &&
+            formik.values.types.images.length !== 0
+        ) {
             const type = {
                 Color: formik.values.types.color,
                 Name: formik.values.types.name,
@@ -143,7 +157,16 @@ function AddProduct() {
             formik.values.types.price = formik.values.types.price;
             formik.values.types.sale = formik.values.types.sale;
             formik.values.types.amount = 0;
-            setValidateTypeProduct(false);
+        } else {
+            toast.error(`🦄 Vui Lòng Không Để Trống Các Trường Thông Tin: Loại, Giá, Số Lượng, Hình Ảnh 🦄`, {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
     };
 
@@ -240,15 +263,15 @@ function AddProduct() {
                 />
                 {formik.errors.name && formik.touched.name ? <ErrorMessage>{formik.errors.name}</ErrorMessage> : null}
                 <Label className={cx('form-label')}>Danh Mục</Label>
+                <Selects onChangeSelect={handleSelectCategory} data={optionsCate} multiple />
                 {formik.errors.category_Id && formik.touched.category_Id ? (
                     <ErrorMessage>{formik.errors.category_Id}</ErrorMessage>
                 ) : null}
-                <Selects onChangeSelect={handleSelectCategory} data={optionsCate} multiple />
                 <Label className={cx('form-label')}>Hãng</Label>
+                <Selects onChangeSelect={handleSelectFirm} data={optionsFirm} multiple={false} />
                 {formik.errors.firm_Id && formik.touched.firm_Id ? (
                     <ErrorMessage>{formik.errors.firm_Id}</ErrorMessage>
                 ) : null}
-                <Selects onChangeSelect={handleSelectFirm} data={optionsFirm} multiple={false} />
                 <Label className={cx('form-label')}>Loại</Label>
                 <Accordion
                     onHandleDeleteType={handleDeleteType}
@@ -261,8 +284,6 @@ function AddProduct() {
                     reviewImages={reviewImages}
                     statusUpdateType={statusUpdateType}
                 />
-                {console.log(validateTypeProduct)}
-                {validateTypeProduct ? <ErrorMessage>Vui Lòng Tạo Ít Nhất 1 Loại Sản Phẩm</ErrorMessage> : null}
                 <Label className={cx('form-label')}>Mô Tả</Label>
                 <TextArea onChange={handleInput} />
                 {formik.errors.description && formik.touched.description ? (
