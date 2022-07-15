@@ -8,7 +8,6 @@ import Label from '~/components/Form/Label/Label';
 import Input from '~/components/Form/Input/Input';
 import Selects from '~/components/Form/Selects';
 import TextArea from '~/components/Form/TextArea';
-import SelectImage from '~/components/Form/SelectImage/SelectImage';
 import ErrorMessage from '~/components/Form/ErrorMessage/ErrorMessage';
 import Accordion from '~/components/Form/Accordion/Accordion';
 import { categoriesApi, firmsApi } from '~/api';

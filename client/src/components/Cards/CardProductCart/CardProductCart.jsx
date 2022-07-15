@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -50,5 +51,12 @@ function CardProductCart(props) {
         </div>
     );
 }
+
+CardProductCart.propTypes = {
+    product: PropTypes.object.isRequired,
+    onIncrease: PropTypes.func.isRequired,
+    onDecrease: PropTypes.func.isRequired,
+    onRemove: PropTypes.func.isRequired,
+};
 
 export default CardProductCart;

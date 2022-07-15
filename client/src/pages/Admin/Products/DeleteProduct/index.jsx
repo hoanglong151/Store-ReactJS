@@ -1,6 +1,6 @@
 import productsApi from '~/api/productsApi';
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Sliders from '~/components/Sliders/Slider';
 import DOMPurify from 'dompurify';
 import Swal from 'sweetalert2';

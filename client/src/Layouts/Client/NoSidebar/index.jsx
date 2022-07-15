@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import styles from './CartLayout.module.scss';
-import Header from '~/Layouts/Client/components/Header/Header';
-import Footer from '~/Layouts/Client/components/Footer/Footer';
-import BottomNavigation from '../components/BottomNavigationSmartPhone';
+import styles from './NoSidebar.module.scss';
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
+import BottomNavigationSmartPhone from '../components/BottomNavigationSmartPhone';
 
 const cx = classnames.bind(styles);
 
-function CartLayout({ children }) {
+function NoSidebar({ children }) {
     useEffect(() => {
         var chatbox = document.getElementById('fb-customer-chat');
         chatbox.setAttribute('page_id', '101296765104112');
@@ -40,14 +40,14 @@ function CartLayout({ children }) {
                 <Footer />
             </div>
             <div className={cx('bottom-navigation')}>
-                <BottomNavigation />
+                <BottomNavigationSmartPhone />
             </div>
         </div>
     );
 }
 
-CartLayout.propTypes = {
+NoSidebar.propTypes = {
     children: PropTypes.node,
 };
 
-export default CartLayout;
+export default NoSidebar;

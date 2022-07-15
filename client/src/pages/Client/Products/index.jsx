@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import CardProduct from '~/components/Cards/CardProduct/CardProduct';
 import SidebarCategory from '~/components/SidebarCategory';
@@ -6,7 +6,6 @@ import SidebarFirm from '~/components/SidebarFirm';
 import ButtonShowMore from '~/components/ShowMore';
 import { useState } from 'react';
 import { useSortProductByTitle } from '~/hooks';
-import { categoriesApi, firmsApi } from '~/api';
 
 // ClassName
 import classNames from 'classnames/bind';

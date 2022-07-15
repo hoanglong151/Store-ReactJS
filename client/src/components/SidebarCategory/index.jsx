@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames/bind';
 import styles from './SidebarCategory.module.scss';
@@ -17,5 +18,12 @@ function SidebarCategory(props) {
         </Link>
     );
 }
+
+SidebarCategory.propTypes = {
+    name: PropTypes.string,
+    link: PropTypes.string,
+    className: PropTypes.bool,
+    select: PropTypes.object,
+};
 
 export default SidebarCategory;

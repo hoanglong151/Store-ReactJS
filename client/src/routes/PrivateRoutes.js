@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Navigate, useNavigate } from 'react-router-dom';
 import authenticationApi from '~/api/authenticationApi';
 import { io } from 'socket.io-client';
@@ -31,5 +32,9 @@ function PrivateRoutes({ children }) {
     }, [socket]);
     return <>{checkLogin ? children : <Navigate to="/Admin/Login" />}</>;
 }
+
+PrivateRoutes.propTypes = {
+    children: PropTypes.node,
+};
 
 export default PrivateRoutes;

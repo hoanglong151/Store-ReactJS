@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
@@ -83,5 +84,10 @@ function TotalPriceCart(props) {
         </div>
     );
 }
+
+TotalPriceCart.propTypes = {
+    title: PropTypes.string,
+    onPayment: PropTypes.func,
+};
 
 export default TotalPriceCart;

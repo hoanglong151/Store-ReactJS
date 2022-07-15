@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames/bind';
 import styles from './SidebarFirm.module.scss';
@@ -17,5 +18,13 @@ function SidebarFirm(props) {
         </Link>
     );
 }
+
+SidebarFirm.propTypes = {
+    name: PropTypes.string,
+    firmID: PropTypes.string,
+    cateID: PropTypes.string,
+    className: PropTypes.bool,
+    select: PropTypes.object,
+};
 
 export default SidebarFirm;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
