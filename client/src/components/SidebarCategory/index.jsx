@@ -22,8 +22,8 @@ function SidebarCategory(props) {
 SidebarCategory.propTypes = {
     name: PropTypes.string,
     link: PropTypes.string,
-    className: PropTypes.bool,
-    select: PropTypes.object,
+    className: PropTypes.string,
+    select: PropTypes.string,
 };
 
 export default SidebarCategory;

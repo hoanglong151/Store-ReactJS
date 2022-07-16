@@ -34,6 +34,9 @@ function CartLayout({ children }) {
 
     return (
         <div className={cx('wrapper')}>
+            <div id="fb-root"></div>
+
+            <div id="fb-customer-chat" className="fb-customerchat"></div>
             <Header openButtonCategory openMenuCategory />
             <div className={cx('body')}>{children}</div>
             <div className={cx('footer')}>

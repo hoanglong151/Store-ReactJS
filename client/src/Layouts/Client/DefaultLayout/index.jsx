@@ -53,7 +53,7 @@ function DefaultLayout({ children }) {
         <div className={cx('wrapper')}>
             <div id="fb-root"></div>
 
-            <div id="fb-customer-chat" class="fb-customerchat"></div>
+            <div id="fb-customer-chat" className="fb-customerchat"></div>
 
             <Header openButtonCategory={openButtonCategory} openMenuCategory={openMenuCategory} />
             <div className={cx('body')}>
