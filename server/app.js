@@ -2,11 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
+require("dotenv").config({ path: __dirname + "\\.env" });
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 const morgan = require("morgan");
 require("./src/configs/socketIO.config");
-require("dotenv").config({ path: __dirname + "\\.env" });
 require("./src/configs/connectFirebase.config");
 
 app.use(helmet());
