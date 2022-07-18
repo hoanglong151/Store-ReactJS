@@ -6,7 +6,7 @@ import { io } from 'socket.io-client';
 import { fetchDetailBills } from '~/app/reducerDetailBill';
 import { useDispatch } from 'react-redux';
 
-const socket = io(process.env.REACT_APP_URL);
+const socket = io(process.env.REACT_APP_WEB_SOCKET_BASE);
 function PrivateRoutes({ children }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();

@@ -3,7 +3,7 @@ const { Server } = require("socket.io");
 
 // const httpServer = createServer();
 // const io = new Server(httpServer, {
-//   cors: "https://cleanfood.vercel.app/",
+//   cors: "http://localhost:3000",
 // });
 
 const io = new Server({
@@ -11,7 +11,6 @@ const io = new Server({
 });
 
 io.on("connection", (socket) => {
-  alert("OK");
   socket.on("payment", (arg) => {
     // socket.broadcast.emit("message", { message: "Update Bills" });
     io.emit("message", { message: "Update Bills" });
@@ -21,6 +20,8 @@ io.on("connection", (socket) => {
     io.emit("message", { message: "Update Bills" });
   });
 });
+
+console.log("Connected");
 
 // httpServer.listen(8080);
 
