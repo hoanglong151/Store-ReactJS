@@ -7,7 +7,7 @@ const { Server } = require("socket.io");
 require("dotenv").config({ path: __dirname + "\\.env" });
 const app = express();
 const port = process.env.PORT || 3001;
-const httpServer = createServer();
+const httpServer = createServer(app);
 const morgan = require("morgan");
 // require("./src/configs/socketIO.config");
 require("./src/configs/connectFirebase.config");
