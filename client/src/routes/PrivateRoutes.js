@@ -6,7 +6,7 @@ import { io } from 'socket.io-client';
 import { fetchDetailBills } from '~/app/reducerDetailBill';
 import { useDispatch } from 'react-redux';
 
-const socket = io(process.env.REACT_APP_WEB_SOCKET_BASE);
+const socket = io(process.env.REACT_APP_URL);
 function PrivateRoutes({ children }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -26,6 +26,7 @@ function PrivateRoutes({ children }) {
 
     useEffect(() => {
         socket.on('message', async (arg) => {
+            alert('Test');
             dispatch(fetchDetailBills());
         });
     }, [socket]);

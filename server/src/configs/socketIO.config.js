@@ -23,6 +23,6 @@ io.on("connection", (socket) => {
 
 console.log("Connected");
 
-// httpServer.listen(8080);
+httpServer.listen(process.env.PORT);
 
 module.exports = io;
