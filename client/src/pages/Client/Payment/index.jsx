@@ -250,7 +250,7 @@ function Bill() {
                         confirmButtonText: 'OK',
                     }).then((confirm) => {
                         if (confirm.isConfirmed) {
-                            const socket = io(process.env.REACT_APP_WEB_SOCKET_BASE);
+                            const socket = io(process.env.REACT_APP_URL_BASE);
                             socket.emit('payment', { bill: result });
                             localStorage.setItem('cart', null);
                             dispatch(emptyCart());

@@ -2,11 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 require("dotenv").config({ path: __dirname + "\\.env" });
 const app = express();
 const port = process.env.PORT || 3001;
+const httpServer = createServer();
 const morgan = require("morgan");
-require("./src/configs/socketIO.config");
+// require("./src/configs/socketIO.config");
 require("./src/configs/connectFirebase.config");
 
 app.use(helmet());
@@ -56,6 +59,24 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.listen(port, () => {
+const io = new Server(httpServer, {
+  /* options */
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.on("connection", (socket) => {
+  socket.on("payment", (arg) => {
+    // socket.broadcast.emit("message", { message: "Update Bills" });
+    io.emit("message", { message: "Update Bills" });
+  });
+  socket.on("updateBill", (arg) => {
+    // socket.broadcast.emit("message", { message: "Update Bills" });
+    io.emit("message", { message: "Update Bills" });
+  });
+});
+
+httpServer.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

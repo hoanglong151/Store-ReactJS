@@ -186,7 +186,7 @@ TableBill.propTypes = {
     handleEditBill: PropTypes.func,
     openDialog: PropTypes.bool,
     handleCloseDialog: PropTypes.func,
-    billStatus: PropTypes.object,
+    billStatus: PropTypes.array,
     billStatusSelect: PropTypes.object,
     handleSelectStatus: PropTypes.func,
     handleUpdateStatusBill: PropTypes.func,
