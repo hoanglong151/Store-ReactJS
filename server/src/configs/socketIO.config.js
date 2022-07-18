@@ -1,15 +1,17 @@
 const express = require("express");
 const app = express();
-const { createServer } = require("http");
-const { Server } = require("socket.io");
+const server = require("http").Server(app);
+const io = (module.exports.io = require("socket.io")(server));
+// const { createServer } = require("http");
+// const { Server } = require("socket.io");
 
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: "*",
-  },
-  transports: ["websocket"],
-});
+// const httpServer = createServer(app);
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: "*",
+//   },
+//   transports: ["websocket"],
+// });
 
 // const io = new Server({
 //   cors: "http://localhost:3000",
