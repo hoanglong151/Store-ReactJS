@@ -22,7 +22,6 @@ import ErrorMessage from '~/components/Form/ErrorMessage/ErrorMessage';
 const cx = classnames.bind(styles);
 
 function Bill() {
-    console.log(process.env.REACT_APP_URL);
     const { cart } = useSelector((state) => state);
     const [addressStores, setAddressStores] = useState([]);
     const [areas, setAreas] = useState([]);
@@ -251,7 +250,7 @@ function Bill() {
                         confirmButtonText: 'OK',
                     }).then((confirm) => {
                         if (confirm.isConfirmed) {
-                            const socket = io(process.env.REACT_APP_URL);
+                            const socket = io(process.env.REACT_APP_WEB_SOCKET_BASE);
                             socket.emit('payment', { bill: result });
                             localStorage.setItem('cart', null);
                             dispatch(emptyCart());
