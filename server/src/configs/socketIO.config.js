@@ -1,8 +1,12 @@
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 
-const httpServer = createServer();
-const io = new Server(httpServer, {
+// const httpServer = createServer();
+// const io = new Server(httpServer, {
+//   cors: "https://cleanfood.vercel.app/",
+// });
+
+const io = new Server({
   cors: "https://cleanfood.vercel.app/",
 });
 
@@ -17,6 +21,6 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(8080);
+// httpServer.listen(8080);
 
 module.exports = io;
