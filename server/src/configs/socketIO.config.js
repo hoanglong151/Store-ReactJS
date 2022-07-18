@@ -6,6 +6,7 @@ const { Server } = require("socket.io");
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: "http://localhost:3000/",
+  transports: ["websocket"],
 });
 
 // const io = new Server({
