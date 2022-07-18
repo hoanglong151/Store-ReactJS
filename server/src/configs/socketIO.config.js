@@ -5,7 +5,7 @@ const { Server } = require("socket.io");
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: "http://localhost:3000",
+  cors: "http://localhost:3000/",
 });
 
 // const io = new Server({

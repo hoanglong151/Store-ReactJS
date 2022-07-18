@@ -22,6 +22,7 @@ import ErrorMessage from '~/components/Form/ErrorMessage/ErrorMessage';
 const cx = classnames.bind(styles);
 
 function Bill() {
+    console.log(process.env.REACT_APP_URL);
     const { cart } = useSelector((state) => state);
     const [addressStores, setAddressStores] = useState([]);
     const [areas, setAreas] = useState([]);
