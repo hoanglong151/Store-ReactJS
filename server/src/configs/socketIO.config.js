@@ -11,6 +11,7 @@ const io = new Server({
 });
 
 io.on("connection", (socket) => {
+  alert("OK");
   socket.on("payment", (arg) => {
     // socket.broadcast.emit("message", { message: "Update Bills" });
     io.emit("message", { message: "Update Bills" });
