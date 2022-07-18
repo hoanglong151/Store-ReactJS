@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(process.env.PORT || 8080);
+httpServer.listen(8080);
 
 // server.listen(process.env.PORT || 8080, (err, server) => {
 //   console.log("OK");
