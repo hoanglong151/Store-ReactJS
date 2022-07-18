@@ -5,7 +5,9 @@ const { Server } = require("socket.io");
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: "https://cleanfood-yq8rp9dc9-hoanglong151.vercel.app/",
+  cors: {
+    origin: "*",
+  },
   transports: ["websocket"],
 });
 
