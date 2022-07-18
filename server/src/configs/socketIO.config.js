@@ -7,7 +7,7 @@ const { Server } = require("socket.io");
 // });
 
 const io = new Server({
-  cors: "https://cleanfood-yq8rp9dc9-hoanglong151.vercel.app/",
+  cors: "http://localhost:3000",
 });
 
 io.on("connection", (socket) => {
