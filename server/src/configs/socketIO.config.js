@@ -1,14 +1,16 @@
+const express = require("express");
+const app = express();
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 
-// const httpServer = createServer();
-// const io = new Server(httpServer, {
-//   cors: "http://localhost:3000",
-// });
-
-const io = new Server({
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
   cors: "http://localhost:3000",
 });
+
+// const io = new Server({
+//   cors: "http://localhost:3000",
+// });
 
 io.on("connection", (socket) => {
   socket.on("payment", (arg) => {
@@ -23,6 +25,6 @@ io.on("connection", (socket) => {
 
 console.log("Connected");
 
-httpServer.listen(process.env.PORT);
+// httpServer.listen(process.env.PORT);
 
 module.exports = io;
