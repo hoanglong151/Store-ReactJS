@@ -10,7 +10,7 @@ function Sliders(props) {
     const { data } = props;
     const settings = {
         customPaging: function (i) {
-            return <img src={data[i]} />;
+            return <img alt="Menu Hình Ảnh" src={data[i]} />;
         },
         arrows: false,
         dots: true,
@@ -27,7 +27,7 @@ function Sliders(props) {
             <Slider {...settings}>
                 {data.map((image, index) => (
                     <div key={index} className={cx('wrap-image')}>
-                        <img className={cx('image')} src={image} />
+                        <img alt="Hình Ảnh" className={cx('image')} src={image} />
                     </div>
                 ))}
             </Slider>

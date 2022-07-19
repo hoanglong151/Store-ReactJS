@@ -9,9 +9,9 @@ const cx = classnames.bind(styles);
 function CardProduct(props) {
     const { boxShadow, product } = props;
     return (
-        <div className={cx('wrapper', { ['box-shadow']: boxShadow })}>
+        <div className={cx('wrapper', { 'box-shadow': boxShadow })}>
             <Link to={`/product/detail`} state={{ product: product }}>
-                <img className={cx('image')} src={product.Images[0]} />
+                <img alt="Hình Ảnh Sản Phẩm" className={cx('image')} src={product.Images[0]} />
             </Link>
             <div className={cx('info')}>
                 <Link to={`/product/detail`} state={{ product: product }}>

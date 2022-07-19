@@ -48,7 +48,7 @@ function Siderbar(props) {
             <div className={cx('toggle-menu')} onClick={onClick}>
                 <FontAwesomeIcon icon={faBars} />
             </div>
-            <div className={cx('menu', { ['mobile']: toggleMenu })}>
+            <div className={cx('menu', { mobile: toggleMenu })}>
                 <NavLink end to="/Admin" className={({ isActive }) => cx('link-menu', { active: isActive })}>
                     <FontAwesomeIcon icon={faChartLine} />
                     <span className={cx('title-menu')}>Dashboard</span>

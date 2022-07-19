@@ -30,7 +30,7 @@ function TableCategory(props) {
                     {categories.map((data, index) => (
                         <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                             <TableCell align="left" className={cx('img-product')}>
-                                <img className={cx('img')} src={data.Image} />
+                                <img alt="Danh Mục Sản Phẩm" className={cx('img')} src={data.Image} />
                             </TableCell>
                             <TableCell style={{ minWidth: '12rem' }} align="left">
                                 {data.Name}

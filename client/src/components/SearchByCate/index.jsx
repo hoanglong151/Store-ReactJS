@@ -69,13 +69,15 @@ function SearchByCate(props) {
                         result = await addressStoresApi.searchAddressStore(searchInput.trim(), PAGE_SIZE);
                         onSearch(result);
                         break;
+                    default:
+                        throw Error('Invalid');
                 }
             };
             submitSearch();
         } else {
             onSearch({});
         }
-    }, [debounce]);
+    }, [debounce, type, onSearch, searchInput]);
 
     const handleSearch = (input) => {
         setSearchInput(input);

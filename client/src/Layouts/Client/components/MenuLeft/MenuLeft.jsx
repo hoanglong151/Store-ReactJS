@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import classnames from 'classnames/bind';
 import styles from './MenuLeft.module.scss';
 import { Link } from 'react-router-dom';
-import { categoriesApi, firmsApi } from '~/api';
 import { useSelector } from 'react-redux';
 
 const cx = classnames.bind(styles);
@@ -37,7 +36,7 @@ function MenuLeft() {
                             className={cx('link')}
                             onMouseEnter={() => handleGetCategory(category)}
                         >
-                            <img className={cx('image')} src={category.Image} />
+                            <img alt={'Danh Mục Sản Phẩm'} className={cx('image')} src={category.Image} />
                             <span className={cx('name')}>{category.Name}</span>
                         </Link>
 

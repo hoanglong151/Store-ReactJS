@@ -33,6 +33,8 @@ function BottomNavigationSmartPhone() {
                                 break;
                             case 1:
                                 setOpenCategory(!openCategory);
+                            default:
+                                throw Error('Invalid');
                         }
                         setValue(newValue);
                     }}

@@ -101,7 +101,7 @@ export default function AccordionBasic(props) {
                     </div>
                     <div className={cx('review-image')}>
                         {reviewImages.map((image, index) => {
-                            return <img className={cx('image')} src={image} key={index} />;
+                            return <img alt="Review Hình Ảnh" className={cx('image')} src={image} key={index} />;
                         })}
                     </div>
 

@@ -31,7 +31,11 @@ export default function TablesProduct(props) {
                     {products.map((data, index) => (
                         <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                             <TableCell align="left" className={cx('img-product')}>
-                                <img className={cx('img')} src={data.TypesProduct[0].Images[0]} />
+                                <img
+                                    alt="Hình Ảnh Sản Phẩm"
+                                    className={cx('img')}
+                                    src={data.TypesProduct[0].Images[0]}
+                                />
                             </TableCell>
                             <TableCell align="left">{data.Name}</TableCell>
                             <TableCell align="left">

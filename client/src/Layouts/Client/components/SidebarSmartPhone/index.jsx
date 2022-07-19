@@ -36,7 +36,7 @@ function SidebarSmartPhone() {
             return getFirmsID.includes(firm._id);
         });
         setFirmByProduct(getFirms);
-    }, []);
+    }, [typeProducts, firms, categories]);
 
     const handleGetCategory = (category) => {
         setActiveCategory(category);
@@ -65,7 +65,7 @@ function SidebarSmartPhone() {
                                 className={cx('link')}
                                 onClick={() => handleGetCategory(category)}
                             >
-                                <img className={cx('image')} src={category.Image} />
+                                <img alt="Danh Mục Sản Phẩm" className={cx('image')} src={category.Image} />
                                 <span className={cx('name')}>{category.Name}</span>
                             </button>
                         </li>

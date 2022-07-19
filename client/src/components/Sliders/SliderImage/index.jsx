@@ -44,18 +44,21 @@ function SliderBasic(props) {
             <Slider {...settings}>
                 <div className={cx('poster')}>
                     <img
+                        alt="Hình Ảnh Sản Phẩm"
                         className={cx('image')}
                         src="https://cdn.tgdd.vn/Files/2021/09/08/1381074/iphone_1280x720-800-resize.jpg"
                     />
                 </div>
                 <div className={cx('poster')}>
                     <img
+                        alt="Hình Ảnh Sản Phẩm"
                         className={cx('image')}
                         src="https://cdn.tgdd.vn/Files/2019/12/04/1224683/6-dau-hieu-ban-nen-thay-chiec-macbook-moi-4.jpg"
                     />
                 </div>
                 <div className={cx('poster')}>
                     <img
+                        alt="Hình Ảnh Sản Phẩm"
                         className={cx('image')}
                         src="https://i0.wp.com/www.eastmojo.com/wp-content/uploads/2020/10/Iphone.jpg?fit=1468%2C821&ssl=1"
                     />

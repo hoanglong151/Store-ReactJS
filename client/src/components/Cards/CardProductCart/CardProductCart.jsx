@@ -14,7 +14,7 @@ function CardProductCart(props) {
             <button className={cx('btn-close')} onClick={() => onRemove(product)}>
                 <FontAwesomeIcon icon={faXmark} />
             </button>
-            <img className={cx('image')} src={product.Image[0]} />
+            <img alt="Hình Ảnh Sản Phẩm" className={cx('image')} src={product.Image[0]} />
             <div className={cx('info-product')}>
                 <h3 className={cx('name-product')}>
                     {product.Name + ` (${product.Description}${product.Color && ' - ' + product.Color})`}

@@ -3,7 +3,7 @@ const initSocket = (httpServer) => {
   const io = new Server(httpServer, {
     /* options */
     cors: {
-      origin: "http://localhost:3000",
+      origin: "https://cleanfood.vercel.app",
     },
   });
 

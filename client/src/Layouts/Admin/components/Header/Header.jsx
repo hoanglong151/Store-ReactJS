@@ -27,6 +27,7 @@ function Header() {
         <div className={cx('wrapper')}>
             <NavLink to="/Admin" end className={cx('logo')}>
                 <img
+                    alt="Giới Thiệu Sản Phẩm"
                     className={cx('logo-img')}
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/IOS_logo.svg/768px-IOS_logo.svg.png"
                 />
@@ -48,6 +49,7 @@ function Header() {
                 >
                     <div className={cx('info-account')} onClick={() => setVisible(true)}>
                         <img
+                            alt="Giới Thiệu Sản Phẩm"
                             className={cx('img')}
                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/IOS_logo.svg/768px-IOS_logo.svg.png"
                         />

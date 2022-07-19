@@ -10,18 +10,21 @@ function MenuRight() {
             <div className={cx('menu-right')}>
                 <a href="https://www.google.com/" className={cx('poster')}>
                     <img
+                        alt="Giới Thiệu Sản Phẩm"
                         className={cx('image')}
                         src="https://cdn1.hoanghamobile.com/tin-tuc/wp-content/uploads/2020/06/1-2-15-1024x536.jpg"
                     />
                 </a>
                 <a href="https://www.google.com/" className={cx('poster')}>
                     <img
+                        alt="Giới Thiệu Sản Phẩm"
                         className={cx('image')}
                         src="https://i.pinimg.com/originals/e9/d3/35/e9d335f25758c4eca3f59d2284d470bf.jpg"
                     />
                 </a>
                 <a href="https://www.google.com/" className={cx('poster')}>
                     <img
+                        alt="Giới Thiệu Sản Phẩm"
                         className={cx('image')}
                         src="https://i.pinimg.com/originals/e9/d3/35/e9d335f25758c4eca3f59d2284d470bf.jpg"
                     />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -36,6 +36,7 @@ function Header(props) {
             <div className={cx('header')}>
                 <Link to="/" className={cx('img-home')}>
                     <img
+                        alt="Giới Thiệu Sản Phẩm"
                         className={cx('image')}
                         src="https://freepngimg.com/thumb/mustang/23061-5-mustang-logo-transparent-image.png"
                     />
@@ -56,7 +57,11 @@ function Header(props) {
                                             className={cx('item-link')}
                                             onMouseEnter={() => handleGetCategory(category)}
                                         >
-                                            <img className={cx('item-image')} src={category.Image} />
+                                            <img
+                                                alt="Giới Thiệu Sản Phẩm"
+                                                className={cx('item-image')}
+                                                src={category.Image}
+                                            />
                                             <p className={cx('item-name')}>{category.Name}</p>
                                             <FontAwesomeIcon icon={faChevronRight} />
                                         </Link>
