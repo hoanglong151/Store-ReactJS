@@ -62,7 +62,7 @@ function ProductsCategory() {
         });
         setGetFirmByProduct(filterFirms);
         setProducts(getProducts);
-    }, [cateID, categories, firms]);
+    }, [cateID, categories, firms, typeProducts]);
 
     const handleShowMoreProducts = (numberProduct) => {
         setShowProducts(showProducts + numberProduct);
@@ -114,7 +114,7 @@ function ProductsCategory() {
                 <h3 className={cx('title')}>Tiêu chí</h3>
                 <button
                     className={cx('btn', {
-                        ['active']: active.High,
+                        active: active.High,
                     })}
                     onClick={handleHighPrice}
                 >
@@ -122,7 +122,7 @@ function ProductsCategory() {
                 </button>
                 <button
                     className={cx('btn', {
-                        ['active']: active.Low,
+                        active: active.Low,
                     })}
                     onClick={handleLowPrice}
                 >

@@ -13,12 +13,14 @@ import TextArea from '~/components/Form/TextArea';
 import Accordion from '~/components/Form/Accordion/Accordion';
 import classnames from 'classnames/bind';
 import styles from './EditProduct.module.scss';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function EditProduct() {
     const { state } = useLocation();
     const { product } = state;
+    const [loading, setLoading] = useState(false);
     const [productEdit, setProductEdit] = useState({});
     const [productImageOld, setProductImageOld] = useState([]);
     let reviewImages1 = [];
@@ -61,7 +63,7 @@ function EditProduct() {
         setProductEdit(editProduct);
         setTypesProduct(product.TypesProduct);
         setSelect(mapCategories);
-    }, []);
+    }, [product]);
 
     const options = categories?.map((cate, index) => {
         return {
@@ -111,13 +113,14 @@ function EditProduct() {
                         fd.append(key, values[key]);
                     }
                     fd.append('imagesOld', productImageOld);
-                    typesProduct.map((type, index) => {
-                        type.Images.map((image) => {
+                    typesProduct.forEach((type, index) => {
+                        type.Images.forEach((image) => {
                             fd.append(`typeImage${index}`, image);
                         });
                     });
                     fd.append('typesProduct', JSON.stringify(typesProduct));
                     try {
+                        setLoading(true);
                         const result = await productsApi.editProduct(fd);
                         if (result.Exist) {
                             toast.error(`🦄 ${result.Exist}`, {
@@ -130,6 +133,7 @@ function EditProduct() {
                                 progress: undefined,
                             });
                         } else {
+                            setLoading(false);
                             navigate('/Admin/Products');
                         }
                     } catch (err) {
@@ -171,8 +175,6 @@ function EditProduct() {
             setReviewImages([]);
             formik.values.types.description = '';
             formik.values.types.color = '';
-            formik.values.types.price = formik.values.types.price;
-            formik.values.types.sale = formik.values.types.sale;
             formik.values.types.amount = 0;
         } else {
             toast.error(`🦄 Vui Lòng Không Để Trống Các Trường Thông Tin: Loại, Giá, Số Lượng, Hình Ảnh 🦄`, {
@@ -215,8 +217,6 @@ function EditProduct() {
         setReviewImages([]);
         formik.values.types.name = '';
         formik.values.types.color = '';
-        formik.values.types.price = formik.values.types.price;
-        formik.values.types.sale = formik.values.types.sale;
         formik.values.types.amount = 0;
     };
 
@@ -282,6 +282,7 @@ function EditProduct() {
 
     return (
         <div className={cx('wrapper')}>
+            {loading && <LoadingCRUD />}
             <ToastContainer />
             <h1 className={cx('header')}>Cập Nhật Sản Phẩm</h1>
             <form onSubmit={formik.handleSubmit} encType="multipart/form-data">

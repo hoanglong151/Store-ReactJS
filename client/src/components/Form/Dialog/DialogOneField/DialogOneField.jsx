@@ -42,7 +42,7 @@ DialogOneField.propTypes = {
     formik: PropTypes.object,
     edit: PropTypes.object,
     placeholder: PropTypes.string,
-    textTitle: PropTypes.string,
+    textTitle: PropTypes.array,
 };
 
 export default DialogOneField;

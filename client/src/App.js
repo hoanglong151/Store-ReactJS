@@ -13,7 +13,7 @@ import PrivateRoutes from './routes/PrivateRoutes';
 import { fetchCategories } from '~/app/reducerCategory';
 import { fetchFirms } from '~/app/reducerFirm';
 import { fetchTypeProducts } from '~/app/reducerTypeProduct';
-import Loading from './components/Loading';
+import Loading from './components/Loading/LoadingAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleChevronUp } from '@fortawesome/free-solid-svg-icons';
 import classnames from 'classnames/bind';

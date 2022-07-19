@@ -106,7 +106,7 @@ function Products() {
                 </button>
                 <button
                     className={cx('btn', {
-                        ['active']: active.Low,
+                        active: active.Low,
                     })}
                     onClick={handleLowPrice}
                 >
@@ -114,7 +114,7 @@ function Products() {
                 </button>
                 <button
                     className={cx('btn', {
-                        ['active']: active.Hot,
+                        active: active.Hot,
                     })}
                     onClick={handleProductHot}
                 >
@@ -122,7 +122,7 @@ function Products() {
                 </button>
                 <button
                     className={cx('btn', {
-                        ['active']: active.New,
+                        active: active.New,
                     })}
                     onClick={handleProductNew}
                 >

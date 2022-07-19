@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function useSortProductByTitle(products, title = 'CHEAP') {
     const [product, setProduct] = useState([]);
@@ -36,6 +36,8 @@ function useSortProductByTitle(products, title = 'CHEAP') {
                     .filter((item) => item.Amount !== 0);
                 setProduct(getProductsCheap);
                 break;
+            default:
+                throw Error('Invalid');
         }
     }, [products, title]);
     return product;

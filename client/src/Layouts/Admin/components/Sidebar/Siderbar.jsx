@@ -49,40 +49,40 @@ function Siderbar(props) {
                 <FontAwesomeIcon icon={faBars} />
             </div>
             <div className={cx('menu', { ['mobile']: toggleMenu })}>
-                <NavLink end to="/Admin" className={({ isActive }) => cx('link-menu', { ['active']: isActive })}>
+                <NavLink end to="/Admin" className={({ isActive }) => cx('link-menu', { active: isActive })}>
                     <FontAwesomeIcon icon={faChartLine} />
                     <span className={cx('title-menu')}>Dashboard</span>
                 </NavLink>
-                <NavLink to="/Admin/Products" className={({ isActive }) => cx('link-menu', { ['active']: isActive })}>
+                <NavLink to="/Admin/Products" className={({ isActive }) => cx('link-menu', { active: isActive })}>
                     <FontAwesomeIcon icon={faMobileButton} />
                     <span className={cx('title-menu')}>Sản Phẩm</span>
                 </NavLink>
-                <NavLink to="/Admin/Categories" className={({ isActive }) => cx('link-menu', { ['active']: isActive })}>
+                <NavLink to="/Admin/Categories" className={({ isActive }) => cx('link-menu', { active: isActive })}>
                     <FontAwesomeIcon icon={faChartPie} />
                     <span className={cx('title-menu')}>Danh Mục</span>
                 </NavLink>
-                <NavLink to="/Admin/Firms" className={({ isActive }) => cx('link-menu', { ['active']: isActive })}>
+                <NavLink to="/Admin/Firms" className={({ isActive }) => cx('link-menu', { active: isActive })}>
                     <FontAwesomeIcon icon={faList} />
                     <span className={cx('title-menu')}>Hãng</span>
                 </NavLink>
                 <NavLink
                     to="/Admin/Bills"
-                    className={({ isActive }) => cx('link-menu', 'd-flex', { ['active']: isActive })}
+                    className={({ isActive }) => cx('link-menu', 'd-flex', { active: isActive })}
                 >
                     <FontAwesomeIcon icon={faSackDollar} />
                     <span className={cx('title-menu')}>Hóa Đơn</span>
                     <span className={cx('count-bill-pending')}>{countBillPending}</span>
                 </NavLink>
-                <NavLink to="/Admin/SaleCodes" className={({ isActive }) => cx('link-menu', { ['active']: isActive })}>
+                <NavLink to="/Admin/SaleCodes" className={({ isActive }) => cx('link-menu', { active: isActive })}>
                     <FontAwesomeIcon icon={faSalesforce} />
                     <span className={cx('title-menu')}>Mã Khuyến Mãi</span>
                 </NavLink>
-                <NavLink to="/Admin/BillStatus" className={({ isActive }) => cx('link-menu', { ['active']: isActive })}>
+                <NavLink to="/Admin/BillStatus" className={({ isActive }) => cx('link-menu', { active: isActive })}>
                     <FontAwesomeIcon icon={faTruck} />
                     <span className={cx('title-menu')}>Tình Trạng ĐH</span>
                 </NavLink>
                 <div className={cx('sub-menu')} onClick={handleToggleMenuArea}>
-                    <div className={cx('area-text', { ['open-menu']: toggleMenuArea })}>
+                    <div className={cx('area-text', { 'open-menu': toggleMenuArea })}>
                         <FontAwesomeIcon icon={faChartArea} />
                         <span className={cx('title-menu', 'area-title')}>Khu vực</span>
                         {toggleMenuArea ? (
@@ -94,14 +94,14 @@ function Siderbar(props) {
 
                     <ul
                         className={cx('area-menu', {
-                            ['area-menu-active']: toggleMenuArea,
+                            'area-menu-active': toggleMenuArea,
                         })}
                     >
                         <li>
                             <NavLink
                                 to="/Admin/Areas"
                                 state={{ openSubMenu: true }}
-                                className={({ isActive }) => cx('link-area', { ['active']: isActive })}
+                                className={({ isActive }) => cx('link-area', { active: isActive })}
                             >
                                 <FontAwesomeIcon icon={faEarthAfrica} />
                                 <span className={cx('title-menu', 'area-title')}>Vùng miền</span>
@@ -111,7 +111,7 @@ function Siderbar(props) {
                             <NavLink
                                 to="/Admin/Provinces"
                                 state={{ openSubMenu: true }}
-                                className={({ isActive }) => cx('link-area', { ['active']: isActive })}
+                                className={({ isActive }) => cx('link-area', { active: isActive })}
                             >
                                 <FontAwesomeIcon icon={faCity} />
                                 <span className={cx('title-menu', 'area-title')}>Tỉnh/Thành</span>
@@ -121,7 +121,7 @@ function Siderbar(props) {
                             <NavLink
                                 to="/Admin/Districts"
                                 state={{ openSubMenu: true }}
-                                className={({ isActive }) => cx('link-area', { ['active']: isActive })}
+                                className={({ isActive }) => cx('link-area', { active: isActive })}
                             >
                                 <FontAwesomeIcon icon={faNetworkWired} />
                                 <span className={cx('title-menu', 'area-title')}>Quận/Huyện</span>
@@ -131,7 +131,7 @@ function Siderbar(props) {
                             <NavLink
                                 to="/Admin/AddressStores"
                                 state={{ openSubMenu: true }}
-                                className={({ isActive }) => cx('link-area', { ['active']: isActive })}
+                                className={({ isActive }) => cx('link-area', { active: isActive })}
                             >
                                 <FontAwesomeIcon icon={faLocationPin} />
                                 <span className={cx('title-menu', 'area-title')}> Danh Sách Cửa Hàng</span>

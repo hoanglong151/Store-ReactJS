@@ -13,11 +13,13 @@ import Accordion from '~/components/Form/Accordion/Accordion';
 import { categoriesApi, firmsApi } from '~/api';
 import classnames from 'classnames/bind';
 import styles from './AddProduct.module.scss';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function AddProduct() {
     let reviewImages1 = [];
+    const [loading, setLoading] = useState(false);
     const [reviewImages, setReviewImages] = useState([]);
     const [typesProduct, setTypesProduct] = useState([]);
     const [firms, setFirms] = useState([]);
@@ -93,13 +95,14 @@ function AddProduct() {
                     for (let key in values) {
                         fd.append(key, values[key]);
                     }
-                    typesProduct.map((type, index) => {
-                        type.Images.map((image) => {
+                    typesProduct.forEach((type, index) => {
+                        type.Images.forEach((image) => {
                             fd.append(`typeImage${index}`, image);
                         });
                     });
                     fd.append('typesProduct', JSON.stringify(typesProduct));
                     try {
+                        setLoading(true);
                         const result = await productsApi.addProduct(fd);
                         if (result.Exist) {
                             toast.error(`🦄 ${result.Exist} 🦄`, {
@@ -112,6 +115,7 @@ function AddProduct() {
                                 progress: undefined,
                             });
                         } else {
+                            setLoading(false);
                             navigate('/Admin/Products');
                         }
                     } catch (err) {
@@ -153,8 +157,6 @@ function AddProduct() {
             setReviewImages([]);
             formik.values.types.name = '';
             formik.values.types.color = '';
-            formik.values.types.price = formik.values.types.price;
-            formik.values.types.sale = formik.values.types.sale;
             formik.values.types.amount = 0;
         } else {
             toast.error(`🦄 Vui Lòng Không Để Trống Các Trường Thông Tin: Loại, Giá, Số Lượng, Hình Ảnh 🦄`, {
@@ -191,8 +193,6 @@ function AddProduct() {
         setReviewImages([]);
         formik.values.types.name = '';
         formik.values.types.color = '';
-        formik.values.types.price = formik.values.types.price;
-        formik.values.types.sale = formik.values.types.sale;
         formik.values.types.amount = 0;
     };
 
@@ -249,6 +249,8 @@ function AddProduct() {
 
     return (
         <div className={cx('wrapper')}>
+            {loading && <LoadingCRUD />}
+
             <ToastContainer />
             <h1 className={cx('header')}>Tạo Sản Phẩm</h1>
             <form onSubmit={formik.handleSubmit} encType="multipart/form-data">

@@ -87,7 +87,7 @@ function ProductDetail() {
             Price: product.Price,
             Sale: product.Sale,
         });
-    }, []);
+    }, [product]);
 
     const handleSelectTypeByColor = (type) => {
         setTypeByColor(type);
@@ -151,8 +151,8 @@ function ProductDetail() {
                                     <div key={index}>
                                         <div
                                             className={cx('item', {
-                                                ['active']: item.Type === typeSelect.Type,
-                                                ['sold-out']: item.Amount <= 0,
+                                                active: item.Type === typeSelect.Type,
+                                                'sold-out': item.Amount <= 0,
                                             })}
                                             onClick={item.Amount <= 0 ? undefined : () => handleSelectType(item)}
                                         >

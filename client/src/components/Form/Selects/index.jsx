@@ -33,7 +33,7 @@ function Selects(props) {
 Selects.propTypes = {
     onChangeSelect: PropTypes.func,
     data: PropTypes.array,
-    select: PropTypes.object,
+    select: PropTypes.node,
     multiple: PropTypes.bool,
     className: PropTypes.node,
     placeholder: PropTypes.string,

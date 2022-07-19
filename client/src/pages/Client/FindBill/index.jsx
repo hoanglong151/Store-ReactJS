@@ -94,7 +94,7 @@ function FindBill() {
                             <div className={cx('wrapper-product-item')}>
                                 {bill.Bill.Cart.cartProducts.map((cart) => (
                                     <div key={cart._id} className={cx('wrapper-cart')}>
-                                        <img className={cx('image')} src={cart.Image[0]} />
+                                        <img alt={`${cart.Name}.`} className={cx('image')} src={cart.Image[0]} />
                                         <div>
                                             <h3 className={cx('name-product')}>{cart.Name}</h3>
                                             <div className={cx('price-product')}>

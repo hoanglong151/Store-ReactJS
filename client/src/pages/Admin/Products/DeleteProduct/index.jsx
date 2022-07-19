@@ -42,7 +42,7 @@ function DeleteProduct() {
 
         const deleteProduct = { ...product, Category_ID: mapCategories };
         setProductDelete(deleteProduct);
-    }, []);
+    }, [product]);
 
     const handleSelectTypeByColor = (type) => {
         setTypeByColor(type);
@@ -117,10 +117,10 @@ function DeleteProduct() {
                 return pre;
             }, []);
             setFilterType(result);
-            const data = result.find((product) => product.Color == typeSelect.Color);
+            const data = result.find((product) => product.Color === typeSelect.Color);
             setTypeByColor(data);
         }
-    }, [productDelete.TypesProduct]);
+    }, [productDelete.TypesProduct, typeSelect]);
 
     const handleDeleteProduct = () => {
         DeleteSwal.fire({

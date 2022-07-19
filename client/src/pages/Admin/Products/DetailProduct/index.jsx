@@ -36,7 +36,7 @@ function DetailProduct() {
 
         const detailProduct = { ...product, Category_ID: mapCategories };
         setProductDetail(detailProduct);
-    }, []);
+    }, [product]);
 
     const handleSelectTypeByColor = (type) => {
         setTypeByColor(type);
@@ -111,10 +111,10 @@ function DetailProduct() {
                 return pre;
             }, []);
             setFilterType(result);
-            const data = result.find((product) => product.Color == typeSelect.Color);
+            const data = result.find((product) => product.Color === typeSelect.Color);
             setTypeByColor(data);
         }
-    }, [productDetail.TypesProduct]);
+    }, [productDetail.TypesProduct, typeSelect]);
 
     return (
         <div className={cx('wrapper')}>

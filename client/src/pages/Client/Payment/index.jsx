@@ -97,9 +97,7 @@ function Bill() {
     const selectDistricts = useMemo(() => {
         const getDistrictsByAreaAndProvince = districts
             .filter((district) => {
-                if (district.Areas._id === selectArea?.value && district.Provinces._id === selectProvince?.value) {
-                    return district;
-                }
+                return district.Areas._id === selectArea?.value && district.Provinces._id === selectProvince?.value;
             })
             .map((item) => {
                 return { value: item._id, label: item.Name };
@@ -110,13 +108,11 @@ function Bill() {
     const selectAddressStores = useMemo(() => {
         const getAddressStoresByAreaAndProvinceAndDistrict = addressStores
             .filter((store) => {
-                if (
+                return (
                     store.Areas._id === selectArea?.value &&
                     store.Provinces._id === selectProvince?.value &&
                     store.Districts._id === selectDistrict?.value
-                ) {
-                    return store;
-                }
+                );
             })
             .map((item) => {
                 return {
@@ -204,7 +200,7 @@ function Bill() {
         email: yup
             .string()
             .required('Vui lòng nhập email')
-            .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Vui lòng kiểm tra lại email'),
+            .matches(/^[\w]+@([\w-])+[\w-]{2,4}$/, 'Vui lòng kiểm tra lại email'),
         addressStore: yup.string().when('shipPayment', {
             is: 'Nhận tại cửa hàng',
             then: yup.string().required('Vui lòng chọn địa chỉ cửa hàng bạn muốn nhận hàng'),
@@ -250,7 +246,7 @@ function Bill() {
                         confirmButtonText: 'OK',
                     }).then((confirm) => {
                         if (confirm.isConfirmed) {
-                            const socket = io(process.env.REACT_APP_URL_BASE);
+                            const socket = io(process.env.REACT_APP_URL);
                             socket.emit('payment', { bill: result });
                             localStorage.setItem('cart', null);
                             dispatch(emptyCart());
@@ -286,6 +282,7 @@ function Bill() {
                         <Input
                             id="phone"
                             name="phone"
+                            minLength="10"
                             maxLength="10"
                             onChange={handleSetPhone}
                             value={formik.values.phone}
