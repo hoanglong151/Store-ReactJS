@@ -31,7 +31,7 @@ function Products() {
             }
         };
         getProducts();
-    }, [currentPage, totalPage, products]);
+    }, [currentPage]);
 
     const handlePagination = (page) => {
         setCurrentPage(page);
