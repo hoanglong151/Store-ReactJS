@@ -200,7 +200,7 @@ function Bill() {
         email: yup
             .string()
             .required('Vui lòng nhập email')
-            .matches(/^[\w]+@([\w-])+[\w-]{2,4}$/, 'Vui lòng kiểm tra lại email'),
+            .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Vui lòng kiểm tra lại email'),
         addressStore: yup.string().when('shipPayment', {
             is: 'Nhận tại cửa hàng',
             then: yup.string().required('Vui lòng chọn địa chỉ cửa hàng bạn muốn nhận hàng'),

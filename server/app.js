@@ -8,7 +8,6 @@ const app = express();
 const port = process.env.PORT || 3001;
 const httpServer = createServer(app);
 const morgan = require("morgan");
-// require("./src/configs/socketIO.config");
 require("./src/configs/connectFirebase.config");
 const initSocket = require("./src/configs/socketIO.config");
 

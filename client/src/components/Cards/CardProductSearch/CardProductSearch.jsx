@@ -13,7 +13,7 @@ function CardProductSearch(props) {
             <img alt="Hình Ảnh Sản Phẩm" src={product.Images[0]} className={cx('img')} />
             <div className={cx('wrapper-info')}>
                 <p className={cx('name-product')}>
-                    {product.Product.Name} - ({product.Name}/{product.Color})
+                    {product.Name} - ({product.Type}/{product.Color})
                 </p>
 
                 {product.sale === 0 ? (

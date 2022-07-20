@@ -26,7 +26,6 @@ function PrivateRoutes({ children }) {
 
     useEffect(() => {
         socket.on('message', async (arg) => {
-            alert('Test');
             dispatch(fetchDetailBills());
         });
     }, []);
