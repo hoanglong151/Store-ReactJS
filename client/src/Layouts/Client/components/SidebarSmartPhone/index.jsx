@@ -36,7 +36,7 @@ function SidebarSmartPhone() {
             return getFirmsID.includes(firm._id);
         });
         setFirmByProduct(getFirms);
-    }, [typeProducts, firms, categories]);
+    }, []);
 
     const handleGetCategory = (category) => {
         setActiveCategory(category);

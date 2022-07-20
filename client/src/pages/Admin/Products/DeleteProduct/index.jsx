@@ -120,7 +120,7 @@ function DeleteProduct() {
             const data = result.find((product) => product.Color === typeSelect.Color);
             setTypeByColor(data);
         }
-    }, [productDelete.TypesProduct, typeSelect]);
+    }, [productDelete.TypesProduct]);
 
     const handleDeleteProduct = () => {
         DeleteSwal.fire({

@@ -101,7 +101,6 @@ function Categories() {
         const getImage = URL.createObjectURL(e.target.files[0]);
         setImage(getImage);
         formik.setFieldValue('image', e.target.files[0]);
-        console.log(e.target.files[0]);
     };
 
     const handleClickOpen = (cate) => {

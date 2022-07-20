@@ -84,8 +84,7 @@ function AddressStores() {
 
     useEffect(() => {
         const callApi = async () => {
-            const dd = await getAreas();
-            console.log(dd);
+            await getAreas();
             await getProvinces();
             await getDistricts();
             await getAddressStores();

@@ -77,7 +77,7 @@ function SearchByCate(props) {
         } else {
             onSearch({});
         }
-    }, [debounce, type, onSearch, searchInput]);
+    }, [debounce]);
 
     const handleSearch = (input) => {
         setSearchInput(input);

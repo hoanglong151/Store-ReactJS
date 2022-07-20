@@ -8,6 +8,7 @@ const cx = classnames.bind(styles);
 
 function CardProduct(props) {
     const { boxShadow, product } = props;
+
     return (
         <div className={cx('wrapper', { 'box-shadow': boxShadow })}>
             <Link to={`/product/detail`} state={{ product: product }}>

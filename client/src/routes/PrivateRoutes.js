@@ -22,14 +22,14 @@ function PrivateRoutes({ children }) {
             }
         };
         validation();
-    }, [children, dispatch, navigate]);
+    }, [children]);
 
     useEffect(() => {
         socket.on('message', async (arg) => {
             alert('Test');
             dispatch(fetchDetailBills());
         });
-    }, [dispatch]);
+    }, []);
     return <>{checkLogin ? children : <Navigate to="/Admin/Login" />}</>;
 }
 

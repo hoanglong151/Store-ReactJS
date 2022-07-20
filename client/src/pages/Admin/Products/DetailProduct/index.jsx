@@ -114,7 +114,7 @@ function DetailProduct() {
             const data = result.find((product) => product.Color === typeSelect.Color);
             setTypeByColor(data);
         }
-    }, [productDetail.TypesProduct, typeSelect]);
+    }, [productDetail.TypesProduct]);
 
     return (
         <div className={cx('wrapper')}>

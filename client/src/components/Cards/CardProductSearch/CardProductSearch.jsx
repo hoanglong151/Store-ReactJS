@@ -10,7 +10,7 @@ function CardProductSearch(props) {
     const { product } = props;
     return (
         <Link to={`/product/detail`} state={{ product: product }} className={cx('wrapper')}>
-            <img alt="Hình Ảnh Sản Phẩm" src={product.Product.Image[0]} className={cx('img')} />
+            <img alt="Hình Ảnh Sản Phẩm" src={product.Images[0]} className={cx('img')} />
             <div className={cx('wrapper-info')}>
                 <p className={cx('name-product')}>
                     {product.Product.Name} - ({product.Name}/{product.Color})

@@ -36,6 +36,7 @@ function Search() {
             const PAGE_SIZE = 5;
             const searchProduct = async () => {
                 const products = await typeProductsApi.searchTypeProduct(debounce, PAGE_SIZE);
+                console.log(products);
                 setSearchResult(products.data);
                 setLoading(false);
             };
