@@ -6,12 +6,12 @@ const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 
 const login = (req, res) => {
-  usersModel.findOne({ Email: req.body.email }, (err, user) => {
+  usersModel.findOne({ Email: req.body.email }, async (err, user) => {
     if (user !== null) {
       const bytes = CryptoJS.AES.decrypt(user.Password, "hoanglong");
       const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
       if (originalPassword === req.body.password) {
-        sendOTP(user);
+        await sendOTP(user);
         res.send({ user });
       } else {
         res.send({ Invalid: "Sai mật khẩu hoặc email" });
@@ -35,7 +35,7 @@ const verifyOTP = async (req, res) => {
   }
 };
 
-const sendOTP = (user) => {
+const sendOTP = async (user) => {
   const id = new mongoose.Types.ObjectId().toString();
   const otp = `${Math.trunc(1000 + Math.random() * 9000)}`;
   const message = {
