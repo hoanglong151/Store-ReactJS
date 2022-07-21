@@ -22,6 +22,7 @@ function DialogSaleCode(props) {
                         onChange={formik.handleChange}
                         value={formik.values.name}
                         placeholder="Mã khuyến mãi"
+                        className="mb1"
                     />
                     {formik.errors.name && formik.touched.name ? (
                         <ErrorMessage>{formik.errors.name}</ErrorMessage>

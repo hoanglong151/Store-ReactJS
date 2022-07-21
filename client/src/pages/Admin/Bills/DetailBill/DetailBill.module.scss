@@ -96,3 +96,36 @@
         flex-basis: 60%;
     }
 }
+
+@include respond(smartphone) {
+    .wrapper-info {
+        flex-direction: column;
+        padding: 1rem 1.5rem;
+    }
+    .wrapper-product {
+        flex-direction: column;
+        margin: 0;
+    }
+
+    .info-bill,
+    .info-price {
+        margin: 0;
+    }
+
+    .info-price {
+        margin-top: 1rem;
+    }
+
+    .image {
+        width: 6rem;
+    }
+    .name-product {
+        font-size: 1.8rem;
+    }
+    .price-active {
+        font-size: 1.7rem;
+    }
+    .price-old {
+        font-size: 1.2rem;
+    }
+}

@@ -28,11 +28,17 @@ function DialogAddressStore(props) {
             <form onSubmit={formik.handleSubmit}>
                 <DialogTitle>{editAddressStore._id ? 'Cập Nhật Địa Chỉ Cửa Hàng' : 'Tạo Địa Chỉ Cửa Hàng'}</DialogTitle>
                 <DialogContent>
-                    <Selects data={areas} select={editAddressStore.Areas} onChangeSelect={handleSelectArea} />
+                    <Selects
+                        className="mb1"
+                        data={areas}
+                        select={editAddressStore.Areas}
+                        onChangeSelect={handleSelectArea}
+                    />
                     {formik.errors.area_Id && formik.touched.area_Id ? (
                         <ErrorMessage>{formik.errors.area_Id}</ErrorMessage>
                     ) : null}
                     <Selects
+                        className="mb1"
                         data={provinces}
                         select={editAddressStore.Provinces}
                         onChangeSelect={handleSelectProvince}
@@ -41,6 +47,7 @@ function DialogAddressStore(props) {
                         <ErrorMessage>{formik.errors.province_Id}</ErrorMessage>
                     ) : null}
                     <Selects
+                        className="mb1"
                         data={districts}
                         select={editAddressStore.Districts}
                         onChangeSelect={handleSelectDistrict}

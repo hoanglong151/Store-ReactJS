@@ -27,11 +27,21 @@ function DialogDistrict(props) {
             <form onSubmit={formik.handleSubmit}>
                 <DialogTitle>{checkDataEdit ? textTitle[1] : textTitle[0]}</DialogTitle>
                 <DialogContent>
-                    <Selects data={areas} select={editDistrict.Areas} onChangeSelect={handleSelectArea} />
+                    <Selects
+                        className="mb1"
+                        data={areas}
+                        select={editDistrict.Areas}
+                        onChangeSelect={handleSelectArea}
+                    />
                     {formik.errors.area_Id && formik.touched.area_Id ? (
                         <ErrorMessage>{formik.errors.area_Id}</ErrorMessage>
                     ) : null}
-                    <Selects data={provinces} select={editDistrict.Provinces} onChangeSelect={handleSelectProvince} />
+                    <Selects
+                        className="mb1"
+                        data={provinces}
+                        select={editDistrict.Provinces}
+                        onChangeSelect={handleSelectProvince}
+                    />
                     {formik.errors.province_Id && formik.touched.province_Id ? (
                         <ErrorMessage>{formik.errors.province_Id}</ErrorMessage>
                     ) : null}

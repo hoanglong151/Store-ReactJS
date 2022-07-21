@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const validateToken = (req, res, next) => {
   const token = req.headers.authorization.split(" ");
-  jwt.verify(token[1], "hoanglong", (err, info) => {
+  jwt.verify(token[1], process.env.SECRET_KEY, (err, info) => {
     if (err) {
       return res.status(401).json({ token: "Changed Token" });
     } else {
@@ -14,7 +14,7 @@ const validateToken = (req, res, next) => {
 const validateTokenNoNext = (req, res, next) => {
   const token = req.headers.authorization.split(" ");
   if (token[1] !== "null") {
-    jwt.verify(token[1], "hoanglong", (err, info) => {
+    jwt.verify(token[1], process.env.SECRET_KEY, (err, info) => {
       if (err) {
         res.status(401).json({ token: "Changed Token" });
       }

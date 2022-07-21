@@ -17,7 +17,12 @@ function DialogProvince(props) {
             <form onSubmit={formik.handleSubmit}>
                 <DialogTitle>{checkDataEdit ? textTitle[1] : textTitle[0]}</DialogTitle>
                 <DialogContent style={{ minHeight: '15rem' }}>
-                    <Selects data={areas} select={editProvince.Areas} onChangeSelect={handleSelectArea} />
+                    <Selects
+                        className="mb1"
+                        data={areas}
+                        select={editProvince.Areas}
+                        onChangeSelect={handleSelectArea}
+                    />
                     {formik.errors.area_Id && formik.touched.area_Id ? (
                         <ErrorMessage>{formik.errors.area_Id}</ErrorMessage>
                     ) : null}

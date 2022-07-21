@@ -66,7 +66,6 @@
 @include respond(smartphone) {
     .wrapper {
         .container {
-            height: 100vh;
             .content {
                 padding: 1rem;
             }

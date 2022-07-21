@@ -15,7 +15,7 @@ function SelectImage(props) {
             <input onChange={onChange} id={id} name={name} multiple className={cx('input-image')} type="file" />
             <div className={cx('review-images')}>
                 {typeof images === 'string' ? (
-                    <img alt="Review Hình Ảnh" className={cx('review-image')} src={images} />
+                    <img className={cx('review-image')} src={images} />
                 ) : (
                     images.map((image, index) => (
                         <img alt="Review Hình Ảnh" key={index} className={cx('review-image')} src={image} />
