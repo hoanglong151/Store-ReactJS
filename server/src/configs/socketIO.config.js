@@ -4,7 +4,7 @@ const { Server } = require("socket.io");
 const httpServer = createServer();
 
 const io = new Server(httpServer, {
-  cors: process.env.CLIENT_URL,
+  cors: "https://cleanfood.vercel.app/",
 });
 
 io.on("connection", (socket) => {
