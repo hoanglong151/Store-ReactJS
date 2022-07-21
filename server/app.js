@@ -2,18 +2,20 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
+const { createServer } = require("http");
 require("dotenv").config({ path: __dirname + "\\.env" });
 const app = express();
 const port = process.env.PORT || 3001;
 const morgan = require("morgan");
 app.use(helmet());
 app.use(cors());
+const httpServer = createServer(app);
 morgan("tiny");
 
 // Import Database
 const connect = require("./src/configs/connect.config");
 require("./src/configs/connectFirebase.config");
-require("./src/configs/socketIO.config");
+const connectSocket = require("./src/configs/socketIO.config");
 // Import Routes
 const categories = require("./src/routes/categories.route");
 const products = require("./src/routes/products.route");
@@ -36,6 +38,7 @@ app.use(bodyParser.json());
 
 // Connect Database
 connect();
+connectSocket(httpServer);
 
 // Routes
 app.use("/categories", categories);
@@ -56,6 +59,6 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
