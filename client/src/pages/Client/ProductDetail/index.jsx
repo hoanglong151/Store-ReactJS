@@ -168,7 +168,7 @@ function ProductDetail() {
                                 );
                             })}
                     </div>
-                    {allTypeOfProduct.length !== 0 && (
+                    {allTypeOfProduct[0]?.Color && (
                         <div className={cx('wrapper-color')}>
                             <h4 className={cx('title-select-color')}>Chọn màu để xem giá mặt hàng</h4>
                             <div className={cx('wrapper-item')}>
