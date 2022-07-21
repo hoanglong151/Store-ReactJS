@@ -15,7 +15,7 @@ import styles from './Categories.module.scss';
 const cx = classnames.bind(styles);
 
 function Categories() {
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState(null);
     const [cateClick, setCateClick] = React.useState({});
     const [createCate, setCreateCate] = React.useState(false);
     const [editCate, setEditCate] = React.useState(false);
@@ -132,9 +132,6 @@ function Categories() {
 
     const validationSchema = Yup.object({
         name: Yup.string('Nhập Tên Danh Mục').required('Vui Lòng Nhập Tên Danh Mục'),
-        image: Yup.object({
-            name: Yup.string().required('Vui Lòng Chọn Hình Ảnh'),
-        }),
     });
 
     const objectCate = () => {
@@ -164,9 +161,27 @@ function Categories() {
                         fd.append(key, values[key]);
                     }
                     if (!formik.initialValues.name) {
-                        const result = await categoriesApi.addCategory(fd);
-                        if (result.Exist) {
-                            toast.error(`🦄 ${result.Exist}`, {
+                        if (image) {
+                            const result = await categoriesApi.addCategory(fd);
+                            if (result.Exist) {
+                                toast.error(`🦄 ${result.Exist}`, {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                });
+                            } else {
+                                formik.setFieldValue('name', '');
+                                setCateClick({});
+                                setCreateCate(false);
+                                setEditCate(false);
+                                getCategories();
+                            }
+                        } else {
+                            toast.error(`🦄 Vui Lòng Chọn Hình Ảnh`, {
                                 position: 'top-right',
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -175,12 +190,6 @@ function Categories() {
                                 draggable: true,
                                 progress: undefined,
                             });
-                        } else {
-                            formik.setFieldValue('name', '');
-                            setCateClick({});
-                            setCreateCate(false);
-                            setEditCate(false);
-                            getCategories();
                         }
                     } else {
                         const result = await categoriesApi.editCategory(fd, values.id);

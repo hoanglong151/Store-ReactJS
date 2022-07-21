@@ -33,9 +33,6 @@ export default function DialogCategory(props) {
                         <ErrorMessage>{formik.errors.name}</ErrorMessage>
                     ) : null}
                     <SelectImage name="image" id="image" images={image} onChange={onHandleImage} />
-                    {formik.errors.image && formik.touched.image ? (
-                        <ErrorMessage>{formik.errors.image.name}</ErrorMessage>
-                    ) : null}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onHandleClose}>Hủy</Button>

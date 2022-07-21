@@ -6,8 +6,8 @@ require("dotenv").config({ path: __dirname + "\\.env" });
 const app = express();
 const port = process.env.PORT || 3001;
 const morgan = require("morgan");
-require("./src/configs/socketIO.config");
 require("./src/configs/connectFirebase.config");
+require("./src/configs/socketIO.config");
 
 app.use(helmet());
 app.use(cors());
