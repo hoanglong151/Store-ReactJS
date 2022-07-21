@@ -1,5 +1,5 @@
-const detailBillsModel = require("../model/detailBills.model");
-const billStatusModel = require("../model/billStatus.model");
+const detailBillsModel = require("../model/Schema/detailBills.schema");
+const billStatusModel = require("../model/Schema/billStatus.schema");
 const billByStatus = async (req, res) => {
   const detailBills = await detailBillsModel.find();
   const billStatus = await billStatusModel.find();

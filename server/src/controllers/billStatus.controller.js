@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const billStatusModel = require("../model/billStatus.model");
-const detailBillsModel = require("../model/detailBills.model");
+const billStatusModel = require("../model/Schema/billStatus.schema");
+const detailBillsModel = require("../model/Schema/detailBills.schema");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getBillStatus = async (req, res) => {

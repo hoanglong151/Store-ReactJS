@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const categoriesModel = require("../model/categories.model");
-const productsModel = require("../model/products.model");
+const categoriesModel = require("../model/Schema/categories.schema");
+const productsModel = require("../model/Schema/products.schema");
 const { storage } = require("../configs/connectFirebase.config");
 const {
   ref,

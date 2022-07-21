@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const saleCodesModel = require("../model/saleCodes.model");
-const detailBillsModel = require("../model/detailBills.model");
+const saleCodesModel = require("../model/Schema/saleCodes.schema");
+const detailBillsModel = require("../model/Schema/detailBills.schema");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getSaleCodes = async (req, res) => {
