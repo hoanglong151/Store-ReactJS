@@ -1,6 +1,6 @@
-const billsModel = require("../model/Schema/bills.schema");
-const detailBillsModel = require("../model/Schema/detailBills.schema");
-const typeProductsModel = require("../model/Schema/typeProducts.schema");
+const billsModel = require("../model/bills.model");
+const detailBillsModel = require("../model/detailBills.model");
+const typeProductsModel = require("../model/typeProducts.model");
 const mongoose = require("mongoose");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 

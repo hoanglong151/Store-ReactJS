@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-const areasModel = require("../model/Schema/areas.schema");
-const detailBillsModel = require("../model/Schema/detailBills.schema");
-const provincesModel = require("../model/Schema/provinces.schema");
-const districtsModel = require("../model/Schema/districts.schema");
-const addressStoresModel = require("../model/Schema/addressStores.schema");
+const areasModel = require("../model/areas.model");
+const detailBillsModel = require("../model/detailBills.model");
+const provincesModel = require("../model/provinces.model");
+const districtsModel = require("../model/districts.model");
+const addressStoresModel = require("../model/addressStores.model");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getAreas = async (req, res) => {
