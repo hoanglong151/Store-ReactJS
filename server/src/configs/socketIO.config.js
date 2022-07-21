@@ -2,7 +2,7 @@ const { Server } = require("socket.io");
 
 function connectSocket(httpServer) {
   const io = new Server(httpServer, {
-    cors: "http://localhost:3000/",
+    cors: process.env.CLIENT_URL,
   });
 
   io.on("connection", (socket) => {
