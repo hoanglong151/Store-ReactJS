@@ -221,6 +221,11 @@
                 .truck,
                 .cart {
                     padding: 0.5rem;
+
+                    .number-cart {
+                        font-size: 1.4rem;
+                        bottom: 23%;
+                    }
                 }
             }
         }

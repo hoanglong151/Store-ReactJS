@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const detailBillsModel = require("../model/Schema/detailBills.schema");
-const districtsModel = require("../model/Schema/districts.schema");
-const addressStoresModel = require("../model/Schema/addressStores.schema");
+const detailBillsModel = require("../model/detailBills.model");
+const districtsModel = require("../model/districts.model");
+const addressStoresModel = require("../model/addressStores.model");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getDistricts = async (req, res) => {

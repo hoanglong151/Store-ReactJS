@@ -1,4 +1,4 @@
-const typeProductsModel = require("../model/Schema/typeProducts.schema");
+const typeProductsModel = require("../model/typeProducts.model");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 
 const getTypeProducts = async (req, res) => {

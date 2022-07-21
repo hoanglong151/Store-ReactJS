@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const firmsModel = require("../model/Schema/firms.schema");
-const productsModel = require("../model/Schema/products.schema");
+const firmsModel = require("../model/firms.model");
+const productsModel = require("../model/products.model");
 const jwt = require("jsonwebtoken");
 const replaceUnicode = require("../middlewares/replaceUnicode.middleware");
 

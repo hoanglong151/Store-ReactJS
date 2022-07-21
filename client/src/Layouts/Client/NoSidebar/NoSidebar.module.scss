@@ -26,3 +26,11 @@
         }
     }
 }
+
+@include respond(smartphone) {
+    .wrapper {
+        .bottom-navigation {
+            display: block;
+        }
+    }
+}

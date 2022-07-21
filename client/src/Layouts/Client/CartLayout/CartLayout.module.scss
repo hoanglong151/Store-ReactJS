@@ -1,3 +1,4 @@
+@import '../../../styles//Mixin.scss';
 .wrapper {
     background-color: #95a9a9;
 }
@@ -12,4 +13,12 @@
 
 .bottom-navigation {
     display: none;
+}
+
+@include respond(smartphone) {
+    .wrapper {
+        .bottom-navigation {
+            display: block;
+        }
+    }
 }

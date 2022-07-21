@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
-const usersModel = require("../model/Schema/authentication.schema");
-const verifyOTPModel = require("../model/Schema/verifyOTP.schema");
+const usersModel = require("../model/authentication.model");
+const verifyOTPModel = require("../model/verifyOTP.model");
 const CryptoJS = require("crypto-js");
 const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
@@ -63,6 +63,7 @@ const sendOTP = async (user) => {
       };
       verifyOTPModel.create(userOTP, (err, data) => {
         console.log("Create");
+        return data;
       });
     })
     .catch((err) => {

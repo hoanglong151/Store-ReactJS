@@ -26,6 +26,13 @@ function App() {
     const [goToTop, setGoToTop] = useState(false);
 
     useEffect(() => {
+        window.fbAsyncInit = function () {
+            window.FB.init({
+                xfbml: true,
+                version: 'v14.0',
+            });
+        };
+
         window.addEventListener('scroll', () => {
             window.scrollY > 400 ? setGoToTop(true) : setGoToTop(false);
         });
@@ -53,6 +60,14 @@ function App() {
 
     return (
         <div className="App">
+            <div id="fb-root"></div>
+
+            <div
+                id="fb-customer-chat"
+                className="fb-customerchat"
+                page_id="101296765104112"
+                attribution="biz_inbox"
+            ></div>
             <BrowserRouter>
                 <Routes>
                     {publicRoutes.map((route, index) => {

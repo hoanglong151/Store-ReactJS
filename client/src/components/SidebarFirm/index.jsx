@@ -24,7 +24,7 @@ SidebarFirm.propTypes = {
     firmID: PropTypes.string,
     cateID: PropTypes.string,
     className: PropTypes.bool,
-    select: PropTypes.object,
+    select: PropTypes.string,
 };
 
 export default SidebarFirm;
