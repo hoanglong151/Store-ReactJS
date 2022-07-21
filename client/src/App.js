@@ -65,7 +65,7 @@ function App() {
             <div
                 id="fb-customer-chat"
                 className="fb-customerchat"
-                page_id="101296765104112"
+                page_id={process.env.REACT_APP_PAGE_ID}
                 attribution="biz_inbox"
             ></div>
             <BrowserRouter>
