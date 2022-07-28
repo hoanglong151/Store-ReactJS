@@ -15,10 +15,12 @@ import * as XLSX from 'xlsx/xlsx.mjs';
 import Input from '~/components/Form/Input/Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function Bills() {
+    const [loading, setLoading] = useState(false);
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
     const [billsByStatus, setBillsByStatus] = useState([]);
@@ -51,27 +53,26 @@ function Bills() {
         }
     };
 
+    const getAllBillStatus = async () => {
+        const getBillStatus = await billStatusApi.getAll();
+        const convertStatus = getBillStatus.billStatus.map((status) => {
+            return {
+                value: status._id,
+                label: status.Name,
+            };
+        });
+        setBillStatus(convertStatus);
+    };
+
     const handlePagination = (page) => {
         setCurrentPage(page);
     };
 
     useEffect(() => {
         const callApi = async () => {
-            await getBills();
-        };
-
-        const getAllBillStatus = async () => {
-            const getBillStatus = await billStatusApi.getAll();
-            const convertStatus = getBillStatus.billStatus.map((status) => {
-                return {
-                    value: status._id,
-                    label: status.Name,
-                };
-            });
-            setBillStatus(convertStatus);
+            Promise.all([getAllBillStatus(), getBills()]);
         };
         callApi();
-        getAllBillStatus();
     }, [openDialog, currentPage, detailBills]);
 
     const handleSelectStatus = (status) => {
@@ -89,6 +90,7 @@ function Bills() {
     };
 
     const handleUpdateStatusBill = async () => {
+        setLoading(true);
         const result = await detailBillsApi.updateBillStatus({
             billID: editBill.bill._id,
             statusBill: convertBillStatusGet,
@@ -96,6 +98,7 @@ function Bills() {
         dispatch(fetchDetailBills());
         if (result) {
             setOpenDialog(false);
+            setLoading(false);
             UpdateSwal.fire({
                 position: 'center',
                 icon: 'success',
@@ -150,7 +153,8 @@ function Bills() {
                                 'Số Điện Thoại': bill.Phone,
                                 'Mã Hóa Đơn': detailBill._id,
                                 'Tổng Tiền': new Intl.NumberFormat('DE-de').format(detailBill.Cart.totalPrice),
-                                'Khuyến Mãi': detailBill.Cart.saleCode?.Sale || 0,
+                                'Khuyến Mãi':
+                                    new Intl.NumberFormat('DE-de').format(detailBill.Cart.saleCode?.Sale) || 0,
                                 'Thành Tiền': new Intl.NumberFormat('DE-de').format(detailBill.Cart.totalPriceSale),
                             };
                         });
@@ -218,7 +222,8 @@ function Bills() {
                                 'Số Điện Thoại': bill.Phone,
                                 'Mã Hóa Đơn': detailBill._id,
                                 'Tổng Tiền': new Intl.NumberFormat('DE-de').format(detailBill.Cart.totalPrice),
-                                'Khuyến Mãi': detailBill.Cart.saleCode?.Sale || 0,
+                                'Khuyến Mãi':
+                                    new Intl.NumberFormat('DE-de').format(detailBill.Cart.saleCode?.Sale) || 0,
                                 'Thành Tiền': new Intl.NumberFormat('DE-de').format(detailBill.Cart.totalPriceSale),
                             };
                         });
@@ -308,6 +313,7 @@ function Bills() {
 
     return (
         <div>
+            {loading && <LoadingCRUD />}
             <div>
                 <SearchByCate type="bill" onSearch={handleSearchBills} />
                 <div>

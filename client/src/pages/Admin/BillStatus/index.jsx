@@ -11,10 +11,12 @@ import PaginationOutlined from '~/components/Pagination';
 import SearchByCate from '~/components/SearchByCate';
 import classnames from 'classnames/bind';
 import styles from './BillStatus.module.scss';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function BillStatus() {
+    const [loading, setLoading] = useState(false);
     const [editBillStatus, setEditBillStatus] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -91,8 +93,10 @@ function BillStatus() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
+                    setLoading(true);
                     const result = await billStatusApi.deleteBillStatus(status._id);
                     if (result.Exist) {
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'error',
                             title: result.Exist,
@@ -101,6 +105,8 @@ function BillStatus() {
                             },
                         });
                     } else {
+                        getBillStatus();
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'success',
                             title: 'Tình Trạng Đã Được Xóa',
@@ -108,7 +114,6 @@ function BillStatus() {
                                 popup: `${cx('popup')}`,
                             },
                         });
-                        getBillStatus();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -142,8 +147,10 @@ function BillStatus() {
             const submit = async () => {
                 try {
                     if (Object.keys(editBillStatus).length !== 0) {
+                        setLoading(true);
                         const result = await billStatusApi.editBillStatus(values, editBillStatus._id);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -159,10 +166,13 @@ function BillStatus() {
                             setOpenEdit(false);
                             setEditBillStatus({});
                             getBillStatus();
+                            setLoading(false);
                         }
                     } else {
+                        setLoading(true);
                         const result = await billStatusApi.addBillStatus(values);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -178,6 +188,7 @@ function BillStatus() {
                             setOpenEdit(false);
                             setEditBillStatus({});
                             getBillStatus();
+                            setLoading(false);
                         }
                     }
                 } catch (err) {
@@ -189,6 +200,7 @@ function BillStatus() {
     });
     return (
         <div>
+            {loading && <LoadingCRUD />}
             <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo tình trạng

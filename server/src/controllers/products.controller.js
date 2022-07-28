@@ -154,6 +154,7 @@ const editProduct = async (req, res) => {
       type.Images = data;
       return type;
     });
+
     const editProduct = {
       _id: req.body.id,
       Name: req.body.name,
@@ -205,12 +206,12 @@ const editProduct = async (req, res) => {
 
       await Promise.all(
         newTypesProduct.map(async (type, index) => {
+          const images = [];
           if (!type._id && !type.Product) {
             const idType = new mongoose.Types.ObjectId().toString();
-            const images = [];
             if (req.files.length !== 0) {
               await Promise.all(
-                req.files.map(async (image, index) => {
+                type.Images.map(async (image, index) => {
                   const metadata = {
                     contentType: image.mimetype,
                   };
@@ -249,10 +250,9 @@ const editProduct = async (req, res) => {
             type.Product &&
             typeof type.Images[0] === "object"
           ) {
-            const images = [];
             if (req.files.length !== 0) {
               await Promise.all(
-                req.files.map(async (image, index) => {
+                type.Images.map(async (image, index) => {
                   const metadata = {
                     contentType: image.mimetype,
                   };
@@ -273,7 +273,6 @@ const editProduct = async (req, res) => {
                 })
               );
             }
-
             const updateTypePro = {
               Name: type.Name,
               Color: type.Color,
@@ -282,6 +281,26 @@ const editProduct = async (req, res) => {
               Amount: type.Amount,
               Sold: type.Sold,
               Images: images,
+              Product: req.body.id,
+            };
+            typeProductsModel.findByIdAndUpdate(
+              type._id,
+              updateTypePro,
+              (err, data) => {
+                if (err) {
+                  console.log("ERR: ", err);
+                  return err;
+                }
+              }
+            );
+          } else {
+            const updateTypePro = {
+              Name: type.Name,
+              Color: type.Color,
+              Price: type.Price,
+              Sale: type.Sale,
+              Amount: type.Amount,
+              Sold: type.Sold,
               Product: req.body.id,
             };
             typeProductsModel.findByIdAndUpdate(

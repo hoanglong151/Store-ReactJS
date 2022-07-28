@@ -38,9 +38,7 @@ function Home() {
 
     useEffect(() => {
         const getData = async () => {
-            getProducts();
-            getDetailBills();
-            getCountBillByStatus();
+            Promise.all([getProducts(), getDetailBills(), getCountBillByStatus()]);
         };
         getData();
     }, []);

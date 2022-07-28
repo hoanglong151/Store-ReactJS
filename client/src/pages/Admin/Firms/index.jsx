@@ -11,10 +11,12 @@ import PaginationOutlined from '~/components/Pagination';
 import SearchByCate from '~/components/SearchByCate';
 import classnames from 'classnames/bind';
 import styles from './Firms.module.scss';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function Firms() {
+    const [loading, setLoading] = useState(false);
     const [openPopupCreate, setOpenPopupCreate] = useState(false);
     const [openPopupEdit, setOpenPopupEdit] = useState(false);
     const [editFirmPopup, setEditFirmPopup] = useState({});
@@ -88,8 +90,10 @@ function Firms() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
+                    setLoading(true);
                     const result = await firmsApi.deleteFirm(firm._id);
                     if (result.Exist) {
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'error',
                             title: result.Exist,
@@ -98,6 +102,8 @@ function Firms() {
                             },
                         });
                     } else {
+                        getFirms();
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'success',
                             title: 'Hãng Đã Được Xóa',
@@ -105,7 +111,6 @@ function Firms() {
                                 popup: `${cx('popup')}`,
                             },
                         });
-                        getFirms();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -139,8 +144,10 @@ function Firms() {
             const submit = async () => {
                 try {
                     if (Object.keys(editFirmPopup).length !== 0) {
+                        setLoading(true);
                         const result = await firmsApi.editFirm(values, editFirmPopup._id);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -155,10 +162,13 @@ function Firms() {
                             setOpenPopupCreate(false);
                             setOpenPopupEdit(false);
                             getFirms();
+                            setLoading(false);
                         }
                     } else {
+                        setLoading(true);
                         const result = await firmsApi.addFirm(values);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -173,6 +183,7 @@ function Firms() {
                             setOpenPopupCreate(false);
                             setOpenPopupEdit(false);
                             getFirms();
+                            setLoading(false);
                         }
                     }
                 } catch (err) {
@@ -185,6 +196,7 @@ function Firms() {
 
     return (
         <div>
+            {loading && <LoadingCRUD />}
             <ToastContainer />
             <button onClick={handleOpenPopup} className={cx('create-btn')}>
                 Tạo Hãng

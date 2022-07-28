@@ -27,7 +27,7 @@ function Input(props) {
 }
 
 Input.propTypes = {
-    errors: PropTypes.bool,
+    errors: PropTypes.node,
     id: PropTypes.string,
     name: PropTypes.string,
     onChange: PropTypes.func,

@@ -11,10 +11,12 @@ import PaginationOutlined from '~/components/Pagination';
 import SearchByCate from '~/components/SearchByCate';
 import classnames from 'classnames/bind';
 import styles from './Categories.module.scss';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function Categories() {
+    const [loading, setLoading] = useState(false);
     const [image, setImage] = useState(null);
     const [cateClick, setCateClick] = React.useState({});
     const [createCate, setCreateCate] = React.useState(false);
@@ -68,8 +70,10 @@ function Categories() {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
+                        setLoading(true);
                         const result = await categoriesApi.deleteCategory(id);
                         if (result.Exist) {
+                            setLoading(false);
                             DeleteSwal.fire({
                                 icon: 'error',
                                 title: result.Exist,
@@ -78,6 +82,8 @@ function Categories() {
                                 },
                             });
                         } else {
+                            getCategories();
+                            setLoading(false);
                             DeleteSwal.fire({
                                 icon: 'success',
                                 title: 'Danh Mục Đã Được Xóa',
@@ -86,7 +92,6 @@ function Categories() {
                                 },
                             });
                         }
-                        getCategories();
                     } catch (err) {
                         throw Error(err);
                     }
@@ -162,8 +167,10 @@ function Categories() {
                     }
                     if (!formik.initialValues.name) {
                         if (image) {
+                            setLoading(true);
                             const result = await categoriesApi.addCategory(fd);
                             if (result.Exist) {
+                                setLoading(false);
                                 toast.error(`🦄 ${result.Exist}`, {
                                     position: 'top-right',
                                     autoClose: 3000,
@@ -179,6 +186,7 @@ function Categories() {
                                 setCreateCate(false);
                                 setEditCate(false);
                                 getCategories();
+                                setLoading(false);
                             }
                         } else {
                             toast.error(`🦄 Vui Lòng Chọn Hình Ảnh`, {
@@ -192,8 +200,10 @@ function Categories() {
                             });
                         }
                     } else {
+                        setLoading(true);
                         const result = await categoriesApi.editCategory(fd, values.id);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -208,6 +218,7 @@ function Categories() {
                             setCreateCate(false);
                             setEditCate(false);
                             getCategories();
+                            setLoading(false);
                         }
                     }
                 } catch (Error) {
@@ -220,6 +231,7 @@ function Categories() {
 
     return (
         <div className={cx('wrapper')}>
+            {loading && <LoadingCRUD />}
             <ToastContainer />
             <button onClick={handleClickOpen} className={cx('create-btn')}>
                 Tạo Danh Mục

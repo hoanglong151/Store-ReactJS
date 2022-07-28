@@ -18,10 +18,12 @@ import styles from './Payment.module.scss';
 import { io } from 'socket.io-client';
 import * as yup from 'yup';
 import ErrorMessage from '~/components/Form/ErrorMessage/ErrorMessage';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function Bill() {
+    const [loading, setLoading] = useState(false);
     const { cart } = useSelector((state) => state);
     const [addressStores, setAddressStores] = useState([]);
     const [areas, setAreas] = useState([]);
@@ -71,11 +73,7 @@ function Bill() {
     };
 
     useEffect(() => {
-        getAreas();
-        getAddressStores();
-        getProvinces();
-        getDistricts();
-        getBillStatus();
+        Promise.all([getAreas(), getAddressStores(), getProvinces(), getDistricts(), getBillStatus()]);
         const info = JSON.parse(sessionStorage.getItem('Info'));
         if (info) {
             setInfo(info);
@@ -231,14 +229,17 @@ function Bill() {
         },
         onSubmit: (values) => {
             const submit = async () => {
+                setLoading(true);
                 const result = await billsApi.paymentBill(values);
                 if (result.Amount) {
+                    setLoading(false);
                     SuccessSwal.fire({
                         icon: 'error',
                         title: `Đặt Hàng Thất Bại <br /> (${result.Product})`,
                         text: result.Amount,
                     });
                 } else {
+                    setLoading(false);
                     SuccessSwal.fire({
                         icon: 'success',
                         title: 'Đặt Hàng Thành Công',
@@ -262,6 +263,7 @@ function Bill() {
 
     return (
         <div className={cx('wrapper')}>
+            {loading && <LoadingCRUD />}
             <form onSubmit={formik.handleSubmit}>
                 <HeaderCart title="Thông Tin Đặt Hàng" link="/cart" />
                 <div className={cx('payment-info')}>

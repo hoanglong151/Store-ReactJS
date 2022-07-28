@@ -14,10 +14,12 @@ import PaginationOutlined from '~/components/Pagination';
 import SearchByCate from '~/components/SearchByCate';
 import classnames from 'classnames/bind';
 import styles from './AddressStores.module.scss';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function AddressStores() {
+    const [loading, setLoading] = useState(false);
     const [editAddressStore, setEditAddressStore] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -84,10 +86,7 @@ function AddressStores() {
 
     useEffect(() => {
         const callApi = async () => {
-            await getAreas();
-            await getProvinces();
-            await getDistricts();
-            await getAddressStores();
+            Promise.all([getAreas(), getProvinces(), getDistricts(), getAddressStores()]);
         };
         callApi();
     }, []);
@@ -169,8 +168,10 @@ function AddressStores() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
+                    setLoading(true);
                     const result = await addressStoresApi.deleteAddressStore(store._id);
                     if (result.Exist) {
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'error',
                             title: result.Exist,
@@ -179,6 +180,8 @@ function AddressStores() {
                             },
                         });
                     } else {
+                        getAddressStores();
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'success',
                             title: 'Cửa Hàng Đã Được Xóa',
@@ -186,7 +189,6 @@ function AddressStores() {
                                 popup: `${cx('popup')}`,
                             },
                         });
-                        getAddressStores();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -253,8 +255,10 @@ function AddressStores() {
             const submit = async () => {
                 try {
                     if (editAddressStore._id) {
+                        setLoading(true);
                         const result = await addressStoresApi.editAddressStore(values, editAddressStore._id);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -270,10 +274,13 @@ function AddressStores() {
                             setOpenEdit(false);
                             setEditAddressStore({});
                             getAddressStores();
+                            setLoading(false);
                         }
                     } else {
+                        setLoading(true);
                         const result = await addressStoresApi.addAddressStore(values);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -289,6 +296,7 @@ function AddressStores() {
                             setOpenEdit(false);
                             setEditAddressStore({});
                             getAddressStores();
+                            setLoading(false);
                         }
                     }
                 } catch (err) {
@@ -300,6 +308,7 @@ function AddressStores() {
     });
     return (
         <div>
+            {loading && <LoadingCRUD />}
             <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo cửa hàng

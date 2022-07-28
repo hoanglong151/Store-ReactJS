@@ -13,10 +13,12 @@ import PaginationOutlined from '~/components/Pagination';
 import SearchByCate from '~/components/SearchByCate';
 import classnames from 'classnames/bind';
 import styles from './Districts.module.scss';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function District() {
+    const [loading, setLoading] = useState(false);
     const [editDistrict, setEditDistrict] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -132,8 +134,10 @@ function District() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
+                    setLoading(true);
                     const result = await districtsApi.deleteDistrict(district._id);
                     if (result.Exist) {
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'error',
                             title: result.Exist,
@@ -142,6 +146,8 @@ function District() {
                             },
                         });
                     } else {
+                        getDistricts();
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'success',
                             title: 'Quận/Huyện Đã Được Xóa',
@@ -149,7 +155,6 @@ function District() {
                                 popup: `${cx('popup')}`,
                             },
                         });
-                        getDistricts();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -209,8 +214,10 @@ function District() {
             const submit = async () => {
                 try {
                     if (editDistrict._id) {
+                        setLoading(true);
                         const result = await districtsApi.editDistrict(values, editDistrict._id);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -226,10 +233,13 @@ function District() {
                             setOpenEdit(false);
                             setEditDistrict({});
                             getDistricts();
+                            setLoading(false);
                         }
                     } else {
+                        setLoading(true);
                         const result = await districtsApi.addDistrict(values);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -245,6 +255,7 @@ function District() {
                             setOpenEdit(false);
                             setEditDistrict({});
                             getDistricts();
+                            setLoading(false);
                         }
                     }
                 } catch (err) {
@@ -256,6 +267,7 @@ function District() {
     });
     return (
         <div>
+            {loading && <LoadingCRUD />}
             <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo quận/huyện

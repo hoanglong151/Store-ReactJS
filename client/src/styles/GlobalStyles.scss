@@ -5,7 +5,6 @@
 :root {
     --primary-admin: #21b6fb;
     --primary-admin-hover: #00acfc;
-    // --primary-header-sidebar: #fff;
     --primary-content: #f6f5f8;
 
     --primary-client-background-color: rgb(47, 79, 79);
@@ -29,11 +28,14 @@ html {
 }
 body {
     font-size: 1.6rem;
+    user-select: none;
 }
 
 input,
 button,
 [tabindex] {
+    font-family: inherit;
+    font-size: inherit;
     outline: none;
     border: none;
 }

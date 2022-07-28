@@ -70,8 +70,32 @@ const searchTypeProducts = async (req, res) => {
       return removeUnicodeName.toLowerCase().includes(removeUnicodeSearch);
     }
   });
+
+  const allProductByTypes = data.map((type) => {
+    const getTypesOfProduct = data.filter(
+      (item) => item.Product._id === type.Product._id
+    );
+    return {
+      _id: type._id,
+      Type: type.Name,
+      Color: type.Color,
+      Price: type.Price,
+      Sale: type.Sale,
+      Amount: type.Amount,
+      Sold: type.Sold,
+      ID_Product: type.Product._id,
+      Name: type.Product.Name,
+      Images: type.Images,
+      Description: type.Product.Description,
+      Category_ID: type.Product.Category_ID,
+      Firm_ID: type.Product.Firm_ID,
+      CreateAt: type.createdAt,
+      TypesProduct: getTypesOfProduct,
+    };
+  });
+
   const totalPage = Math.ceil(data.length / parseInt(req.query.size));
-  res.send({ data: data, totalPage: totalPage });
+  res.send({ data: allProductByTypes, totalPage: totalPage });
 };
 
 module.exports = { getTypeProducts, searchTypeProducts };

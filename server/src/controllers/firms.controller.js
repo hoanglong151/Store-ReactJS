@@ -31,22 +31,16 @@ const addFirm = async (req, res) => {
   if (checkExistFirm) {
     res.json({ Exist: "Hãng Tồn Tại. Vui Lòng Kiểm Tra Lại" });
   } else {
-    const token = req.headers.authorization.split(" ");
-    jwt.verify(token[1], "hoanglong", (err, info) => {
+    const id = new mongoose.Types.ObjectId().toString();
+    const firm = {
+      _id: id,
+      Name: req.body.name,
+    };
+    firmsModel.create(firm, (err, data) => {
       if (err) {
-        res.status(401);
+        return res.status(404);
       }
-      const id = new mongoose.Types.ObjectId().toString();
-      const firm = {
-        _id: id,
-        Name: req.body.name,
-      };
-      firmsModel.create(firm, (err, data) => {
-        if (err) {
-          return res.status(404);
-        }
-        res.json(data);
-      });
+      res.json(data);
     });
   }
 };

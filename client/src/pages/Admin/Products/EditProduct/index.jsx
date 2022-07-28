@@ -212,7 +212,6 @@ function EditProduct() {
             typesProduct[getIndexType].Images = formik.values.types.images;
         }
         setTypesProduct([...typesProduct]);
-
         setStatusUpdateType(false);
         setReviewImages([]);
         formik.values.types.name = '';

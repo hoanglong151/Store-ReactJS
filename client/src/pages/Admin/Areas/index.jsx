@@ -11,10 +11,12 @@ import PaginationOutlined from '~/components/Pagination';
 import SearchByCate from '~/components/SearchByCate';
 import classnames from 'classnames/bind';
 import styles from './Areas.module.scss';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function Areas() {
+    const [loading, setLoading] = useState(false);
     const [editArea, setEditArea] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -81,8 +83,10 @@ function Areas() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
+                    setLoading(true);
                     const result = await areasApi.deleteArea(area._id);
                     if (result.Exist) {
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'error',
                             title: result.Exist,
@@ -91,6 +95,8 @@ function Areas() {
                             },
                         });
                     } else {
+                        getAreas();
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'success',
                             title: 'Vùng Miền Đã Được Xóa',
@@ -98,7 +104,6 @@ function Areas() {
                                 popup: `${cx('popup')}`,
                             },
                         });
-                        getAreas();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -142,8 +147,10 @@ function Areas() {
             const submit = async () => {
                 try {
                     if (Object.keys(editArea).length !== 0) {
+                        setLoading(true);
                         const result = await areasApi.editArea(values, editArea._id);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -158,10 +165,13 @@ function Areas() {
                             setOpenCreate(false);
                             setOpenEdit(false);
                             getAreas();
+                            setLoading(false);
                         }
                     } else {
+                        setLoading(true);
                         const result = await areasApi.addArea(values);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -176,6 +186,7 @@ function Areas() {
                             setOpenCreate(false);
                             setOpenEdit(false);
                             getAreas();
+                            setLoading(false);
                         }
                     }
                 } catch (err) {
@@ -187,6 +198,7 @@ function Areas() {
     });
     return (
         <div>
+            {loading && <LoadingCRUD />}
             <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo vùng miền

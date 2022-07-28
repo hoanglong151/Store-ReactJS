@@ -12,10 +12,12 @@ import PaginationOutlined from '~/components/Pagination';
 import SearchByCate from '~/components/SearchByCate';
 import classnames from 'classnames/bind';
 import styles from './Provinces.module.scss';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function Provinces() {
+    const [loading, setLoading] = useState(false);
     const [editProvince, setEditProvince] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -58,8 +60,7 @@ function Provinces() {
     };
 
     useEffect(() => {
-        getAreas();
-        getProvinces();
+        Promise.all([getAreas(), getProvinces()]);
     }, [currentPage]);
 
     const newAreas = useMemo(() => {
@@ -106,8 +107,10 @@ function Provinces() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
+                    setLoading(true);
                     const result = await provincesApi.deleteProvince(province._id);
                     if (result.Exist) {
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'error',
                             title: result.Exist,
@@ -116,6 +119,8 @@ function Provinces() {
                             },
                         });
                     } else {
+                        getProvinces();
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'success',
                             title: 'Tỉnh/Thành Đã Được Xóa',
@@ -123,7 +128,6 @@ function Provinces() {
                                 popup: `${cx('popup')}`,
                             },
                         });
-                        getProvinces();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -175,8 +179,10 @@ function Provinces() {
             const submit = async () => {
                 try {
                     if (editProvince._id) {
+                        setLoading(true);
                         const result = await provincesApi.editProvince(values, editProvince._id);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -192,10 +198,13 @@ function Provinces() {
                             setOpenEdit(false);
                             setEditProvince({});
                             getProvinces();
+                            setLoading(false);
                         }
                     } else {
+                        setLoading(true);
                         const result = await provincesApi.addProvince(values);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -211,6 +220,7 @@ function Provinces() {
                             setOpenEdit(false);
                             setEditProvince({});
                             getProvinces();
+                            setLoading(false);
                         }
                     }
                 } catch (err) {
@@ -222,6 +232,7 @@ function Provinces() {
     });
     return (
         <div>
+            {loading && <LoadingCRUD />}
             <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo tỉnh/thành

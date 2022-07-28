@@ -11,10 +11,12 @@ import PaginationOutlined from '~/components/Pagination';
 import SearchByCate from '~/components/SearchByCate';
 import classnames from 'classnames/bind';
 import styles from './SaleCodes.module.scss';
+import LoadingCRUD from '~/components/Loading/LoadingCRUD';
 
 const cx = classnames.bind(styles);
 
 function SaleCodes() {
+    const [loading, setLoading] = useState(false);
     const [editSaleCode, setEditSaleCode] = useState({});
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -78,8 +80,10 @@ function SaleCodes() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
+                    setLoading(true);
                     const result = await saleCodesApi.deleteSaleCode(code._id);
                     if (result.Exist) {
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'error',
                             title: result.Exist,
@@ -88,6 +92,8 @@ function SaleCodes() {
                             },
                         });
                     } else {
+                        getSaleCodes();
+                        setLoading(false);
                         DeleteSwal.fire({
                             icon: 'success',
                             title: 'Mã Khuyến Mãi Đã Được Xóa',
@@ -95,7 +101,6 @@ function SaleCodes() {
                                 popup: `${cx('popup')}`,
                             },
                         });
-                        getSaleCodes();
                     }
                 } catch (err) {
                     throw Error(err);
@@ -142,8 +147,10 @@ function SaleCodes() {
             const submit = async () => {
                 try {
                     if (editSaleCode._id) {
+                        setLoading(true);
                         const result = await saleCodesApi.editSaleCode(values, editSaleCode._id);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -160,10 +167,13 @@ function SaleCodes() {
                             setOpenEdit(false);
                             setEditSaleCode({});
                             getSaleCodes();
+                            setLoading(false);
                         }
                     } else {
+                        setLoading(true);
                         const result = await saleCodesApi.addSaleCode(values);
                         if (result.Exist) {
+                            setLoading(false);
                             toast.error(`🦄 ${result.Exist}`, {
                                 position: 'top-right',
                                 autoClose: 3000,
@@ -180,6 +190,7 @@ function SaleCodes() {
                             setOpenEdit(false);
                             setEditSaleCode({});
                             getSaleCodes();
+                            setLoading(false);
                         }
                     }
                 } catch (err) {
@@ -191,6 +202,7 @@ function SaleCodes() {
     });
     return (
         <div>
+            {loading && <LoadingCRUD />}
             <ToastContainer />
             <button className={cx('create-btn')} onClick={handleOpenDialog}>
                 Tạo mã khuyến mãi
